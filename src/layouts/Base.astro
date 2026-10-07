@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
 import '../styles/global.css';
 
 const { title = 'Hamro Bazaar', tab = '' } = Astro.props;
@@ -29,6 +30,9 @@ const fontCss = 'https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" type="image/svg+xml" href="/icons/icon-192.svg" />
   <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
+  <!-- ViewTransitions (app-feel): native-style page changes, no white flash.
+       Degrades gracefully — plain navigation where unsupported. -->
+  <ViewTransitions />
   <!-- Display face: Tiro Devanagari Hindi (real Google Fonts family with native
        Devanagari — the spec's 'Tiro Devanagari Serif' 404s). One face only. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -40,6 +44,20 @@ const fontCss = 'https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:
   <link rel="stylesheet" href={fontCss} media="print" onload="this.media='all'" />
   <noscript><link rel="stylesheet" href={fontCss} /></noscript>
   <script>document.documentElement.classList.add('js');</script>
+  <!-- === PWA INSTALLABILITY (Worker 1) — PNG icons, iOS splash screens.
+       PNG apple-touch-icon placed after the SVG one above so iOS (which
+       ignores SVG) picks this up. SVG favicon stays as fallback. === -->
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <link rel="apple-touch-startup-image" href="/splash/splash-1170x2532.png"
+        media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="/splash/splash-1290x2796.png"
+        media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="/splash/splash-1125x2436.png"
+        media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="/splash/splash-1242x2688.png"
+        media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="/splash/splash-828x1792.png"
+        media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
 </head>
 <body data-wa-number={waNumber}>
   <header class="site-header" id="site-header">
@@ -119,58 +137,85 @@ const fontCss = 'https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:
     import { getLang, setLang, applyLang } from '../lib/i18n.js';
     import { track } from '../lib/analytics.js';
 
+    // App-feel note: ViewTransitions re-executes this script on each
+    // navigation. Everything below is idempotent: document-level listeners
+    // bind exactly once, per-navigation work (lang, reveal, header state)
+    // re-runs against the fresh DOM.
+    const HB = (window.__hbBase ??= {});
+
     // Tap analytics: delegated, fire-and-forget. Catches every tel:/wa.me
     // link on the site — server-rendered cards, live-search results, and any
     // future links — without touching each template's click handling.
-    document.addEventListener('click', (e) => {
-      try {
-        const a = e.target.closest('a[href^="tel:"], a[href^="https://wa.me"]');
-        if (!a) return;
-        const href = a.getAttribute('href') || '';
-        track(href.startsWith('tel:') ? 'call_tap' : 'whatsapp_tap', {
-          listingId: a.getAttribute('data-listing-id') || null,
-          context: a.getAttribute('data-track-context') || null,
+    if (!HB.clickBound) {
+      document.addEventListener('click', (e) => {
+        try {
+          const a = e.target.closest('a[href^="tel:"], a[href^="https://wa.me"]');
+          if (!a) return;
+          const href = a.getAttribute('href') || '';
+          track(href.startsWith('tel:') ? 'call_tap' : 'whatsapp_tap', {
+            listingId: a.getAttribute('data-listing-id') || null,
+            context: a.getAttribute('data-track-context') || null,
+          });
+        } catch { /* never break navigation */ }
+      }, { capture: true });
+      HB.clickBound = true;
+    }
+
+    function initPage() {
+      // Solid-on-scroll header: hairline appears after 8px (no backdrop-filter —
+      // iOS Safari ghosts blurred sticky headers). Node is re-grabbed each
+      // navigation because view transitions swap the body.
+      const header = document.getElementById('site-header');
+      const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 8);
+      if (!HB.scrollBound) {
+        window.addEventListener('scroll', onScroll, { passive: true });
+        HB.scrollBound = true;
+      }
+      onScroll();
+
+      // Language: re-apply on each navigation; bind fresh toggle nodes only.
+      applyLang(getLang());
+      document.querySelectorAll('[data-lang-toggle]').forEach((btn) => {
+        if (btn.dataset.hbBound) return;
+        btn.dataset.hbBound = '1';
+        btn.addEventListener('click', () => {
+          const next = getLang() === 'ne' ? 'en' : 'ne';
+          setLang(next);
         });
-      } catch { /* never break navigation */ }
-    }, { capture: true });
-
-    // Solid-on-scroll header: hairline appears after 8px (no backdrop-filter —
-    // iOS Safari ghosts blurred sticky headers).
-    const header = document.getElementById('site-header');
-    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-
-    // Language
-    applyLang(getLang());
-    document.querySelectorAll('[data-lang-toggle]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const next = getLang() === 'ne' ? 'en' : 'ne';
-        setLang(next);
       });
-    });
 
-    // Section-head reveal only (everything else stays still).
-    // Fallback timer guarantees content appears even if IO never fires.
-    const reveal = () => document.querySelectorAll('.rv:not(.in)').forEach((el) => el.classList.add('in'));
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-      }, { threshold: 0.15 });
-      document.querySelectorAll('.rv').forEach((el) => io.observe(el));
-      setTimeout(reveal, 2500);
-    } else {
-      reveal();
+      // Section-head reveal only (everything else stays still).
+      // Fallback timer guarantees content appears even if IO never fires.
+      const reveal = () => document.querySelectorAll('.rv:not(.in)').forEach((el) => el.classList.add('in'));
+      if ('IntersectionObserver' in window) {
+        HB.io ??= new IntersectionObserver((entries) => {
+          entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); HB.io.unobserve(e.target); } });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.rv:not([data-hb-rv])').forEach((el) => { el.dataset.hbRv = '1'; HB.io.observe(el); });
+        setTimeout(reveal, 2500);
+      } else {
+        reveal();
+      }
+    }
+    initPage();
+    if (!HB.pageLoadBound) {
+      document.addEventListener('astro:page-load', initPage);
+      HB.pageLoadBound = true;
     }
 
     // Best-effort service worker — must never break the page.
-    try {
-      if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(() => {});
-        });
-      }
-    } catch { /* offline support is a bonus, not a requirement */ }
+    if (!HB.swBound) {
+      HB.swBound = true;
+      try {
+        if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
+          });
+        }
+      } catch { /* offline support is a bonus, not a requirement */ }
+    }
   </script>
+  <!-- === PWA INSTALLABILITY (Worker 1) — install prompts + standalone detection === -->
+  <script src="/js/pwa-install.js" defer></script>
 </body>
 </html>

@@ -799,3 +799,112 @@ html.js .rv.in { animation: hb-fade 0.6s ease both; }
 @media (prefers-reduced-motion: reduce) {
   html.js .rv, html.js .rv.in { opacity: 1; animation: none; }
 }
+
+/* ============================================================
+   APP FEEL (2026-10-07, Worker 2) — native-mobile touches.
+   Mobile upgrade only: every layout change below is scoped to
+   <1024px or is desktop-neutral. Keep new app-feel rules in this
+   section; edit existing rules in place only where noted.
+   ============================================================ */
+
+/* ---- 1. View Transitions: subtle fade/slide, nothing flashy ---- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 180ms;
+  animation-timing-function: ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none; }
+}
+
+/* ---- 2. Scroll + overscroll ---- */
+/* Anchor jumps / scrollIntoView never park content behind the fixed tab
+   bar, the sticky header, or the business-page Call/WhatsApp row. */
+html {
+  scroll-padding-top: 76px;
+  scroll-padding-bottom: 0;
+  scroll-padding-bottom: calc(200px + env(safe-area-inset-bottom));
+}
+/* Nested scrollers keep the page out of the rubber-band bounce… */
+.chips, .table-scroll, .tabbar, .site-header { overscroll-behavior: none; }
+/* …while the main feed keeps natural overscroll (iOS pull-to-refresh stays). */
+
+/* ---- 3. Safe-area audit ---- */
+/* Header sits at the very top edge under viewport-fit=cover. */
+.site-header {
+  padding-top: 0;
+  padding-top: env(safe-area-inset-top);
+}
+/* Tab bar: static fallback first for engines without env(). */
+.tabbar {
+  padding-bottom: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+/* Sticky Call/WhatsApp bar: safe-area bottom padding confirmed in the base
+   rule (bottom: calc(84px + env(safe-area-inset-bottom))); add composition
+   stability so it can't jitter on iOS Safari sticky. */
+.cta-row {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+/* Worker 1 install-prompt landing zone: floats above the tab bar + home
+   indicator on mobile; docks above the footer chrome on desktop. */
+.install-prompt, [data-install-prompt] {
+  position: fixed;
+  left: 12px; right: 12px;
+  bottom: 88px;
+  bottom: calc(88px + env(safe-area-inset-bottom));
+  z-index: 60;
+  margin: 0 auto;
+  max-width: 480px;
+}
+@media (min-width: 1024px) {
+  .install-prompt, [data-install-prompt] { bottom: 24px; }
+}
+
+/* ---- 4. Bottom tab bar: active state, press feedback, badge hook ---- */
+.tabbar a {
+  -webkit-tap-highlight-color: transparent;
+  transition: color 150ms ease, transform 120ms ease, background-color 150ms ease;
+}
+.tabbar a:active { transform: scale(0.94); }
+/* Active tab: unmistakable — tinted cell + deep-maroon label/icon + top bar. */
+.tabbar a[aria-current="page"] {
+  color: var(--color-maroon-deep);
+  font-weight: 600; /* 600 reserved for controls — the tab bar is a control */
+  background: var(--color-maroon-tint);
+}
+.tabbar a[aria-current="page"] svg { stroke-width: 2; }
+/* Badge hook for future notification counts (span.bdot inside a tab link). */
+.tabbar a .bdot {
+  position: absolute;
+  top: 12px;
+  right: calc(50% - 22px);
+  min-width: 8px; height: 8px;
+  border-radius: 999px;
+  background: var(--color-maroon);
+  display: none;
+}
+.tabbar a[data-badge] .bdot { display: block; }
+
+/* ---- 5. Forms: iOS zoom guard (16px floor on mobile) ---- */
+/* Public forms (.field, .searchbar, survey) are already 16px. This floor
+   catches anything else (e.g. admin controls) on touch layouts only. */
+@media (max-width: 1023.98px) {
+  input[type="text"], input[type="tel"], input[type="email"], input[type="url"],
+  input[type="search"], input[type="password"], select, textarea {
+    font-size: max(16px, 1em);
+  }
+}
+
+/* ---- 6. Standalone (installed PWA) hooks ----
+   Worker 1 sets data-standalone on <html>. Chrome is already safe-area
+   aware, so the hooks stay minimal: hide any "open in app" cruft. */
+html[data-standalone] .hb-open-in-app { display: none; }
+
+/* ---- 7. Instant press feedback (perceived performance) ---- */
+.btn, .chip, .navlink, .card { -webkit-tap-highlight-color: transparent; }
+@media (hover: none) {
+  .btn:active { transform: scale(0.97); }
+}

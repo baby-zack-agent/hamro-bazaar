@@ -126,7 +126,7 @@ const glyph = glyphs[listing.category] || glyphs.other;
         <input type="hidden" name="listingId" value={listing.id} />
         <div class="field">
           <label for="rv-name" data-i18n="rev.name">Your name</label>
-          <input id="rv-name" name="name" required maxlength="80" />
+          <input id="rv-name" name="name" type="text" required maxlength="80" autocomplete="name" />
         </div>
         <div class="field">
           <span class="flabel" data-i18n="rev.rating">Rating</span>

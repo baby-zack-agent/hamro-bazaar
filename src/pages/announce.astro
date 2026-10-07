@@ -34,7 +34,7 @@ import { CATEGORIES, categoryLabel } from '../lib/db.js';
           </div>
           <div class="field">
             <label for="s-contact" data-i18n="annsub.contact">Your contact (phone or WhatsApp)</label>
-            <input id="s-contact" name="contact" required maxlength="120" inputmode="tel" autocomplete="tel" />
+            <input id="s-contact" name="contact" type="tel" required maxlength="120" inputmode="tel" autocomplete="tel" />
           </div>
           {/* honeypot — humans never fill this */}
           <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />

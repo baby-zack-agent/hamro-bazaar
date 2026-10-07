@@ -53,7 +53,7 @@ const nameMap = Object.fromEntries(getListings().map((l) => [l.id, l.name]));
           </div>
           <div class="field">
             <label for="ft-contact" data-i18n="feat.contact">Your contact (phone or WhatsApp)</label>
-            <input id="ft-contact" name="contact" required maxlength="120" inputmode="tel" autocomplete="tel" />
+            <input id="ft-contact" name="contact" type="tel" required maxlength="120" inputmode="tel" autocomplete="tel" />
           </div>
           <div class="field">
             <label for="ft-msg"><span data-i18n="feat.msg">Anything we should know (optional)</span></label>
