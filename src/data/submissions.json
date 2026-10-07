@@ -2,12 +2,13 @@
  {
   "id": "sub-muy1z44g-za9l",
   "type": "announcement",
-  "status": "pending",
+  "status": "rejected",
   "created": "2026-10-07T11:57:28.096Z",
   "businessName": "Test",
   "category": "grocery",
   "title": "zz-test-delete-me",
   "details": "",
-  "contact": "test"
+  "contact": "test",
+  "moderated": "2026-10-07T11:57:35.752Z"
  }
 ]
