@@ -24,6 +24,7 @@ import { CATEGORIES, categoryLabel } from '../lib/db.js';
           <button class="chip" id="tab-listings" aria-pressed="true">Listings</button>
           <button class="chip" id="tab-ann" aria-pressed="false">Announcements</button>
           <button class="chip" id="tab-sub" aria-pressed="false">Submissions <span id="sub-badge"></span></button>
+          <button class="chip" id="tab-analytics" aria-pressed="false">Analytics</button>
           <button class="chip" id="logout" style="margin-left:auto">Log out</button>
         </div>
 
@@ -88,6 +89,27 @@ import { CATEGORIES, categoryLabel } from '../lib/db.js';
           </table>
           </div>
         </div>
+
+        <div id="pane-analytics" hidden>
+          <h2 class="eyebrow">Tap analytics</h2>
+          <p class="notice">Privacy-first: event counts only. No personal data, IPs, or cookies are ever collected.</p>
+          <div style="overflow-x:auto;margin-top:12px">
+          <table class="admin-table" id="analytics-table">
+            <thead><tr><th>Day</th><th>Calls</th><th>WhatsApp</th><th>Searches</th><th>Survey starts</th><th>Total taps</th></tr></thead>
+            <tbody></tbody>
+          </table>
+          </div>
+          <h2 class="eyebrow" style="margin-top:20px">Top 10 listings by taps</h2>
+          <div style="overflow-x:auto">
+          <table class="admin-table" id="top-table">
+            <thead><tr><th>Listing</th><th>Calls</th><th>WhatsApp</th><th>Total</th></tr></thead>
+            <tbody></tbody>
+          </table>
+          </div>
+          <h2 class="eyebrow" style="margin-top:20px">Taps — last 7 days</h2>
+          <div id="trend-chart" style="margin-top:8px"></div>
+          <p id="analytics-msg" style="font-size:13px;color:var(--ink-faint)"></p>
+        </div>
       </div>
     </section>
   </div>
@@ -131,7 +153,7 @@ $('#logout').addEventListener('click', async () => {
 });
 
 // --- tabs ---
-const TABS = [['#tab-listings', '#pane-listings'], ['#tab-ann', '#pane-ann'], ['#tab-sub', '#pane-sub']];
+const TABS = [['#tab-listings', '#pane-listings'], ['#tab-ann', '#pane-ann'], ['#tab-sub', '#pane-sub'], ['#tab-analytics', '#pane-analytics']];
 for (const [tab, pane] of TABS) {
   $(tab).addEventListener('click', () => {
     for (const [t, p] of TABS) {
@@ -293,7 +315,86 @@ $('#sub-table').addEventListener('click', async (e) => {
   } catch (err) { alert(err.message); }
 });
 
+// --- analytics ---
+// Reads the public analytics/*.jsonl files straight from GitHub (repo is
+// public, no auth needed) and aggregates client-side. Listing names come
+// from the already-authed listings fetch.
+const ANALYTICS_REPO = 'baby-zack-agent/hamro-bazaar';
+async function loadAnalytics() {
+  const msg = $('#analytics-msg');
+  msg.textContent = 'Loading…';
+  try {
+    if (!listingsCache.length) {
+      const d = await api('/api/admin?resource=listings');
+      listingsCache = d.listings;
+    }
+    const names = {};
+    for (const l of listingsCache) names[l.id] = l.name;
+    const dirRes = await fetch(`https://api.github.com/repos/${ANALYTICS_REPO}/contents/analytics?ref=main`);
+    let files = [];
+    if (dirRes.ok) {
+      const dir = await dirRes.json();
+      files = (Array.isArray(dir) ? dir : [])
+        .filter((f) => /\.jsonl$/.test(f.name))
+        .sort((a, b) => (a.name < b.name ? 1 : -1));
+    }
+    const days = [];
+    for (const f of files.slice(0, 14)) {
+      const day = f.name.replace('events-', '').replace('.jsonl', '');
+      let text = '';
+      try { const r = await fetch(f.download_url); if (r.ok) text = await r.text(); } catch {}
+      const counts = { call_tap: 0, whatsapp_tap: 0, search: 0, survey_start: 0 };
+      const perListing = {};
+      for (const line of text.split('\n')) {
+        if (!line.trim()) continue;
+        let ev; try { ev = JSON.parse(line); } catch { continue; }
+        if (counts[ev.event] === undefined) continue;
+        counts[ev.event]++;
+        if ((ev.event === 'call_tap' || ev.event === 'whatsapp_tap') && ev.listingId) {
+          const p = perListing[ev.listingId] || (perListing[ev.listingId] = { call_tap: 0, whatsapp_tap: 0 });
+          p[ev.event]++;
+        }
+      }
+      days.push({ day, counts, perListing });
+    }
+    $('#analytics-table tbody').innerHTML = days.map(({ day, counts }) => `<tr>
+      <td><strong>${esc(day)}</strong></td><td>${counts.call_tap}</td><td>${counts.whatsapp_tap}</td>
+      <td>${counts.search}</td><td>${counts.survey_start}</td>
+      <td><strong>${counts.call_tap + counts.whatsapp_tap}</strong></td></tr>`).join('')
+      || '<tr><td colspan="6">No analytics yet — events appear here after the first taps.</td></tr>';
+    const agg = {};
+    for (const { perListing } of days) for (const [id, c] of Object.entries(perListing)) {
+      const a = agg[id] || (agg[id] = { call_tap: 0, whatsapp_tap: 0 });
+      a.call_tap += c.call_tap; a.whatsapp_tap += c.whatsapp_tap;
+    }
+    const top = Object.entries(agg)
+      .sort((a, b) => (b[1].call_tap + b[1].whatsapp_tap) - (a[1].call_tap + a[1].whatsapp_tap))
+      .slice(0, 10);
+    $('#top-table tbody').innerHTML = top.map(([id, c]) => `<tr>
+      <td>${esc(names[id] || id)}</td><td>${c.call_tap}</td><td>${c.whatsapp_tap}</td>
+      <td><strong>${c.call_tap + c.whatsapp_tap}</strong></td></tr>`).join('')
+      || '<tr><td colspan="4">No taps recorded yet.</td></tr>';
+    const last7 = days.slice(0, 7).reverse();
+    const max = Math.max(1, ...last7.map(({ counts }) => counts.call_tap + counts.whatsapp_tap));
+    const W = 320, H = 92, bw = Math.floor(W / 7);
+    const bars = last7.map(({ day, counts }, i) => {
+      const v = counts.call_tap + counts.whatsapp_tap;
+      const h = Math.round((v / max) * (H - 22));
+      const x = i * bw + 6, bw2 = bw - 12;
+      return `<rect x="${x}" y="${H - 16 - h}" width="${bw2}" height="${h}" rx="2" fill="var(--maroon)"/>`
+        + `<text x="${x + bw2 / 2}" y="${H - 4}" font-size="9" text-anchor="middle" fill="var(--ink-faint)">${esc(day.slice(5))}</text>`
+        + (v ? `<text x="${x + bw2 / 2}" y="${H - 20 - h}" font-size="9" text-anchor="middle" fill="var(--ink-soft)">${v}</text>` : '');
+    }).join('');
+    $('#trend-chart').innerHTML = last7.length
+      ? `<svg viewBox="0 0 ${W} ${H}" style="max-width:360px;width:100%" role="img" aria-label="Taps per day, last 7 days">${bars}</svg>`
+      : '<p style="font-size:13px;color:var(--ink-faint)">No data yet.</p>';
+    msg.textContent = days.length ? `Showing ${days.length} day(s) of analytics (newest first).` : '';
+  } catch (err) {
+    msg.textContent = 'Could not load analytics: ' + err.message;
+  }
+}
+
 // If we already have a session cookie, skip the login form.
-api('/api/admin?resource=listings').then(() => { showAdmin(); return Promise.all([loadListings(), loadAnnouncements(), loadSubmissions()]); }).catch(() => showLogin());
+api('/api/admin?resource=listings').then(() => { showAdmin(); return Promise.all([loadListings(), loadAnnouncements(), loadSubmissions(), loadAnalytics()]); }).catch(() => showLogin());
 </script>
 </Base>

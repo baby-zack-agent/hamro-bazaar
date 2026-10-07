@@ -7,6 +7,7 @@ import {
   validateAnnouncementSubmission,
   validateReviewSubmission,
   validateFeaturedRequest,
+  validateSurvey,
 } from './lib/validate.js';
 import { rateLimit } from './lib/ratelimit.js';
 
@@ -22,6 +23,10 @@ const TYPES = {
   featured: {
     validate: validateFeaturedRequest,
     commitMsg: (c) => `submission: featured request "${c.businessName.slice(0, 60)}"`,
+  },
+  survey: {
+    validate: validateSurvey,
+    commitMsg: () => `submission: survey response`,
   },
 };
 

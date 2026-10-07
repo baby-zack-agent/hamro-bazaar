@@ -120,3 +120,25 @@ export function validateFeaturedRequest(input) {
     message: str(input.message, 1000) || '',
   };
 }
+
+export function validateSurvey(input) {
+  honeypot(input);
+  const oneOf = (v, opts) => (opts.includes(v) ? v : null);
+  const grocery = str(input.grocery, 40);
+  const service = str(input.service, 40);
+  const discovery = str(input.discovery, 40);
+  const onlineIntent = str(input.onlineIntent, 20);
+  if (!grocery || !service || !discovery || !onlineIntent) {
+    throw new Error('please answer the required questions');
+  }
+  return {
+    grocery,
+    service,
+    discovery,
+    onlineIntent,
+    trigger: str(input.trigger, 1000) || '',
+    zip: str(input.zip, 12) || '',
+    language: oneOf(str(input.language, 20), ['nepali', 'hindi', 'english', 'other']) || '',
+    phone: str(input.phone, 30) || '',
+  };
+}
