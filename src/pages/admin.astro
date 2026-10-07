@@ -3,116 +3,625 @@ import Base from '../layouts/Base.astro';
 import { CATEGORIES, categoryLabel } from '../lib/db.js';
 ---
 <Base title="Admin">
-  <div class="wrap">
-    <section class="block">
-      <h1 class="eyebrow">Admin</h1>
+  <div class="adm">
+    <div class="adm-inner">
+      <header class="adm-head">
+        <div>
+          <p class="adm-eyebrow">Hamro Bazaar</p>
+          <h1 class="adm-title">Admin console</h1>
+        </div>
+      </header>
 
+      <!-- ============ LOGIN ============ -->
       <div id="login-pane">
-        <p class="notice">Restricted area. Sign in with the admin key.</p>
-        <form id="login-form" style="margin-top:12px">
-          <div class="field">
-            <label for="adm-key">Admin key</label>
-            <input id="adm-key" type="password" autocomplete="current-password" required minlength="8" />
-          </div>
-          <button class="btn btn-primary btn-block" type="submit">Sign in</button>
-          <p id="login-err" style="color:var(--maroon-deep);font-size:13px" hidden>Wrong key. Try again.</p>
-        </form>
+        <div class="adm-login-card">
+          <p class="adm-eyebrow">Restricted area</p>
+          <h2 class="adm-h2">Sign in</h2>
+          <p class="adm-lede">Enter the admin key to manage listings, announcements, and moderation.</p>
+          <form id="login-form">
+            <div class="field adm-field">
+              <label for="adm-key">Admin key</label>
+              <input id="adm-key" type="password" autocomplete="current-password" required minlength="8" />
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+            <p id="login-err" class="adm-err" role="alert" hidden>Wrong key. Try again.</p>
+          </form>
+        </div>
       </div>
 
+      <!-- ============ ADMIN ============ -->
       <div id="admin-pane" hidden>
-        <div class="admin-tabs" role="tablist">
-          <button class="chip" id="tab-listings" aria-pressed="true">Listings</button>
-          <button class="chip" id="tab-ann" aria-pressed="false">Announcements</button>
-          <button class="chip" id="tab-sub" aria-pressed="false">Submissions <span id="sub-badge"></span></button>
-          <button class="chip" id="tab-analytics" aria-pressed="false">Analytics</button>
-          <button class="chip" id="logout" style="margin-left:auto">Log out</button>
+        <div class="adm-tabrow">
+          <div class="adm-tabs" role="tablist" aria-label="Admin sections">
+            <button class="adm-tab" role="tab" id="tab-listings" aria-selected="true" aria-controls="pane-listings">Listings</button>
+            <button class="adm-tab" role="tab" id="tab-ann" aria-selected="false" aria-controls="pane-ann">Announcements</button>
+            <button class="adm-tab" role="tab" id="tab-sub" aria-selected="false" aria-controls="pane-sub">Submissions<span class="adm-badge" id="sub-badge" hidden></span></button>
+            <button class="adm-tab" role="tab" id="tab-analytics" aria-selected="false" aria-controls="pane-analytics">Analytics</button>
+          </div>
+          <button class="btn btn-ghost adm-btn-sm" id="logout">Log out</button>
         </div>
 
-        <div id="pane-listings">
-          <h2 class="eyebrow">Add / edit listing</h2>
-          <form id="listing-form" style="margin:12px 0 20px">
-            <input type="hidden" id="lf-id" />
-            <div class="field"><label for="lf-name">Name *</label><input id="lf-name" required maxlength="120" /></div>
-            <div class="field"><label for="lf-cat">Category *</label>
-              <select id="lf-cat">{CATEGORIES.map((c) => <option value={c}>{categoryLabel(c)}</option>)}</select>
+        <!-- LISTINGS -->
+        <section id="pane-listings" role="tabpanel" aria-labelledby="tab-listings">
+          <div class="adm-card">
+            <div class="adm-card-head">
+              <div>
+                <p class="adm-eyebrow">Catalog</p>
+                <h2 class="adm-h2" id="listing-form-title">Add listing</h2>
+              </div>
             </div>
-            <div class="field"><label for="lf-phone">Phone</label><input id="lf-phone" inputmode="tel" placeholder="(412) 555-0123" /></div>
-            <div class="field"><label for="lf-addr">Address</label><input id="lf-addr" maxlength="200" /></div>
-            <div class="field"><label for="lf-web">Website</label><input id="lf-web" inputmode="url" placeholder="https://…" /></div>
-            <div class="field"><label for="lf-hours">Hours</label><input id="lf-hours" maxlength="200" placeholder="Mon–Sat 9am–8pm" /></div>
-            <div class="field"><label for="lf-services">Services (comma separated)</label><input id="lf-services" maxlength="500" /></div>
-            <div class="field"><label for="lf-langs">Languages (comma separated)</label><input id="lf-langs" maxlength="200" placeholder="Nepali, English" /></div>
-            <div style="display:flex;gap:8px">
-              <button class="btn btn-primary" type="submit" style="flex:1">Save listing</button>
-              <button class="btn btn-ghost" type="button" id="lf-reset">Clear</button>
-            </div>
-            <p id="lf-msg" style="font-size:13px" hidden></p>
-          </form>
-          <h2 class="eyebrow">All listings (<span id="lcount">…</span>)</h2>
-          <div style="overflow-x:auto">
-          <table class="admin-table" id="listing-table">
-            <thead><tr><th>Name</th><th>Cat</th><th>Phone</th><th>Flags</th><th>Actions</th></tr></thead>
-            <tbody></tbody>
-          </table>
+            <form id="listing-form">
+              <input type="hidden" id="lf-id" />
+              <div class="adm-grid">
+                <div class="field adm-field"><label for="lf-name">Name *</label><input id="lf-name" required maxlength="120" /></div>
+                <div class="field adm-field"><label for="lf-cat">Category *</label>
+                  <select id="lf-cat">{CATEGORIES.map((c) => <option value={c}>{categoryLabel(c)}</option>)}</select>
+                </div>
+                <div class="field adm-field"><label for="lf-phone">Phone</label><input id="lf-phone" inputmode="tel" placeholder="(412) 555-0123" /></div>
+                <div class="field adm-field"><label for="lf-addr">Address</label><input id="lf-addr" maxlength="200" /></div>
+                <div class="field adm-field"><label for="lf-web">Website</label><input id="lf-web" inputmode="url" placeholder="https://…" /></div>
+                <div class="field adm-field"><label for="lf-hours">Hours</label><input id="lf-hours" maxlength="200" placeholder="Mon–Sat 9am–8pm" /></div>
+                <div class="field adm-field adm-full"><label for="lf-services">Services (comma separated)</label><input id="lf-services" maxlength="500" /></div>
+                <div class="field adm-field adm-full"><label for="lf-langs">Languages (comma separated)</label><input id="lf-langs" maxlength="200" placeholder="Nepali, English" /></div>
+              </div>
+              <div class="adm-form-actions">
+                <button class="btn btn-primary" type="submit" style="flex:1">Save listing</button>
+                <button class="btn btn-ghost" type="button" id="lf-reset">Clear</button>
+              </div>
+              <p id="lf-msg" class="adm-formmsg" role="status" hidden></p>
+            </form>
           </div>
-        </div>
 
-        <div id="pane-ann" hidden>
-          <h2 class="eyebrow">Add announcement</h2>
-          <form id="ann-form" style="margin:12px 0 20px">
-            <div class="field"><label for="af-en">Title (English) *</label><input id="af-en" required maxlength="200" /></div>
-            <div class="field"><label for="af-ne">Title (Nepali) *</label><input id="af-ne" required maxlength="200" /></div>
-            <div class="field"><label for="af-cat">Category</label>
-              <select id="af-cat">{CATEGORIES.map((c) => <option value={c}>{categoryLabel(c)}</option>)}<option value="other">Community</option></select>
+          <div class="adm-card">
+            <div class="adm-card-head adm-card-head-row">
+              <div>
+                <p class="adm-eyebrow">Inventory</p>
+                <h2 class="adm-h2">All listings <span class="adm-count num" id="lcount">…</span></h2>
+              </div>
+              <div class="adm-toolbar">
+                <input id="lsearch" class="adm-search" type="search" placeholder="Search name, phone, address…" aria-label="Search listings" autocomplete="off" />
+                <select id="lsort" class="adm-sort" aria-label="Sort listings">
+                  <option value="name">Name A–Z</option>
+                  <option value="category">Category</option>
+                  <option value="phone">Phone</option>
+                </select>
+              </div>
             </div>
-            <div style="display:flex;gap:8px">
-              <button class="btn btn-primary" type="submit" style="flex:1">Publish announcement</button>
+            <div class="table-scroll">
+              <table class="adm-table" id="listing-table">
+                <thead><tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Phone</th>
+                  <th scope="col">Flags</th>
+                  <th scope="col"><span class="visually-hidden">Actions</span></th>
+                </tr></thead>
+                <tbody></tbody>
+              </table>
             </div>
-            <p id="af-msg" style="font-size:13px" hidden></p>
-          </form>
-          <h2 class="eyebrow">All announcements</h2>
-          <div style="overflow-x:auto">
-          <table class="admin-table" id="ann-table">
-            <thead><tr><th>Date</th><th>Title</th><th>Status</th><th>Actions</th></tr></thead>
-            <tbody></tbody>
-          </table>
           </div>
-        </div>
+        </section>
 
-        <div id="pane-sub" hidden>
-          <h2 class="eyebrow">Moderation queue</h2>
-          <p class="notice">Community submissions. Approving an announcement publishes it immediately; approving a review attaches it to the listing; featured requests just need your follow-up.</p>
-          <div style="overflow-x:auto;margin-top:12px">
-          <table class="admin-table" id="sub-table">
-            <thead><tr><th>Date</th><th>Type</th><th>Summary</th><th>Status</th><th>Actions</th></tr></thead>
-            <tbody></tbody>
-          </table>
+        <!-- ANNOUNCEMENTS -->
+        <section id="pane-ann" role="tabpanel" aria-labelledby="tab-ann" hidden>
+          <div class="adm-card">
+            <div class="adm-card-head">
+              <div>
+                <p class="adm-eyebrow">Broadcast</p>
+                <h2 class="adm-h2">Add announcement</h2>
+              </div>
+            </div>
+            <form id="ann-form">
+              <div class="adm-grid">
+                <div class="field adm-field"><label for="af-en">Title (English) *</label><input id="af-en" required maxlength="200" /></div>
+                <div class="field adm-field"><label for="af-ne">Title (Nepali) *</label><input id="af-ne" required maxlength="200" /></div>
+                <div class="field adm-field"><label for="af-cat">Category</label>
+                  <select id="af-cat">{CATEGORIES.map((c) => <option value={c}>{categoryLabel(c)}</option>)}<option value="other">Community</option></select>
+                </div>
+              </div>
+              <div class="adm-form-actions">
+                <button class="btn btn-primary" type="submit" style="flex:1">Publish announcement</button>
+              </div>
+              <p id="af-msg" class="adm-formmsg" role="status" hidden></p>
+            </form>
           </div>
-        </div>
 
-        <div id="pane-analytics" hidden>
-          <h2 class="eyebrow">Tap analytics</h2>
-          <p class="notice">Privacy-first: event counts only. No personal data, IPs, or cookies are ever collected.</p>
-          <div style="overflow-x:auto;margin-top:12px">
-          <table class="admin-table" id="analytics-table">
-            <thead><tr><th>Day</th><th>Calls</th><th>WhatsApp</th><th>Searches</th><th>Survey starts</th><th>Total taps</th></tr></thead>
-            <tbody></tbody>
-          </table>
+          <div class="adm-card">
+            <div class="adm-card-head">
+              <div>
+                <p class="adm-eyebrow">Feed</p>
+                <h2 class="adm-h2">All announcements</h2>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table class="adm-table" id="ann-table">
+                <thead><tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Title</th>
+                  <th scope="col">Status</th>
+                  <th scope="col"><span class="visually-hidden">Actions</span></th>
+                </tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
-          <h2 class="eyebrow" style="margin-top:20px">Top 10 listings by taps</h2>
-          <div style="overflow-x:auto">
-          <table class="admin-table" id="top-table">
-            <thead><tr><th>Listing</th><th>Calls</th><th>WhatsApp</th><th>Total</th></tr></thead>
-            <tbody></tbody>
-          </table>
+        </section>
+
+        <!-- SUBMISSIONS -->
+        <section id="pane-sub" role="tabpanel" aria-labelledby="tab-sub" hidden>
+          <div class="adm-card">
+            <div class="adm-card-head">
+              <div>
+                <p class="adm-eyebrow">Review</p>
+                <h2 class="adm-h2">Moderation queue</h2>
+                <p class="adm-lede">Community submissions. Approving an announcement publishes it immediately; approving a review attaches it to the listing; featured requests just need your follow-up.</p>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table class="adm-table" id="sub-table">
+                <thead><tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Summary</th>
+                  <th scope="col">Status</th>
+                  <th scope="col"><span class="visually-hidden">Actions</span></th>
+                </tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
-          <h2 class="eyebrow" style="margin-top:20px">Taps — last 7 days</h2>
-          <div id="trend-chart" style="margin-top:8px"></div>
-          <p id="analytics-msg" style="font-size:13px;color:var(--ink-faint)"></p>
-        </div>
+        </section>
+
+        <!-- ANALYTICS -->
+        <section id="pane-analytics" role="tabpanel" aria-labelledby="tab-analytics" hidden>
+          <div class="adm-stats" role="group" aria-label="Tap totals">
+            <div class="adm-stat"><p class="adm-eyebrow">Calls</p><p class="num" id="stat-calls">—</p></div>
+            <div class="adm-stat"><p class="adm-eyebrow">WhatsApp</p><p class="num" id="stat-wa">—</p></div>
+            <div class="adm-stat"><p class="adm-eyebrow">Searches</p><p class="num" id="stat-search">—</p></div>
+            <div class="adm-stat"><p class="adm-eyebrow">Survey starts</p><p class="num" id="stat-survey">—</p></div>
+          </div>
+
+          <div class="adm-card">
+            <div class="adm-card-head">
+              <div>
+                <p class="adm-eyebrow">Trend</p>
+                <h2 class="adm-h2">Taps — last 7 days</h2>
+              </div>
+            </div>
+            <div id="trend-chart"></div>
+          </div>
+
+          <div class="adm-card">
+            <div class="adm-card-head">
+              <div>
+                <p class="adm-eyebrow">Leaders</p>
+                <h2 class="adm-h2">Top 10 listings by taps</h2>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table class="adm-table" id="top-table">
+                <thead><tr>
+                  <th scope="col">Listing</th>
+                  <th scope="col">Calls</th>
+                  <th scope="col">WhatsApp</th>
+                  <th scope="col">Total</th>
+                </tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="adm-card">
+            <div class="adm-card-head">
+              <div>
+                <p class="adm-eyebrow">Daily</p>
+                <h2 class="adm-h2">Tap analytics</h2>
+                <p class="adm-lede">Privacy-first: event counts only. No personal data, IPs, or cookies are ever collected.</p>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table class="adm-table" id="analytics-table">
+                <thead><tr>
+                  <th scope="col">Day</th>
+                  <th scope="col">Calls</th>
+                  <th scope="col">WhatsApp</th>
+                  <th scope="col">Searches</th>
+                  <th scope="col">Survey starts</th>
+                  <th scope="col">Total taps</th>
+                </tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <p id="analytics-msg" class="adm-note" role="status"></p>
+          </div>
+        </section>
       </div>
-    </section>
+    </div>
   </div>
+
+<style>
+  /* ---- Spec tokens, page-scoped (Agent A migrates these to global.css later) ---- */
+  .adm {
+    --color-paper: #faf7f0;
+    --color-paper-deep: #f1ebdd;
+    --color-paper-raised: #fffdf8;
+    --color-ink: #211a13;
+    --color-ink-soft: #54493c;
+    --color-ink-faint: #857a68;
+    --color-maroon: #8c2b2b;
+    --color-maroon-deep: #651b1b;
+    --color-gold: #c6a15b;
+    --color-gold-deep: #7d5f28;
+    --color-ok: #2e7d4f;
+    --color-err: #b3402f;
+    --color-maroon-tint: color-mix(in oklab, var(--color-maroon) 10%, transparent);
+    --color-gold-tint: color-mix(in oklab, var(--color-gold) 16%, transparent);
+    --color-amber: color-mix(in oklab, var(--color-err) 52%, var(--color-gold) 48%);
+    --color-amber-deep: color-mix(in oklab, var(--color-err) 58%, var(--color-gold-deep) 42%);
+    --hairline: 1px solid color-mix(in oklab, var(--color-ink) 10%, transparent);
+    --hairline-strong: 1px solid color-mix(in oklab, var(--color-ink) 20%, transparent);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 999px;
+    --fs-micro: 11px;
+    --fs-caption: 13px;
+    --fs-body: 16px;
+    --fs-h4: 20px;
+    --fs-h3: clamp(22px, 1.375rem + 1vw, 28px);
+    --fs-h2: clamp(28px, 1.75rem + 1.6vw, 40px);
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans',
+      'Noto Sans Devanagari', 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+    --focus-ring: 0 0 0 2px color-mix(in oklab, var(--color-maroon) 35%, transparent);
+    --tap: 48px;
+
+    background: var(--color-paper-deep);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    padding: 32px 0 64px;
+  }
+  .adm-inner { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+  /* ---- Type ---- */
+  .adm-eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    margin: 0;
+  }
+  .adm-title {
+    font-family: var(--font-display, Georgia, 'Times New Roman', serif);
+    font-weight: 400;
+    font-size: var(--fs-h2);
+    letter-spacing: -0.015em;
+    line-height: 1.18;
+    margin: 8px 0 0;
+  }
+  .adm-h2 {
+    font-family: var(--font-display, Georgia, 'Times New Roman', serif);
+    font-weight: 400;
+    font-size: var(--fs-h3);
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    margin: 8px 0 0;
+  }
+  .adm-lede {
+    font-size: var(--fs-caption);
+    color: var(--color-ink-soft);
+    margin: 8px 0 0;
+    max-width: 56ch;
+  }
+  .adm-head { margin-bottom: 24px; }
+  .adm .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* ---- Buttons (shared .btn, page-spec sizing) ---- */
+  .adm .btn {
+    min-height: var(--tap);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+  }
+  .adm .btn-primary { background: var(--color-maroon); color: #fff; }
+  .adm .btn-primary:hover { background: var(--color-maroon-deep); }
+  .adm .btn-ghost {
+    background: var(--color-paper-raised);
+    border: var(--hairline-strong);
+    color: var(--color-ink);
+  }
+  .adm .btn-ghost:hover {
+    border-color: color-mix(in oklab, var(--color-maroon) 40%, transparent);
+  }
+  .adm-btn-sm { min-height: 40px !important; padding: 0 14px !important; font-size: var(--fs-caption) !important; }
+
+  /* ---- Login ---- */
+  .adm-login-card {
+    max-width: 420px;
+    margin: 48px auto;
+    background: var(--color-paper-raised);
+    border: var(--hairline);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+  }
+  .adm-err { font-size: var(--fs-caption); color: var(--color-err); margin: 12px 0 0; }
+
+  /* ---- Forms (§4.4) ---- */
+  .adm .field { margin-bottom: 16px; }
+  .adm .field label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+    margin-bottom: 6px;
+  }
+  .adm .field input,
+  .adm .field select {
+    width: 100%;
+    min-height: var(--tap);
+    border: var(--hairline);
+    border-radius: var(--radius-sm);
+    background: var(--color-paper-raised);
+    padding: 0 14px;
+    font-size: var(--fs-body);
+    font-family: var(--font-body);
+    color: var(--color-ink);
+  }
+  .adm .field input:focus,
+  .adm .field select:focus,
+  .adm-search:focus,
+  .adm-sort:focus {
+    outline: none;
+    border-color: var(--color-maroon);
+    box-shadow: var(--focus-ring);
+  }
+  .adm .btn:focus-visible,
+  .abtn:focus-visible,
+  .adm-tab:focus-visible {
+    outline: none;
+    border-color: var(--color-maroon);
+    box-shadow: var(--focus-ring);
+  }
+  .adm-grid { display: grid; gap: 0 16px; }
+  @media (min-width: 720px) {
+    .adm-grid { grid-template-columns: 1fr 1fr; }
+    .adm-full { grid-column: 1 / -1; }
+  }
+  .adm-form-actions { display: flex; gap: 8px; margin-top: 4px; }
+  .adm-formmsg { font-size: var(--fs-caption); margin: 12px 0 0; }
+  .adm-formmsg.ok { color: var(--color-ok); }
+  .adm-formmsg.err { color: var(--color-err); }
+  .adm-note { font-size: var(--fs-caption); color: var(--color-ink-faint); margin: 12px 0 0; }
+
+  /* ---- Tabs ---- */
+  .adm-tabrow {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    border-bottom: var(--hairline);
+    margin-bottom: 24px;
+  }
+  .adm-tabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex: 1;
+    min-width: 0;
+  }
+  .adm-tabs::-webkit-scrollbar { display: none; }
+  .adm-tab {
+    background: none;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    padding: 12px 14px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 150ms ease, border-color 150ms ease;
+  }
+  .adm-tab:hover { color: var(--color-ink-soft); }
+  .adm-tab[aria-selected="true"] {
+    color: var(--color-maroon);
+    border-bottom-color: var(--color-maroon);
+  }
+  .adm-badge {
+    display: inline-block;
+    min-width: 22px;
+    margin-left: 8px;
+    padding: 1px 6px;
+    border: var(--hairline-strong);
+    border-radius: var(--radius-full);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-soft);
+    background: var(--color-paper-raised);
+    vertical-align: 1px;
+  }
+  .adm-logout { margin-left: auto; margin-bottom: 8px; flex: none; }
+
+  /* ---- Cards ---- */
+  .adm-card {
+    background: var(--color-paper-raised);
+    border: var(--hairline);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .adm-card-head { margin-bottom: 16px; }
+  .adm-card-head-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .adm-count { color: var(--color-ink-faint); font-size: var(--fs-micro); }
+
+  /* ---- Toolbar (search + sort) ---- */
+  .adm-toolbar { display: flex; gap: 8px; flex-wrap: wrap; }
+  .adm-search,
+  .adm-sort {
+    min-height: 40px;
+    border: var(--hairline);
+    border-radius: var(--radius-sm);
+    background: var(--color-paper);
+    padding: 0 12px;
+    font-size: var(--fs-caption);
+    font-family: var(--font-body);
+    color: var(--color-ink);
+  }
+  .adm-search { width: 220px; max-width: 100%; }
+  .adm-sort { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ---- Tables ---- */
+  .table-scroll { overflow-x: auto; margin: 0 -20px; padding: 0 20px; }
+  .adm-table {
+    width: 100%;
+    min-width: 680px;
+    border-collapse: collapse;
+    font-size: var(--fs-caption);
+  }
+  .adm-table th {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    text-align: left;
+    font-weight: 400;
+    padding: 10px 12px;
+    border-bottom: var(--hairline-strong);
+    white-space: nowrap;
+  }
+  .adm-table td {
+    padding: 12px;
+    border-bottom: var(--hairline);
+    vertical-align: middle;
+  }
+  .adm-table tbody tr:last-child td { border-bottom: 0; }
+  @media (hover: hover) {
+    .adm-table tbody tr:hover { background: color-mix(in oklab, var(--color-ink) 2.5%, transparent); }
+  }
+  .adm-cell-main { font-weight: 600; font-size: var(--fs-body); color: var(--color-ink); }
+  .adm-cell-sub { color: var(--color-ink-faint); font-size: var(--fs-caption); }
+  .adm-table .num { font-size: var(--fs-caption); }
+
+  /* ---- Status pills (restrained) ---- */
+  .pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .pill-ok {
+    color: var(--color-ok);
+    border-color: color-mix(in oklab, var(--color-ok) 40%, transparent);
+    background: color-mix(in oklab, var(--color-ok) 8%, transparent);
+  }
+  .pill-err {
+    color: var(--color-err);
+    border-color: color-mix(in oklab, var(--color-err) 40%, transparent);
+    background: color-mix(in oklab, var(--color-err) 8%, transparent);
+  }
+  .pill-amber {
+    color: var(--color-amber-deep);
+    border-color: color-mix(in oklab, var(--color-amber) 40%, transparent);
+    background: color-mix(in oklab, var(--color-amber) 10%, transparent);
+  }
+  .pill-gold {
+    color: var(--color-gold-deep);
+    border-color: color-mix(in oklab, var(--color-gold) 55%, transparent);
+    background: var(--color-gold-tint);
+  }
+  .pill-ghost {
+    color: var(--color-ink-soft);
+    border-color: color-mix(in oklab, var(--color-ink) 20%, transparent);
+  }
+
+  /* ---- Row action buttons ---- */
+  .rowbtns { display: flex; gap: 6px; flex-wrap: nowrap; }
+  .abtn {
+    min-height: 36px;
+    padding: 0 12px;
+    border: var(--hairline-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-paper-raised);
+    color: var(--color-ink);
+    font-size: var(--fs-caption);
+    font-weight: 400;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+  }
+  .abtn:hover { border-color: color-mix(in oklab, var(--color-maroon) 40%, transparent); }
+  .abtn.active-gold {
+    color: var(--color-gold-deep);
+    border-color: color-mix(in oklab, var(--color-gold) 55%, transparent);
+    background: var(--color-gold-tint);
+  }
+  .abtn.active-ok {
+    color: var(--color-ok);
+    border-color: color-mix(in oklab, var(--color-ok) 40%, transparent);
+    background: color-mix(in oklab, var(--color-ok) 8%, transparent);
+  }
+  .abtn-danger {
+    color: var(--color-err);
+    border-color: color-mix(in oklab, var(--color-err) 35%, transparent);
+    background: color-mix(in oklab, var(--color-err) 8%, transparent);
+  }
+  .abtn-primary-sm {
+    color: #fff;
+    background: var(--color-maroon);
+    border-color: var(--color-maroon);
+  }
+  .abtn-primary-sm:hover { background: var(--color-maroon-deep); border-color: var(--color-maroon-deep); }
+
+  /* ---- Stat cards ---- */
+  .adm-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (min-width: 768px) { .adm-stats { grid-template-columns: repeat(4, 1fr); } }
+  .adm-stat {
+    background: var(--color-paper-raised);
+    border: var(--hairline);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+  }
+  .adm-stat .num {
+    font-size: 32px;
+    line-height: 1.2;
+    color: var(--color-ink);
+    margin: 8px 0 0;
+  }
+
+  /* ---- Chart ---- */
+  #trend-chart svg { display: block; width: 100%; max-width: 640px; height: auto; }
+  .adm-empty { font-size: var(--fs-caption); color: var(--color-ink-faint); padding: 24px 0; text-align: center; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .adm * { transition: none !important; }
+  }
+</style>
 
 <script>
 const $ = (s) => document.querySelector(s);
@@ -157,31 +666,59 @@ const TABS = [['#tab-listings', '#pane-listings'], ['#tab-ann', '#pane-ann'], ['
 for (const [tab, pane] of TABS) {
   $(tab).addEventListener('click', () => {
     for (const [t, p] of TABS) {
-      $(t).setAttribute('aria-pressed', t === tab);
+      $(t).setAttribute('aria-selected', t === tab ? 'true' : 'false');
       $(p).hidden = p !== pane;
+    }
+    if (pane === '#pane-analytics' && !$(pane).dataset.loaded) {
+      $(pane).dataset.loaded = '1';
+      loadAnalytics();
     }
   });
 }
 
 // --- listings ---
 let listingsCache = [];
+let listingSort = 'name';
+function filteredListings() {
+  const q = ($('#lsearch').value || '').trim().toLowerCase();
+  const rows = listingsCache.filter((l) => {
+    if (!q) return true;
+    return [l.name, l.address, l.phone, l.category].join(' ').toLowerCase().includes(q);
+  });
+  const key = (l) => (l[listingSort] || '').toLowerCase();
+  rows.sort((a, b) => key(a).localeCompare(key(b)) || (a.name || '').localeCompare(b.name || ''));
+  return rows;
+}
+function flagsCell(l) {
+  const pills = [];
+  if (l.featured) pills.push('<span class="pill pill-gold">Featured</span>');
+  if (l.verified) pills.push('<span class="pill pill-ok">Verified</span>');
+  return pills.join(' ') || '<span class="adm-cell-sub">—</span>';
+}
+function renderListings() {
+  const rows = filteredListings();
+  $('#lcount').textContent = String(listingsCache.length);
+  const tb = $('#listing-table tbody');
+  tb.innerHTML = rows.map((l) => `<tr>
+    <td><div class="adm-cell-main">${esc(l.name)}</div>${l.address ? `<div class="adm-cell-sub">${esc(l.address)}</div>` : ''}</td>
+    <td><span class="pill pill-ghost">${esc(l.category)}</span></td>
+    <td><span class="num">${esc(l.phone || '—')}</span></td>
+    <td>${flagsCell(l)}</td>
+    <td><div class="rowbtns">
+      <button class="abtn" data-act="edit" data-id="${esc(l.id)}">Edit</button>
+      <button class="abtn ${l.featured ? 'active-gold' : ''}" data-act="feat" data-id="${esc(l.id)}" aria-pressed="${!!l.featured}">Feature</button>
+      <button class="abtn ${l.verified ? 'active-ok' : ''}" data-act="ver" data-id="${esc(l.id)}" aria-pressed="${!!l.verified}">Verify</button>
+      <button class="abtn abtn-danger" data-act="del" data-id="${esc(l.id)}">Delete</button>
+    </div></td></tr>`).join('')
+    || '<tr><td colspan="5"><p class="adm-empty">No listings match.</p></td></tr>';
+}
 async function loadListings() {
   const data = await api('/api/admin?resource=listings');
   listingsCache = data.listings;
-  $('#lcount').textContent = listingsCache.length;
-  const tb = $('#listing-table tbody');
-  tb.innerHTML = listingsCache.map((l) => `<tr>
-    <td><strong>${esc(l.name)}</strong><br><span style="color:var(--ink-faint)">${esc(l.address || '')}</span></td>
-    <td>${esc(l.category)}</td>
-    <td>${esc(l.phone || '—')}</td>
-    <td>${l.featured ? '★ ' : ''}${l.verified ? '✓' : ''}</td>
-    <td><div class="rowbtns">
-      <button class="minibtn" data-act="edit" data-id="${l.id}">Edit</button>
-      <button class="minibtn ${l.featured ? 'on' : ''}" data-act="feat" data-id="${l.id}">Feat</button>
-      <button class="minibtn ${l.verified ? 'ok-on' : ''}" data-act="ver" data-id="${l.id}">Ver</button>
-      <button class="minibtn" data-act="del" data-id="${l.id}">Del</button>
-    </div></td></tr>`).join('');
+  renderListings();
 }
+$('#lsearch').addEventListener('input', renderListings);
+$('#lsort').addEventListener('change', (e) => { listingSort = e.target.value; renderListings(); });
 $('#listing-table').addEventListener('click', async (e) => {
   const btn = e.target.closest('button[data-act]');
   if (!btn) return;
@@ -196,6 +733,7 @@ $('#listing-table').addEventListener('click', async (e) => {
       $('#lf-web').value = l.website || ''; $('#lf-hours').value = l.hours || '';
       $('#lf-services').value = (l.services || []).join(', ');
       $('#lf-langs').value = (l.languages || []).join(', ');
+      $('#listing-form-title').textContent = 'Edit listing';
       $('#lf-name').focus();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (act === 'feat') {
@@ -215,11 +753,16 @@ $('#listing-table').addEventListener('click', async (e) => {
     }
   } catch (err) { alert(err.message); }
 });
-$('#lf-reset').addEventListener('click', () => $('#listing-form').reset());
+$('#lf-reset').addEventListener('click', () => {
+  $('#listing-form').reset();
+  $('#lf-id').value = '';
+  $('#listing-form-title').textContent = 'Add listing';
+});
 $('#listing-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const msg = $('#lf-msg');
   msg.hidden = true;
+  msg.className = 'adm-formmsg';
   const body = {
     id: $('#lf-id').value || undefined,
     name: $('#lf-name').value.trim(),
@@ -234,24 +777,30 @@ $('#listing-form').addEventListener('submit', async (e) => {
   try {
     await api('/api/admin', 'POST', { action: 'listing-save', ...body });
     msg.hidden = false;
-    msg.style.color = 'var(--ok)';
+    msg.classList.add('ok');
     msg.textContent = 'Saved — committing to GitHub. The live site redeploys in ~1 minute.';
     $('#listing-form').reset();
+    $('#lf-id').value = '';
+    $('#listing-form-title').textContent = 'Add listing';
     await loadListings();
-  } catch (err) { msg.hidden = false; msg.style.color = 'var(--maroon-deep)'; msg.textContent = err.message; }
+  } catch (err) { msg.hidden = false; msg.classList.add('err'); msg.textContent = err.message; }
 });
 
 // --- announcements ---
+function annStatusPill(a) {
+  return a.published ? '<span class="pill pill-ok">Live</span>' : '<span class="pill pill-amber">Draft</span>';
+}
 async function loadAnnouncements() {
   const data = await api('/api/admin?resource=announcements');
   const tb = $('#ann-table tbody');
   tb.innerHTML = data.announcements.map((a) => `<tr>
-    <td>${esc(a.date)}</td>
-    <td>${esc(a.title?.en || '')}</td>
-    <td>${a.published ? 'live' : 'draft'}</td>
+    <td><span class="num">${esc(a.date)}</span></td>
+    <td><div class="adm-cell-main">${esc(a.title?.en || '')}</div>${a.title?.ne ? `<div class="adm-cell-sub">${esc(a.title.ne)}</div>` : ''}</td>
+    <td>${annStatusPill(a)}</td>
     <td><div class="rowbtns">
-      <button class="minibtn ${a.published ? 'on' : ''}" data-act="pub" data-id="${a.id}">${a.published ? 'Unpublish' : 'Publish'}</button>
-    </div></td></tr>`).join('');
+      <button class="abtn" data-act="pub" data-id="${esc(a.id)}">${a.published ? 'Unpublish' : 'Publish'}</button>
+    </div></td></tr>`).join('')
+    || '<tr><td colspan="4"><p class="adm-empty">No announcements yet.</p></td></tr>';
 }
 $('#ann-table').addEventListener('click', async (e) => {
   const btn = e.target.closest('button[data-act="pub"]');
@@ -267,6 +816,7 @@ $('#ann-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const msg = $('#af-msg');
   msg.hidden = true;
+  msg.className = 'adm-formmsg';
   try {
     await api('/api/admin', 'POST', {
       action: 'announcement-add',
@@ -275,34 +825,43 @@ $('#ann-form').addEventListener('submit', async (e) => {
       category: $('#af-cat').value,
       published: true,
     });
-    msg.hidden = false; msg.style.color = 'var(--ok)';
+    msg.hidden = false; msg.classList.add('ok');
     msg.textContent = 'Published — committing to GitHub.';
     $('#ann-form').reset();
     await loadAnnouncements();
-  } catch (err) { msg.hidden = false; msg.style.color = 'var(--maroon-deep)'; msg.textContent = err.message; }
+  } catch (err) { msg.hidden = false; msg.classList.add('err'); msg.textContent = err.message; }
 });
 
 // --- submissions (moderation queue) ---
 function subSummary(s) {
-  if (s.type === 'announcement') return `<strong>${esc(s.businessName)}</strong><br>${esc(s.title)}${s.details ? `<br><span style="color:var(--ink-faint)">${esc(s.details.slice(0, 120))}</span>` : ''}<br><span style="color:var(--ink-faint)">contact: ${esc(s.contact || '—')}</span>`;
-  if (s.type === 'review') return `<strong>${esc(s.name)}</strong> rated ${'★'.repeat(s.rating)}<br>${esc(s.text.slice(0, 160))}<br><span style="color:var(--ink-faint)">listing: ${esc(s.listingId)}</span>`;
-  if (s.type === 'featured-request') return `<strong>${esc(s.businessName)}</strong><br><span style="color:var(--ink-faint)">contact: ${esc(s.contact || '—')}</span>${s.message ? `<br>${esc(s.message.slice(0, 160))}` : ''}${s.listingId ? `<br><span style="color:var(--ink-faint)">listing: ${esc(s.listingId)}</span>` : ''}`;
+  if (s.type === 'announcement') return `<div class="adm-cell-main">${esc(s.businessName)}</div>${esc(s.title)}${s.details ? `<div class="adm-cell-sub">${esc(s.details.slice(0, 120))}</div>` : ''}<div class="adm-cell-sub">contact: ${esc(s.contact || '—')}</div>`;
+  if (s.type === 'review') return `<div class="adm-cell-main">${esc(s.name)}</div><div class="adm-cell-sub">${'★'.repeat(s.rating || 0)}</div>${esc((s.text || '').slice(0, 160))}<div class="adm-cell-sub">listing: ${esc(s.listingId)}</div>`;
+  if (s.type === 'featured-request') return `<div class="adm-cell-main">${esc(s.businessName)}</div><div class="adm-cell-sub">contact: ${esc(s.contact || '—')}</div>${s.message ? esc(s.message.slice(0, 160)) : ''}${s.listingId ? `<div class="adm-cell-sub">listing: ${esc(s.listingId)}</div>` : ''}`;
   return esc(s.id);
 }
+function subStatusPill(s) {
+  if (s.status === 'approved') return '<span class="pill pill-ok">Approved</span>';
+  if (s.status === 'rejected') return '<span class="pill pill-err">Rejected</span>';
+  return '<span class="pill pill-amber">Pending</span>';
+}
+const SUB_TYPE_LABEL = { announcement: 'Announcement', review: 'Review', 'featured-request': 'Featured' };
 async function loadSubmissions() {
   const data = await api('/api/admin?resource=submissions');
   const tb = $('#sub-table tbody');
   const pending = data.submissions.filter((s) => s.status === 'pending').length;
-  $('#sub-badge').textContent = pending ? `(${pending})` : '';
+  const badge = $('#sub-badge');
+  badge.hidden = !pending;
+  badge.textContent = pending ? String(pending) : '';
   tb.innerHTML = data.submissions.map((s) => `<tr>
-    <td>${esc((s.created || '').slice(0, 10))}</td>
-    <td>${esc(s.type)}</td>
+    <td><span class="num">${esc((s.created || '').slice(0, 10))}</span></td>
+    <td><span class="pill pill-ghost">${esc(SUB_TYPE_LABEL[s.type] || s.type)}</span></td>
     <td>${subSummary(s)}</td>
-    <td>${esc(s.status)}</td>
+    <td>${subStatusPill(s)}</td>
     <td>${s.status === 'pending' ? `<div class="rowbtns">
-      <button class="minibtn ok-on" data-act="approve" data-id="${s.id}">Approve</button>
-      <button class="minibtn" data-act="reject" data-id="${s.id}">Reject</button>
-    </div>` : '—'}</td></tr>`).join('') || '<tr><td colspan="5">Queue is empty.</td></tr>';
+      <button class="abtn abtn-primary-sm" data-act="approve" data-id="${esc(s.id)}">Approve</button>
+      <button class="abtn" data-act="reject" data-id="${esc(s.id)}">Reject</button>
+    </div>` : '<span class="adm-cell-sub">—</span>'}</td></tr>`).join('')
+    || '<tr><td colspan="5"><p class="adm-empty">Queue is empty.</p></td></tr>';
 }
 $('#sub-table').addEventListener('click', async (e) => {
   const btn = e.target.closest('button[data-act]');
@@ -320,13 +879,17 @@ $('#sub-table').addEventListener('click', async (e) => {
 // public, no auth needed) and aggregates client-side. Listing names come
 // from the already-authed listings fetch.
 const ANALYTICS_REPO = 'baby-zack-agent/hamro-bazaar';
+let analyticsLoaded = false;
 async function loadAnalytics() {
+  if (analyticsLoaded) return;
+  analyticsLoaded = true;
   const msg = $('#analytics-msg');
   msg.textContent = 'Loading…';
   try {
     if (!listingsCache.length) {
       const d = await api('/api/admin?resource=listings');
       listingsCache = d.listings;
+      renderListings();
     }
     const names = {};
     for (const l of listingsCache) names[l.id] = l.name;
@@ -339,6 +902,7 @@ async function loadAnalytics() {
         .sort((a, b) => (a.name < b.name ? 1 : -1));
     }
     const days = [];
+    const totals = { call_tap: 0, whatsapp_tap: 0, search: 0, survey_start: 0 };
     for (const f of files.slice(0, 14)) {
       const day = f.name.replace('events-', '').replace('.jsonl', '');
       let text = '';
@@ -350,6 +914,7 @@ async function loadAnalytics() {
         let ev; try { ev = JSON.parse(line); } catch { continue; }
         if (counts[ev.event] === undefined) continue;
         counts[ev.event]++;
+        totals[ev.event]++;
         if ((ev.event === 'call_tap' || ev.event === 'whatsapp_tap') && ev.listingId) {
           const p = perListing[ev.listingId] || (perListing[ev.listingId] = { call_tap: 0, whatsapp_tap: 0 });
           p[ev.event]++;
@@ -357,11 +922,18 @@ async function loadAnalytics() {
       }
       days.push({ day, counts, perListing });
     }
+    $('#stat-calls').textContent = totals.call_tap.toLocaleString('en-US');
+    $('#stat-wa').textContent = totals.whatsapp_tap.toLocaleString('en-US');
+    $('#stat-search').textContent = totals.search.toLocaleString('en-US');
+    $('#stat-survey').textContent = totals.survey_start.toLocaleString('en-US');
     $('#analytics-table tbody').innerHTML = days.map(({ day, counts }) => `<tr>
-      <td><strong>${esc(day)}</strong></td><td>${counts.call_tap}</td><td>${counts.whatsapp_tap}</td>
-      <td>${counts.search}</td><td>${counts.survey_start}</td>
-      <td><strong>${counts.call_tap + counts.whatsapp_tap}</strong></td></tr>`).join('')
-      || '<tr><td colspan="6">No analytics yet — events appear here after the first taps.</td></tr>';
+      <td><span class="num"><strong>${esc(day)}</strong></span></td>
+      <td><span class="num">${counts.call_tap}</span></td>
+      <td><span class="num">${counts.whatsapp_tap}</span></td>
+      <td><span class="num">${counts.search}</span></td>
+      <td><span class="num">${counts.survey_start}</span></td>
+      <td><span class="num"><strong>${counts.call_tap + counts.whatsapp_tap}</strong></span></td></tr>`).join('')
+      || '<tr><td colspan="6"><p class="adm-empty">No analytics yet — events appear here after the first taps.</p></td></tr>';
     const agg = {};
     for (const { perListing } of days) for (const [id, c] of Object.entries(perListing)) {
       const a = agg[id] || (agg[id] = { call_tap: 0, whatsapp_tap: 0 });
@@ -370,26 +942,29 @@ async function loadAnalytics() {
     const top = Object.entries(agg)
       .sort((a, b) => (b[1].call_tap + b[1].whatsapp_tap) - (a[1].call_tap + a[1].whatsapp_tap))
       .slice(0, 10);
-    $('#top-table tbody').innerHTML = top.map(([id, c]) => `<tr>
-      <td>${esc(names[id] || id)}</td><td>${c.call_tap}</td><td>${c.whatsapp_tap}</td>
-      <td><strong>${c.call_tap + c.whatsapp_tap}</strong></td></tr>`).join('')
-      || '<tr><td colspan="4">No taps recorded yet.</td></tr>';
+    $('#top-table tbody').innerHTML = top.map(([id, c], i) => `<tr>
+      <td><span class="num adm-cell-sub">${String(i + 1).padStart(2, '0')}</span>&nbsp;&nbsp;${esc(names[id] || id)}</td>
+      <td><span class="num">${c.call_tap}</span></td>
+      <td><span class="num">${c.whatsapp_tap}</span></td>
+      <td><span class="num"><strong>${c.call_tap + c.whatsapp_tap}</strong></span></td></tr>`).join('')
+      || '<tr><td colspan="4"><p class="adm-empty">No taps recorded yet.</p></td></tr>';
     const last7 = days.slice(0, 7).reverse();
     const max = Math.max(1, ...last7.map(({ counts }) => counts.call_tap + counts.whatsapp_tap));
-    const W = 320, H = 92, bw = Math.floor(W / 7);
+    const W = 560, H = 150, base = H - 26, bw = W / 7;
     const bars = last7.map(({ day, counts }, i) => {
       const v = counts.call_tap + counts.whatsapp_tap;
-      const h = Math.round((v / max) * (H - 22));
-      const x = i * bw + 6, bw2 = bw - 12;
-      return `<rect x="${x}" y="${H - 16 - h}" width="${bw2}" height="${h}" rx="2" fill="var(--maroon)"/>`
-        + `<text x="${x + bw2 / 2}" y="${H - 4}" font-size="9" text-anchor="middle" fill="var(--ink-faint)">${esc(day.slice(5))}</text>`
-        + (v ? `<text x="${x + bw2 / 2}" y="${H - 20 - h}" font-size="9" text-anchor="middle" fill="var(--ink-soft)">${v}</text>` : '');
+      const h = Math.round((v / max) * (H - 52));
+      const x = i * bw + (bw - 40) / 2;
+      return (v ? `<text x="${x + 20}" y="${base - h - 8}" font-size="11" text-anchor="middle" fill="var(--color-ink-soft)" font-family="var(--font-mono)">${v}</text>` : '')
+        + `<rect x="${x}" y="${base - h}" width="40" height="${Math.max(h, 2)}" rx="3" fill="var(--color-maroon)" opacity="${v ? 0.92 : 0.18}"/>`
+        + `<text x="${x + 20}" y="${H - 8}" font-size="10" text-anchor="middle" fill="var(--color-ink-faint)" font-family="var(--font-mono)">${esc(day.slice(5))}</text>`;
     }).join('');
     $('#trend-chart').innerHTML = last7.length
-      ? `<svg viewBox="0 0 ${W} ${H}" style="max-width:360px;width:100%" role="img" aria-label="Taps per day, last 7 days">${bars}</svg>`
-      : '<p style="font-size:13px;color:var(--ink-faint)">No data yet.</p>';
+      ? `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Taps per day, last 7 days"><line x1="0" y1="${base + 0.5}" x2="${W}" y2="${base + 0.5}" stroke="color-mix(in oklab, var(--color-ink) 20%, transparent)" stroke-width="1"/>${bars}</svg>`
+      : '<p class="adm-empty">No data yet.</p>';
     msg.textContent = days.length ? `Showing ${days.length} day(s) of analytics (newest first).` : '';
   } catch (err) {
+    analyticsLoaded = false;
     msg.textContent = 'Could not load analytics: ' + err.message;
   }
 }
