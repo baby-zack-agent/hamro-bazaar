@@ -9,53 +9,149 @@ const nameMap = Object.fromEntries(getListings().map((l) => [l.id, l.name]));
 <Base title="Feature my business">
   <div class="wrap">
     <section class="block">
-      <h1 class="eyebrow" data-i18n="feat.title" style="margin-bottom:8px">Feature my business</h1>
-      <p data-i18n="feat.sub" style="color:var(--ink-soft);font-size:18px">$25/month. Get seen first by the whole community.</p>
+      <header class="ft-head rv">
+        <h1 class="ft-title" data-i18n="feat.title">Feature my business</h1>
+        <p class="ft-lede" data-i18n="feat.sub">$25/month. Get seen first by the whole community.</p>
+      </header>
 
-      <div class="feat-benefits" style="margin:20px 0">
-        <div class="feat-benefit">
+      <div class="ft-price" aria-hidden="true">
+        <span class="ft-amount">$25</span><span class="ft-per">/mo</span>
+      </div>
+
+      <div class="ft-benefits">
+        <div class="ft-benefit ft-star">
+          <div class="ft-brow"><span class="ft-bnum">01</span><span class="ft-bstar" aria-hidden="true">★</span></div>
           <h3 data-i18n="feat.b1t">Top of your category</h3>
           <p data-i18n="feat.b1d">Your listing appears first whenever someone browses your category.</p>
         </div>
-        <div class="feat-benefit">
+        <div class="ft-benefit">
+          <div class="ft-brow"><span class="ft-bnum">02</span></div>
           <h3 data-i18n="feat.b2t">Homepage carousel</h3>
           <p data-i18n="feat.b2d">A rotating spot on the home page, seen by every visitor.</p>
         </div>
-        <div class="feat-benefit">
+        <div class="ft-benefit">
+          <div class="ft-brow"><span class="ft-bnum">03</span></div>
           <h3 data-i18n="feat.b3t">Featured badge</h3>
           <p data-i18n="feat.b3d">A gold badge that marks you as a community favorite.</p>
         </div>
       </div>
 
-      <h2 class="eyebrow" data-i18n="feat.pay" style="margin-bottom:8px">How to pay</h2>
-      <p data-i18n="feat.payd" style="color:var(--ink-soft)">Pay $25/month by Zelle or Venmo. Then send the request below and mention your payment — we confirm and activate your spot, usually within a day.</p>
+      <div class="ft-pay">
+        <h2 class="ft-pay-t" data-i18n="feat.pay">How to pay</h2>
+        <p data-i18n="feat.payd">Pay $25/month by Zelle or Venmo. Then send the request below and mention your payment — we confirm and activate your spot, usually within a day.</p>
+      </div>
     </section>
 
-    <section class="block">
-      <h2 class="eyebrow" data-i18n="feat.formTitle" style="margin-bottom:12px">Request featured placement</h2>
-      <form id="feat-form">
+    <section class="block ft-formsec">
+      <h2 class="ft-form-t" data-i18n="feat.formTitle">Request featured placement</h2>
+      <form id="feat-form" class="ft-form">
         <input type="hidden" id="ft-listing" name="listingId" value={prefillId} />
-        <div class="field">
-          <label for="ft-biz" data-i18n="feat.biz">Business name</label>
-          <input id="ft-biz" name="businessName" required maxlength="120" />
+        <div class="ft-panel">
+          <div class="field">
+            <label for="ft-biz" data-i18n="feat.biz">Business name</label>
+            <input id="ft-biz" name="businessName" required maxlength="120" autocomplete="organization" />
+          </div>
+          <div class="field">
+            <label for="ft-contact" data-i18n="feat.contact">Your contact (phone or WhatsApp)</label>
+            <input id="ft-contact" name="contact" required maxlength="120" inputmode="tel" autocomplete="tel" />
+          </div>
+          <div class="field">
+            <label for="ft-msg"><span data-i18n="feat.msg">Anything we should know (optional)</span></label>
+            <textarea id="ft-msg" name="message" maxlength="1000" rows="3"></textarea>
+          </div>
+          {/* honeypot — humans never fill this */}
+          <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <button class="btn btn-primary ft-submit" type="submit">
+            <span data-i18n="feat.send">Send request</span>
+          </button>
+          <p id="ft-msg-el" class="formmsg" role="alert" hidden></p>
         </div>
-        <div class="field">
-          <label for="ft-contact" data-i18n="feat.contact">Your contact (phone or WhatsApp)</label>
-          <input id="ft-contact" name="contact" required maxlength="120" inputmode="tel" />
-        </div>
-        <div class="field">
-          <label for="ft-msg" data-i18n="feat.msg">Anything we should know (optional)</label>
-          <textarea id="ft-msg" name="message" maxlength="1000" rows="2"></textarea>
-        </div>
-        {/* honeypot — humans never fill this */}
-        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <button class="btn btn-primary btn-block" type="submit">
-          <span data-i18n="feat.send">Send request</span>
-        </button>
-        <p id="ft-msg-el" class="formmsg" hidden></p>
       </form>
     </section>
   </div>
+
+  <style>
+    .ft-head { margin: 12px 0 0; }
+    .ft-title {
+      font-family: var(--serif); font-weight: 400;
+      font-size: var(--fs-h2); line-height: 1.25; letter-spacing: -0.01em;
+      color: var(--ink); margin: 0;
+    }
+    .ft-lede { font-size: var(--fs-lead); line-height: 1.65; color: var(--ink-soft); margin: 12px 0 0; max-width: 60ch; }
+
+    /* Price as display type — tabular numerals */
+    .ft-price { margin: 24px 0 0; display: flex; align-items: baseline; gap: 6px; }
+    .ft-amount {
+      font-family: var(--serif); font-weight: 400;
+      font-size: clamp(48px, 12vw, 64px); line-height: 1.1; letter-spacing: -0.02em;
+      color: var(--ink); font-variant-numeric: tabular-nums;
+    }
+    .ft-per { font-family: var(--mono); font-size: var(--fs-caption); color: var(--ink-faint); }
+
+    /* Benefits — #1 carries the single gold spend */
+    .ft-benefits { display: grid; gap: 12px; margin: 24px 0 0; }
+    .ft-benefit {
+      background: var(--paper-raised); border: var(--hairline);
+      border-radius: var(--radius); padding: 20px 16px;
+    }
+    .ft-benefit.ft-star {
+      border-color: color-mix(in oklab, var(--gold) 55%, transparent);
+      background: color-mix(in oklab, var(--gold) 10%, var(--paper-raised));
+    }
+    .ft-brow { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .ft-bnum {
+      font-family: var(--mono); font-size: var(--fs-micro); letter-spacing: 0.1em;
+      color: var(--ink-faint); font-variant-numeric: tabular-nums;
+    }
+    .ft-bstar { color: color-mix(in oklab, var(--gold) 60%, var(--ink)); font-size: 18px; line-height: 1; }
+    .ft-benefit h3 { margin: 0 0 6px; font-size: var(--fs-body); font-weight: 600; line-height: 1.6; color: var(--ink); }
+    .ft-benefit p { margin: 0; font-size: var(--fs-body); line-height: 1.65; color: var(--ink-soft); }
+    @media (min-width: 720px) {
+      .ft-benefits { grid-template-columns: 1fr 1fr; }
+      .ft-benefit.ft-star { grid-column: 1 / -1; }
+      .ft-benefit { padding: 24px 20px; }
+    }
+
+    /* Payment panel */
+    .ft-pay {
+      margin: 24px 0 0; padding: 20px 16px;
+      background: var(--paper-deep); border-radius: var(--radius);
+    }
+    @media (min-width: 640px) { .ft-pay { padding: 24px 20px; } }
+    .ft-pay-t {
+      font-family: var(--serif); font-weight: 400;
+      font-size: var(--fs-h3); line-height: 1.3; letter-spacing: -0.01em;
+      color: var(--ink); margin: 0 0 8px;
+    }
+    .ft-pay p { margin: 0; font-size: var(--fs-body); line-height: 1.65; color: var(--ink-soft); }
+
+    /* Form */
+    .ft-formsec { padding-top: 8px; }
+    .ft-form-t {
+      font-family: var(--serif); font-weight: 400;
+      font-size: var(--fs-h3); line-height: 1.3; letter-spacing: -0.01em;
+      color: var(--ink); margin: 0 0 16px;
+    }
+    .ft-panel {
+      background: var(--paper-raised); border: var(--hairline);
+      border-radius: var(--radius); padding: 20px 16px;
+    }
+    @media (min-width: 640px) { .ft-panel { padding: 28px 24px; } }
+    .ft-form .field { margin-bottom: 20px; }
+    .ft-form .field > label {
+      font-size: 12px; letter-spacing: 0.08em; margin-bottom: 6px; line-height: 1.6;
+    }
+    .ft-form .field input, .ft-form .field select, .ft-form .field textarea {
+      min-height: 48px; padding: 0 14px; line-height: 1.6;
+    }
+    .ft-form .field textarea { min-height: 96px; padding: 12px 14px; resize: vertical; }
+    .ft-form .field input:focus, .ft-form .field select:focus, .ft-form .field textarea:focus {
+      outline: none; border-color: var(--maroon);
+      box-shadow: 0 0 0 2px color-mix(in oklab, var(--maroon) 35%, transparent);
+    }
+    .ft-submit { width: 100%; min-height: 56px; font-weight: 600; white-space: normal; line-height: 1.6; }
+  </style>
+
   <script define:vars={{ prefillId, nameMap }}>
     import { t, getLang } from '../lib/i18n.js';
     if (prefillId && nameMap[prefillId]) {
@@ -95,9 +191,3 @@ const nameMap = Object.fromEntries(getListings().map((l) => [l.id, l.name]));
     });
   </script>
 </Base>
-<style>
-  .feat-benefit { border: 1px solid color-mix(in oklab, var(--ink) 10%, transparent); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; background: var(--paper-raised); }
-  .feat-benefit h3 { font-size: 16px; margin: 0 0 4px; }
-  .feat-benefit h3::before { content: '★ '; color: var(--gold); }
-  .feat-benefit p { margin: 0; color: var(--ink-soft); font-size: 14px; }
-</style>

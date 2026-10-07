@@ -8,40 +8,82 @@ const hoods = neighborhoods();
 <Base title="Request a service" tab="request">
   <div class="wrap">
     <section class="block">
-      <h1 class="eyebrow" data-i18n="req.title" style="margin-bottom:8px">Request a service</h1>
-      <p data-i18n="req.sub" style="color:var(--ink-soft)">Tell us what you need. We open WhatsApp with your request ready to send.</p>
+      <header class="rq-head rv">
+        <h1 class="rq-title" data-i18n="req.title">Request a service</h1>
+        <p class="rq-lede" data-i18n="req.sub">Tell us what you need. We open WhatsApp with your request ready to send.</p>
+      </header>
 
       {!waNumber && (
-        <p class="notice" style="margin:16px 0">WhatsApp requests aren't wired up yet — check back soon.</p>
+        <p class="notice" style="margin:20px 0 0">WhatsApp requests aren't wired up yet — check back soon.</p>
       )}
 
-      <form id="req-form" style="margin-top:16px">
-        <div class="field">
-          <label for="f-need" data-i18n="req.need">What do you need?</label>
-          <textarea id="f-need" name="need" required data-i18n-ph="req.needPh" placeholder="e.g. A mechanic near Baldwin who speaks Nepali"></textarea>
+      <form id="req-form" class="rq-form" style="margin-top:24px">
+        <div class="rq-panel">
+          <div class="field">
+            <label for="f-need" data-i18n="req.need">What do you need?</label>
+            <textarea id="f-need" name="need" required rows="4" data-i18n-ph="req.needPh" placeholder="e.g. A mechanic near Baldwin who speaks Nepali"></textarea>
+          </div>
+          <div class="rq-grid2">
+            <div class="field">
+              <label for="f-hood" data-i18n="req.hood">Neighborhood</label>
+              <select id="f-hood" name="hood">
+                {hoods.map((h) => <option value={h}>{h}</option>)}
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-lang" data-i18n="req.lang">Preferred language</label>
+              <select id="f-lang" name="langpref">
+                <option value="" data-i18n="req.langAny">No preference</option>
+                <option value="Nepali">Nepali / नेपाली</option>
+                <option value="Hindi">Hindi / हिन्दी</option>
+                <option value="English">English</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary rq-submit" type="submit" disabled={!waNumber}>
+            <span data-i18n="req.send">Send via WhatsApp</span>
+          </button>
         </div>
-        <div class="field">
-          <label for="f-hood" data-i18n="req.hood">Neighborhood</label>
-          <select id="f-hood" name="hood">
-            {hoods.map((h) => <option value={h}>{h}</option>)}
-          </select>
-        </div>
-        <div class="field">
-          <label for="f-lang" data-i18n="req.lang">Preferred language</label>
-          <select id="f-lang" name="langpref">
-            <option value="" data-i18n="req.langAny">No preference</option>
-            <option value="Nepali">Nepali / नेपाली</option>
-            <option value="Hindi">Hindi / हिन्दी</option>
-            <option value="English">English</option>
-          </select>
-        </div>
-        <button class="btn btn-primary btn-block" type="submit" disabled={!waNumber}>
-          <span data-i18n="req.send">Send via WhatsApp</span>
-        </button>
-        <p style="font-size:13px;color:var(--ink-faint)" data-i18n="req.note">No account needed. Your request goes straight to our team on WhatsApp.</p>
+        <p class="rq-note" data-i18n="req.note">No account needed. Your request goes straight to our team on WhatsApp.</p>
       </form>
     </section>
   </div>
+
+  <style>
+    .rq-head { margin: 12px 0 0; }
+    .rq-title {
+      font-family: var(--serif); font-weight: 400;
+      font-size: var(--fs-h2); line-height: 1.25; letter-spacing: -0.01em;
+      color: var(--ink); margin: 0;
+    }
+    .rq-lede { font-size: var(--fs-lead); line-height: 1.65; color: var(--ink-soft); margin: 12px 0 0; max-width: 60ch; }
+
+    .rq-panel {
+      background: var(--paper-raised); border: var(--hairline);
+      border-radius: var(--radius); padding: 20px 16px;
+    }
+    @media (min-width: 640px) { .rq-panel { padding: 28px 24px; } }
+
+    .rq-form .field { margin-bottom: 20px; }
+    .rq-form .field > label {
+      font-size: 12px; letter-spacing: 0.08em; margin-bottom: 6px; line-height: 1.6;
+    }
+    .rq-form .field input, .rq-form .field select, .rq-form .field textarea {
+      min-height: 48px; padding: 0 14px; line-height: 1.6;
+    }
+    .rq-form .field textarea { min-height: 96px; padding: 12px 14px; resize: vertical; }
+    .rq-form .field input:focus, .rq-form .field select:focus, .rq-form .field textarea:focus {
+      outline: none; border-color: var(--maroon);
+      box-shadow: 0 0 0 2px color-mix(in oklab, var(--maroon) 35%, transparent);
+    }
+
+    .rq-grid2 { display: grid; gap: 0; }
+    @media (min-width: 640px) { .rq-grid2 { grid-template-columns: 1fr 1fr; gap: 16px; } }
+
+    .rq-submit { width: 100%; min-height: 56px; font-weight: 600; white-space: normal; line-height: 1.6; }
+    .rq-note { font-size: var(--fs-caption); line-height: 1.6; color: var(--ink-faint); margin: 12px 0 0; text-align: center; }
+  </style>
+
   <script define:vars={{ waNumber }}>
     import { track } from '../lib/analytics.js';
     document.getElementById('req-form')?.addEventListener('submit', (e) => {

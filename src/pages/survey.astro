@@ -5,117 +5,258 @@ import Base from '../layouts/Base.astro';
 <Base title="Community spending survey" tab="home">
   <div class="wrap">
     <section class="block">
-      <h1 class="eyebrow" data-i18n="sv.title" style="margin-bottom:8px">Community spending survey</h1>
-      <p data-i18n="sv.sub" style="color:var(--ink-soft)">2 minutes. Help us understand how our community shops — so we build the right thing.</p>
+      <header class="sv-head rv">
+        <h1 class="sv-title" data-i18n="sv.title">Community spending survey</h1>
+        <p class="sv-lede" data-i18n="sv.sub">2 minutes. Help us understand how our community shops — so we build the right thing.</p>
+      </header>
 
-      <div class="sv-progress" aria-hidden="true">
-        <div class="sv-bar"><span id="sv-fill"></span></div>
-        <p id="sv-count" data-i18n="sv.answered" style="font-size:13px;color:var(--ink-faint);margin-top:6px">0 of 8 answered</p>
+      <div class="sv-progress">
+        <div class="sv-track" aria-hidden="true"><span class="sv-fill" id="sv-fill"></span></div>
+        <p class="sv-count" id="sv-count" data-i18n="sv.answered">0 of 8 answered</p>
       </div>
 
-      <form id="sv-form" style="margin-top:8px">
+      <form id="sv-form" class="sv-form">
         <!-- Q1 grocery -->
-        <div class="field sv-q">
-          <label data-i18n="sv.q1">Where did your household’s last ~$100 of desi groceries go?</label>
-          <div class="opts" role="radiogroup">
-            <label class="opt"><input type="radio" name="grocery" value="hamro-listed" required /><span data-i18n="sv.q1o1">A desi store listed on Hamro Bazaar</span></label>
-            <label class="opt"><input type="radio" name="grocery" value="other-desi" /><span data-i18n="sv.q1o2">Another Nepali/Indian grocery store</span></label>
-            <label class="opt"><input type="radio" name="grocery" value="mainstream" /><span data-i18n="sv.q1o3">A mainstream supermarket</span></label>
-            <label class="opt"><input type="radio" name="grocery" value="online" /><span data-i18n="sv.q1o4">Online</span></label>
-            <label class="opt"><input type="radio" name="grocery" value="mix" /><span data-i18n="sv.q1o5">A mix of these</span></label>
+        <div class="sv-q">
+          <div class="sv-qhead">
+            <span class="sv-num" aria-hidden="true">01</span>
+            <span class="sv-qtitle" id="sv-q1" data-i18n="sv.q1">Where did your household’s last ~$100 of desi groceries go?</span>
+          </div>
+          <div class="opts" role="radiogroup" aria-labelledby="sv-q1">
+            <label class="opt"><input type="radio" name="grocery" value="hamro-listed" required /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q1o1">A desi store listed on Hamro Bazaar</span></label>
+            <label class="opt"><input type="radio" name="grocery" value="other-desi" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q1o2">Another Nepali/Indian grocery store</span></label>
+            <label class="opt"><input type="radio" name="grocery" value="mainstream" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q1o3">A mainstream supermarket</span></label>
+            <label class="opt"><input type="radio" name="grocery" value="online" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q1o4">Online</span></label>
+            <label class="opt"><input type="radio" name="grocery" value="mix" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q1o5">A mix of these</span></label>
           </div>
         </div>
 
         <!-- Q2 service -->
-        <div class="field sv-q">
-          <label data-i18n="sv.q2">Where did your last service need go? (mechanic, tax, salon…)</label>
-          <div class="opts" role="radiogroup">
-            <label class="opt"><input type="radio" name="service" value="diaspora" required /><span data-i18n="sv.q2o1">A Nepali/Indian-owned business</span></label>
-            <label class="opt"><input type="radio" name="service" value="mainstream" /><span data-i18n="sv.q2o2">A mainstream business</span></label>
-            <label class="opt"><input type="radio" name="service" value="diy-friend" /><span data-i18n="sv.q2o3">Did it myself / asked a friend</span></label>
-            <label class="opt"><input type="radio" name="service" value="none" /><span data-i18n="sv.q2o4">Haven’t needed one recently</span></label>
+        <div class="sv-q">
+          <div class="sv-qhead">
+            <span class="sv-num" aria-hidden="true">02</span>
+            <span class="sv-qtitle" id="sv-q2" data-i18n="sv.q2">Where did your last service need go? (mechanic, tax, salon…)</span>
+          </div>
+          <div class="opts" role="radiogroup" aria-labelledby="sv-q2">
+            <label class="opt"><input type="radio" name="service" value="diaspora" required /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q2o1">A Nepali/Indian-owned business</span></label>
+            <label class="opt"><input type="radio" name="service" value="mainstream" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q2o2">A mainstream business</span></label>
+            <label class="opt"><input type="radio" name="service" value="diy-friend" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q2o3">Did it myself / asked a friend</span></label>
+            <label class="opt"><input type="radio" name="service" value="none" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q2o4">Haven’t needed one recently</span></label>
           </div>
         </div>
 
         <!-- Q3 discovery -->
-        <div class="field sv-q">
-          <label data-i18n="sv.q3">How do you usually FIND a desi business today?</label>
-          <div class="opts" role="radiogroup">
-            <label class="opt"><input type="radio" name="discovery" value="whatsapp" required /><span data-i18n="sv.q3o1">WhatsApp group</span></label>
-            <label class="opt"><input type="radio" name="discovery" value="facebook" /><span data-i18n="sv.q3o2">Facebook</span></label>
-            <label class="opt"><input type="radio" name="discovery" value="google" /><span data-i18n="sv.q3o3">Google / maps</span></label>
-            <label class="opt"><input type="radio" name="discovery" value="friend" /><span data-i18n="sv.q3o4">Friend or family</span></label>
-            <label class="opt"><input type="radio" name="discovery" value="hamro" /><span data-i18n="sv.q3o5">Hamro Bazaar</span></label>
+        <div class="sv-q">
+          <div class="sv-qhead">
+            <span class="sv-num" aria-hidden="true">03</span>
+            <span class="sv-qtitle" id="sv-q3" data-i18n="sv.q3">How do you usually FIND a desi business today?</span>
+          </div>
+          <div class="opts" role="radiogroup" aria-labelledby="sv-q3">
+            <label class="opt"><input type="radio" name="discovery" value="whatsapp" required /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q3o1">WhatsApp group</span></label>
+            <label class="opt"><input type="radio" name="discovery" value="facebook" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q3o2">Facebook</span></label>
+            <label class="opt"><input type="radio" name="discovery" value="google" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q3o3">Google / maps</span></label>
+            <label class="opt"><input type="radio" name="discovery" value="friend" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q3o4">Friend or family</span></label>
+            <label class="opt"><input type="radio" name="discovery" value="hamro" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q3o5">Hamro Bazaar</span></label>
           </div>
         </div>
 
         <!-- Q4 open text -->
-        <div class="field sv-q">
-          <label for="sv-trigger"><span data-i18n="sv.q4">What would make you try a NEW desi business?</span> <span class="sv-tag" data-i18n="sv.optional">optional</span></label>
+        <div class="sv-q">
+          <div class="sv-qhead">
+            <span class="sv-num" aria-hidden="true">04</span>
+            <span class="sv-qtitle"><label for="sv-trigger" data-i18n="sv.q4">What would make you try a NEW desi business?</label> <span class="sv-tag" data-i18n="sv.optional">optional</span></span>
+          </div>
           <textarea id="sv-trigger" name="trigger" maxlength="1000" data-i18n-ph="sv.q4ph" placeholder="Optional — a sentence or two is plenty"></textarea>
         </div>
 
         <!-- Q5 online intent -->
-        <div class="field sv-q">
-          <label data-i18n="sv.q5">Would you order groceries or book services online if it were in Nepali or Hindi?</label>
-          <div class="opts" role="radiogroup">
-            <label class="opt"><input type="radio" name="onlineIntent" value="yes" required /><span data-i18n="sv.q5o1">Yes</span></label>
-            <label class="opt"><input type="radio" name="onlineIntent" value="maybe" /><span data-i18n="sv.q5o2">Maybe</span></label>
-            <label class="opt"><input type="radio" name="onlineIntent" value="no" /><span data-i18n="sv.q5o3">No</span></label>
+        <div class="sv-q">
+          <div class="sv-qhead">
+            <span class="sv-num" aria-hidden="true">05</span>
+            <span class="sv-qtitle" id="sv-q5" data-i18n="sv.q5">Would you order groceries or book services online if it were in Nepali or Hindi?</span>
+          </div>
+          <div class="opts" role="radiogroup" aria-labelledby="sv-q5">
+            <label class="opt"><input type="radio" name="onlineIntent" value="yes" required /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q5o1">Yes</span></label>
+            <label class="opt"><input type="radio" name="onlineIntent" value="maybe" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q5o2">Maybe</span></label>
+            <label class="opt"><input type="radio" name="onlineIntent" value="no" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q5o3">No</span></label>
           </div>
         </div>
 
         <!-- Q6 zip -->
-        <div class="field sv-q">
-          <label for="sv-zip"><span data-i18n="sv.q6">Home zip code</span> <span class="sv-tag" data-i18n="sv.optional">optional</span></label>
+        <div class="sv-q">
+          <div class="sv-qhead">
+            <span class="sv-num" aria-hidden="true">06</span>
+            <span class="sv-qtitle"><label for="sv-zip" data-i18n="sv.q6">Home zip code</label> <span class="sv-tag" data-i18n="sv.optional">optional</span></span>
+          </div>
           <input id="sv-zip" name="zip" inputmode="numeric" maxlength="10" data-i18n-ph="sv.q6ph" placeholder="e.g. 15236" />
         </div>
 
         <!-- Q7 language -->
-        <div class="field sv-q">
-          <label><span data-i18n="sv.q7">Preferred language</span> <span class="sv-tag" data-i18n="sv.optional">optional</span></label>
-          <div class="opts" role="radiogroup">
-            <label class="opt"><input type="radio" name="language" value="Nepali" /><span data-i18n="sv.q7o1">Nepali</span></label>
-            <label class="opt"><input type="radio" name="language" value="Hindi" /><span data-i18n="sv.q7o2">Hindi</span></label>
-            <label class="opt"><input type="radio" name="language" value="English" /><span data-i18n="sv.q7o3">English</span></label>
+        <div class="sv-q">
+          <div class="sv-qhead">
+            <span class="sv-num" aria-hidden="true">07</span>
+            <span class="sv-qtitle" id="sv-q7"><span data-i18n="sv.q7">Preferred language</span> <span class="sv-tag" data-i18n="sv.optional">optional</span></span>
+          </div>
+          <div class="opts" role="radiogroup" aria-labelledby="sv-q7">
+            <label class="opt"><input type="radio" name="language" value="Nepali" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q7o1">Nepali</span></label>
+            <label class="opt"><input type="radio" name="language" value="Hindi" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q7o2">Hindi</span></label>
+            <label class="opt"><input type="radio" name="language" value="English" /><span class="dot" aria-hidden="true"></span><span class="opt-t" data-i18n="sv.q7o3">English</span></label>
           </div>
         </div>
 
         <!-- Q8 phone -->
-        <div class="field sv-q">
-          <label for="sv-phone"><span data-i18n="sv.q8">Phone</span> <span class="sv-tag" data-i18n="sv.optional">optional</span></label>
+        <div class="sv-q">
+          <div class="sv-qhead">
+            <span class="sv-num" aria-hidden="true">08</span>
+            <span class="sv-qtitle"><label for="sv-phone" data-i18n="sv.q8">Phone</label> <span class="sv-tag" data-i18n="sv.optional">optional</span></span>
+          </div>
           <input id="sv-phone" name="phone" type="tel" inputmode="tel" maxlength="20" />
-          <p style="font-size:13px;color:var(--ink-faint);margin-top:4px" data-i18n="sv.q8note">Optional — only for the raffle. We never share it.</p>
+          <p class="sv-helper" data-i18n="sv.q8note">Optional — only for the raffle. We never share it.</p>
         </div>
 
         {/* honeypot — humans never fill this */}
         <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
-        <button class="btn btn-primary btn-block" type="submit">
+        <button class="btn btn-primary sv-submit" type="submit">
           <span data-i18n="sv.send">Submit survey</span>
         </button>
-        <p id="sv-msg" class="formmsg" hidden></p>
-        <p style="font-size:13px;color:var(--ink-faint)" data-i18n="sv.note">No account needed. Anonymous unless you share your phone.</p>
+        <p id="sv-msg" class="formmsg" role="alert" hidden></p>
+        <p class="sv-note" data-i18n="sv.note">No account needed. Anonymous unless you share your phone.</p>
       </form>
 
-      <div id="sv-thanks" class="notice" hidden style="margin-top:16px">
-        <p data-i18n="sv.ok" style="margin:0">Thank you! Your answers help us build what the community actually wants.</p>
+      <div id="sv-thanks" class="sv-thanks" role="status" hidden>
+        <p class="sv-thanks-t" data-i18n="sv.ok">Thank you! Your answers help us build what the community actually wants.</p>
       </div>
     </section>
   </div>
 
   <style>
-    .sv-progress { margin: 16px 0 4px; }
-    .sv-bar { height: 6px; border-radius: 999px; background: var(--paper-deep); overflow: hidden; }
-    .sv-bar span { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--maroon); transition: width 250ms ease; }
-    .sv-q { margin-bottom: 20px; }
-    .sv-tag { font-size: 11px; color: var(--ink-faint); text-transform: none; letter-spacing: 0; }
-    .opts { display: grid; gap: 8px; margin-top: 2px; }
-    .opt { position: relative; display: block; border: var(--hairline); border-radius: 4px; background: var(--paper-raised); padding: 12px 14px; cursor: pointer; min-height: 48px; display: flex; align-items: center; }
+    /* Page hero */
+    .sv-head { margin: 12px 0 0; }
+    .sv-title {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: var(--fs-h2);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin: 0;
+    }
+    .sv-lede {
+      font-size: var(--fs-lead);
+      line-height: 1.65;
+      color: var(--ink-soft);
+      margin: 12px 0 0;
+      max-width: 60ch;
+    }
+
+    /* Progress — transform-only motion (scaleX), mono tabular counter */
+    .sv-progress { margin: 24px 0 8px; }
+    .sv-track { height: 6px; border-radius: 999px; background: var(--paper-deep); overflow: hidden; }
+    .sv-fill {
+      display: block; height: 100%; width: 100%;
+      border-radius: 999px; background: var(--maroon);
+      transform: scaleX(var(--p, 0)); transform-origin: left center;
+      transition: transform 250ms ease;
+    }
+    .sv-count {
+      font-family: var(--mono); font-size: var(--fs-caption); color: var(--ink-faint);
+      font-variant-numeric: tabular-nums; margin: 8px 0 0;
+    }
+
+    /* Question cards */
+    .sv-form { margin-top: 8px; }
+    .sv-q {
+      background: var(--paper-raised);
+      border: var(--hairline);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      margin-bottom: 12px;
+    }
+    @media (min-width: 640px) { .sv-q { padding: 24px 20px; } }
+    .sv-qhead { display: flex; gap: 12px; align-items: baseline; margin-bottom: 16px; }
+    .sv-num {
+      font-family: var(--mono); font-size: var(--fs-micro); letter-spacing: 0.1em;
+      color: var(--maroon-deep); flex: none;
+      font-variant-numeric: tabular-nums;
+    }
+    .sv-qtitle { font-size: var(--fs-body); font-weight: 600; line-height: 1.6; color: var(--ink); }
+    .sv-qtitle label { cursor: pointer; }
+    .sv-tag {
+      font-family: var(--mono); font-size: var(--fs-micro); letter-spacing: 0;
+      color: var(--ink-faint); text-transform: uppercase; font-weight: 400;
+      margin-left: 8px; white-space: nowrap;
+    }
+
+    /* Radio cards — big tap targets */
+    .opts { display: grid; gap: 8px; }
+    .opt {
+      position: relative; display: flex; align-items: center; gap: 12px;
+      min-height: 52px; padding: 12px 14px;
+      border: var(--hairline); border-radius: var(--radius);
+      background: var(--paper); cursor: pointer;
+      transition: border-color 150ms ease, background-color 150ms ease;
+    }
     .opt input { position: absolute; opacity: 0; pointer-events: none; }
-    .opt span { font-size: var(--fs-body); color: var(--ink); }
-    .opt.sel { border-color: var(--maroon); border-width: 2px; padding: 11px 13px; background: color-mix(in oklab, var(--maroon) 6%, var(--paper-raised)); }
+    .opt .dot {
+      width: 20px; height: 20px; border-radius: 999px; flex: none;
+      border: 2px solid color-mix(in oklab, var(--ink) 28%, transparent);
+      position: relative;
+      transition: border-color 150ms ease;
+    }
+    .opt .dot::after {
+      content: ''; position: absolute; inset: 4px; border-radius: 999px;
+      background: var(--maroon); transform: scale(0);
+      transition: transform 150ms ease;
+    }
+    .opt-t { font-size: var(--fs-body); line-height: 1.6; color: var(--ink); }
+    .opt.sel {
+      border: 2px solid var(--maroon); padding: 11px 13px;
+      background: color-mix(in oklab, var(--maroon) 6%, var(--paper));
+    }
+    .opt.sel .dot { border-color: var(--maroon); }
+    .opt.sel .dot::after { transform: scale(1); }
+    .opt:focus-within {
+      border-color: var(--maroon);
+      box-shadow: 0 0 0 2px color-mix(in oklab, var(--maroon) 35%, transparent);
+    }
     .opt:active { transform: scale(0.99); }
+
+    /* Text inputs — Polaris pattern on this page */
+    .sv-q input[type="tel"], .sv-q input[inputmode="numeric"], .sv-q textarea {
+      width: 100%; min-height: 48px;
+      border: var(--hairline); border-radius: var(--radius);
+      background: var(--paper); padding: 0 14px;
+      font-size: var(--fs-body); line-height: 1.6; color: var(--ink);
+      font-family: var(--sans);
+    }
+    .sv-q textarea { min-height: 96px; padding: 12px 14px; resize: vertical; }
+    .sv-q input::placeholder, .sv-q textarea::placeholder { color: var(--ink-faint); }
+    .sv-q input:focus, .sv-q textarea:focus {
+      outline: none; border-color: var(--maroon);
+      box-shadow: 0 0 0 2px color-mix(in oklab, var(--maroon) 35%, transparent);
+    }
+    .sv-helper { font-size: var(--fs-caption); line-height: 1.6; color: var(--ink-faint); margin: 8px 0 0; }
+
+    /* Submit */
+    .sv-submit {
+      width: 100%; min-height: 56px; font-weight: 600;
+      margin-top: 8px; white-space: normal; line-height: 1.6;
+    }
+    .sv-note { font-size: var(--fs-caption); line-height: 1.6; color: var(--ink-faint); margin: 12px 0 0; text-align: center; }
+
+    /* Thank-you state */
+    .sv-thanks {
+      margin-top: 24px; padding: 28px 20px; text-align: center;
+      background: var(--paper-raised);
+      border: var(--hairline); border-left: 3px solid var(--ok);
+      border-radius: var(--radius);
+    }
+    .sv-thanks-t { font-size: var(--fs-lead); line-height: 1.65; color: var(--ink); margin: 0; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sv-fill, .opt, .opt .dot, .opt .dot::after { transition: none; }
+    }
   </style>
 
   <script>
@@ -141,7 +282,7 @@ import Base from '../layouts/Base.astro';
 
     function updateProgress() {
       const n = answeredCount();
-      fill.style.width = `${(n / 8) * 100}%`;
+      fill.style.setProperty('--p', String(n / 8));
       count.textContent = t('sv.answered', getLang()).replace('{n}', String(n));
     }
 

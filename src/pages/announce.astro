@@ -5,42 +5,85 @@ import { CATEGORIES, categoryLabel } from '../lib/db.js';
 <Base title="Post an announcement" tab="announcements">
   <div class="wrap">
     <section class="block">
-      <h1 class="eyebrow" data-i18n="annsub.title" style="margin-bottom:8px">Post an announcement</h1>
-      <p data-i18n="annsub.sub" style="color:var(--ink-soft)">Free for every business. We review each post before it goes live.</p>
+      <header class="an-head rv">
+        <h1 class="an-title" data-i18n="annsub.title">Post an announcement</h1>
+        <p class="an-lede" data-i18n="annsub.sub">Free for every business. We review each post before it goes live.</p>
+      </header>
 
-      <form id="annsub-form" style="margin-top:16px">
-        <div class="field">
-          <label for="s-biz" data-i18n="annsub.biz">Business name</label>
-          <input id="s-biz" name="businessName" required maxlength="120" />
+      <form id="annsub-form" class="an-form" style="margin-top:24px">
+        <div class="an-panel">
+          <div class="an-grid2">
+            <div class="field">
+              <label for="s-biz" data-i18n="annsub.biz">Business name</label>
+              <input id="s-biz" name="businessName" required maxlength="120" autocomplete="organization" />
+            </div>
+            <div class="field">
+              <label for="s-cat" data-i18n="annsub.cat">Category</label>
+              <select id="s-cat" name="category">
+                {CATEGORIES.map((c) => <option value={c}>{categoryLabel(c)}</option>)}
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="s-title" data-i18n="annsub.titleField">Announcement title</label>
+            <input id="s-title" name="title" required maxlength="200" data-i18n-ph="annsub.titlePh" placeholder="e.g. Fresh sel roti every Saturday" />
+          </div>
+          <div class="field">
+            <label for="s-details" data-i18n="annsub.details">Details</label>
+            <textarea id="s-details" name="details" maxlength="2000" rows="4" data-i18n-ph="annsub.detailsPh" placeholder="Dates, prices, anything useful…"></textarea>
+          </div>
+          <div class="field">
+            <label for="s-contact" data-i18n="annsub.contact">Your contact (phone or WhatsApp)</label>
+            <input id="s-contact" name="contact" required maxlength="120" inputmode="tel" autocomplete="tel" />
+          </div>
+          {/* honeypot — humans never fill this */}
+          <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <button class="btn btn-primary an-submit" type="submit">
+            <span data-i18n="annsub.send">Submit for review</span>
+          </button>
+          <p id="s-msg" class="formmsg" role="alert" hidden></p>
         </div>
-        <div class="field">
-          <label for="s-cat" data-i18n="annsub.cat">Category</label>
-          <select id="s-cat" name="category">
-            {CATEGORIES.map((c) => <option value={c}>{categoryLabel(c)}</option>)}
-          </select>
-        </div>
-        <div class="field">
-          <label for="s-title" data-i18n="annsub.titleField">Announcement title</label>
-          <input id="s-title" name="title" required maxlength="200" data-i18n-ph="annsub.titlePh" placeholder="e.g. Fresh sel roti every Saturday" />
-        </div>
-        <div class="field">
-          <label for="s-details" data-i18n="annsub.details">Details</label>
-          <textarea id="s-details" name="details" maxlength="2000" data-i18n-ph="annsub.detailsPh" placeholder="Dates, prices, anything useful…"></textarea>
-        </div>
-        <div class="field">
-          <label for="s-contact" data-i18n="annsub.contact">Your contact (phone or WhatsApp)</label>
-          <input id="s-contact" name="contact" required maxlength="120" inputmode="tel" />
-        </div>
-        {/* honeypot — humans never fill this */}
-        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <button class="btn btn-primary btn-block" type="submit">
-          <span data-i18n="annsub.send">Submit for review</span>
-        </button>
-        <p id="s-msg" class="formmsg" hidden></p>
-        <p style="font-size:13px;color:var(--ink-faint)" data-i18n="annsub.note">No account needed. Posts go live after a quick review — usually within a day.</p>
+        <p class="an-note" data-i18n="annsub.note">No account needed. Posts go live after a quick review — usually within a day.</p>
       </form>
     </section>
   </div>
+
+  <style>
+    .an-head { margin: 12px 0 0; }
+    .an-title {
+      font-family: var(--serif); font-weight: 400;
+      font-size: var(--fs-h2); line-height: 1.25; letter-spacing: -0.01em;
+      color: var(--ink); margin: 0;
+    }
+    .an-lede { font-size: var(--fs-lead); line-height: 1.65; color: var(--ink-soft); margin: 12px 0 0; max-width: 60ch; }
+
+    .an-panel {
+      background: var(--paper-raised); border: var(--hairline);
+      border-radius: var(--radius); padding: 20px 16px;
+    }
+    @media (min-width: 640px) { .an-panel { padding: 28px 24px; } }
+
+    /* Polaris labels: mono 12px uppercase above, 48px inputs, maroon focus */
+    .an-form .field { margin-bottom: 20px; }
+    .an-form .field > label {
+      font-size: 12px; letter-spacing: 0.08em; margin-bottom: 6px; line-height: 1.6;
+    }
+    .an-form .field input, .an-form .field select, .an-form .field textarea {
+      min-height: 48px; padding: 0 14px; line-height: 1.6;
+    }
+    .an-form .field textarea { min-height: 96px; padding: 12px 14px; resize: vertical; }
+    .an-form .field input:focus, .an-form .field select:focus, .an-form .field textarea:focus {
+      outline: none; border-color: var(--maroon);
+      box-shadow: 0 0 0 2px color-mix(in oklab, var(--maroon) 35%, transparent);
+    }
+
+    .an-grid2 { display: grid; gap: 0; }
+    @media (min-width: 640px) { .an-grid2 { grid-template-columns: 1fr 1fr; gap: 16px; } }
+
+    .an-submit { width: 100%; min-height: 56px; font-weight: 600; white-space: normal; line-height: 1.6; }
+    .an-note { font-size: var(--fs-caption); line-height: 1.6; color: var(--ink-faint); margin: 12px 0 0; text-align: center; }
+  </style>
+
   <script>
     import { t, getLang } from '../lib/i18n.js';
     const form = document.getElementById('annsub-form');

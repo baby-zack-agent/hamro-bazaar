@@ -8,18 +8,52 @@ const announcements = getAnnouncements();
 <Base title="Announcements" tab="announcements">
   <div class="wrap">
     <section class="block">
-      <h1 class="eyebrow" data-i18n="ann.title" style="margin-bottom:8px">Announcements</h1>
-      <p data-i18n="ann.sub" style="color:var(--ink-soft)">New products, sales, and community news — free for every business to post.</p>
-      <div style="margin:14px 0 4px;display:flex;gap:8px;flex-wrap:wrap">
-        <a class="btn btn-ghost" href="/announce"><span data-i18n="ann.postOwn">Post your own announcement</span></a>
-        <a class="btn btn-ghost" href="/survey"><span data-i18n="sv.cta">Take the 2-minute survey</span></a>
+      <header class="annh-head rv">
+        <h1 class="annh-title" data-i18n="ann.title">Announcements</h1>
+        <p class="annh-lede" data-i18n="ann.sub">New products, sales, and community news — free for every business to post.</p>
+      </header>
+
+      <div class="annh-ctas">
+        <a class="btn btn-primary annh-cta" href="/announce"><span data-i18n="ann.postOwn">Post your own announcement</span></a>
+        <a class="btn btn-ghost annh-cta" href="/survey"><span data-i18n="sv.cta">Take the 2-minute survey</span></a>
       </div>
-      <div class="cards" style="margin-top:16px">
+
+      <div class="cards annh-cards">
         {announcements.map((a) => <AnnouncementCard announcement={a} />)}
       </div>
-      {announcements.length === 0 && <p data-i18n="ann.empty">No announcements yet.</p>}
+      {announcements.length === 0 && (
+        <div class="annh-empty">
+          <p data-i18n="ann.empty">No announcements yet.</p>
+        </div>
+      )}
     </section>
   </div>
+
+  <style>
+    .annh-head { margin: 12px 0 0; }
+    .annh-title {
+      font-family: var(--serif); font-weight: 400;
+      font-size: var(--fs-h2); line-height: 1.25; letter-spacing: -0.01em;
+      color: var(--ink); margin: 0;
+    }
+    .annh-lede { font-size: var(--fs-lead); line-height: 1.65; color: var(--ink-soft); margin: 12px 0 0; max-width: 60ch; }
+
+    .annh-ctas { display: flex; flex-direction: column; gap: 8px; margin: 20px 0 0; }
+    .annh-cta { min-height: 48px; font-weight: 600; white-space: normal; line-height: 1.6; text-align: center; }
+    @media (min-width: 640px) {
+      .annh-ctas { flex-direction: row; }
+      .annh-cta { flex: 1; }
+    }
+
+    .annh-cards { margin-top: 20px; }
+    .annh-empty {
+      margin-top: 20px; padding: 32px 20px; text-align: center;
+      background: var(--paper-raised); border: var(--hairline);
+      border-radius: var(--radius);
+    }
+    .annh-empty p { margin: 0; font-size: var(--fs-body); line-height: 1.65; color: var(--ink-faint); }
+  </style>
+
   <script id="hb-ann-data" type="application/json">{JSON.stringify(announcements)}</script>
   <script>
     import { getLang } from '../lib/i18n.js';

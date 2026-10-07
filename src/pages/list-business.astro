@@ -9,30 +9,80 @@ const waHref = waNumber
 <Base title="List your business">
   <div class="wrap">
     <section class="block">
-      <h1 class="eyebrow" data-i18n="own.title" style="margin-bottom:8px">List your business — free</h1>
-      <p data-i18n="own.sub" style="color:var(--ink-soft); font-size:19px">No dashboard. No forms. No English required.</p>
+      <header class="lb-head rv">
+        <h1 class="lb-title" data-i18n="own.title">List your business — free</h1>
+        <p class="lb-lede" data-i18n="own.sub">No dashboard. No forms. No English required.</p>
+      </header>
 
-      <div class="steps" style="margin:20px 0">
-        <div class="step">
+      <ol class="lb-steps">
+        <li class="lb-step">
+          <span class="lb-n" aria-hidden="true">1</span>
           <h3 data-i18n="own.step1t">Say hello on WhatsApp</h3>
           <p data-i18n="own.step1d">Message us in Nepali, Hindi, or English — whichever is easiest.</p>
-        </div>
-        <div class="step">
+        </li>
+        <li class="lb-step">
+          <span class="lb-n" aria-hidden="true">2</span>
           <h3 data-i18n="own.step2t">Two-minute chat</h3>
           <p data-i18n="own.step2d">We ask about your services, hours, and photos. That is the whole process.</p>
-        </div>
-        <div class="step">
+        </li>
+        <li class="lb-step">
+          <span class="lb-n" aria-hidden="true">3</span>
           <h3 data-i18n="own.step3t">We build your listing</h3>
           <p data-i18n="own.step3d">You approve it with a thumbs-up. Updates anytime — just message us.</p>
-        </div>
-      </div>
+        </li>
+      </ol>
 
-      {waHref ? (
-        <a class="btn btn-primary btn-block" href={waHref} target="_blank" rel="noopener" data-track-context="list-business"><span data-i18n="own.cta">Start on WhatsApp</span></a>
-      ) : (
-        <p class="notice">WhatsApp onboarding opens soon — check back shortly.</p>
-      )}
-      <p style="font-size:13px;color:var(--ink-faint);margin-top:12px" data-i18n="own.free">Listing is free forever. Optional featured placement available later.</p>
+      <div class="lb-cta">
+        {waHref ? (
+          <a class="btn btn-primary lb-btn" href={waHref} target="_blank" rel="noopener" data-track-context="list-business"><span data-i18n="own.cta">Start on WhatsApp</span></a>
+        ) : (
+          <p class="notice">WhatsApp onboarding opens soon — check back shortly.</p>
+        )}
+        <p class="lb-free" data-i18n="own.free">Listing is free forever. Optional featured placement available later.</p>
+      </div>
     </section>
   </div>
+
+  <style>
+    .lb-head { margin: 12px 0 0; text-align: left; }
+    .lb-title {
+      font-family: var(--serif); font-weight: 400;
+      font-size: var(--fs-h2); line-height: 1.25; letter-spacing: -0.01em;
+      color: var(--ink); margin: 0;
+    }
+    .lb-lede { font-size: var(--fs-lead); line-height: 1.65; color: var(--ink-soft); margin: 12px 0 0; max-width: 60ch; }
+
+    .lb-steps {
+      list-style: none; margin: 28px 0 0; padding: 0;
+      display: grid; gap: 12px;
+    }
+    .lb-step {
+      background: var(--paper-raised); border: var(--hairline);
+      border-radius: var(--radius); padding: 20px 16px 20px 68px;
+      position: relative;
+    }
+    .lb-n {
+      position: absolute; left: 16px; top: 18px;
+      width: 36px; height: 36px; border-radius: 999px;
+      background: var(--maroon); color: #fff;
+      font-family: var(--mono); font-size: var(--fs-caption);
+      font-variant-numeric: tabular-nums;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .lb-step h3 { margin: 0 0 6px; font-size: var(--fs-body); font-weight: 600; line-height: 1.6; color: var(--ink); }
+    .lb-step p { margin: 0; font-size: var(--fs-body); line-height: 1.65; color: var(--ink-soft); }
+
+    @media (min-width: 720px) {
+      .lb-steps { grid-template-columns: repeat(3, 1fr); }
+      .lb-step { padding: 24px 20px; }
+      .lb-n { position: static; margin-bottom: 16px; }
+    }
+
+    .lb-cta { margin-top: 28px; }
+    .lb-btn {
+      width: 100%; min-height: 56px; font-weight: 600;
+      white-space: normal; line-height: 1.6;
+    }
+    .lb-free { font-size: var(--fs-caption); line-height: 1.6; color: var(--ink-faint); margin: 12px 0 0; text-align: center; }
+  </style>
 </Base>
