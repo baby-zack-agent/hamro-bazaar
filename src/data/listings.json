@@ -8,7 +8,12 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "spices",
+   "religious items",
+   "clothing",
+   "cell phones"
+  ],
   "hours": null,
   "languages": []
  },
@@ -21,8 +26,12 @@
   "website": "",
   "featured": true,
   "verified": false,
-  "services": [],
-  "hours": null,
+  "services": [
+   "goat meat",
+   "pork",
+   "chicken"
+  ],
+  "hours": "Mon–Sun 9am–8pm",
   "languages": []
  },
  {
@@ -34,8 +43,15 @@
   "website": "https://apps.apple.com/app/id1530966562",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
+  "services": [
+   "custom gold jewelry design",
+   "jewelry repair",
+   "gold buying",
+   "jewelry appraisals",
+   "engagement & wedding rings",
+   "22k/24k gold jewelry"
+  ],
+  "hours": "Tue–Sun 10am–6pm",
   "languages": []
  },
  {
@@ -47,9 +63,18 @@
   "website": "https://nim-nim-llc.business.site/",
   "featured": true,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "asian spices",
+   "fresh goat meat",
+   "fresh vegetables",
+   "fresh fruits",
+   "fresh chicken"
+  ],
+  "hours": "Mon–Sun 9am–9pm",
+  "languages": [
+   "Nepali",
+   "English"
+  ]
  },
  {
   "id": "nim-nim-nepali-bazar-fed3",
@@ -61,7 +86,7 @@
   "featured": false,
   "verified": false,
   "services": [],
-  "hours": null,
+  "hours": "Mon–Sun 9:30am–7:30pm",
   "languages": []
  },
  {
@@ -73,9 +98,18 @@
   "website": "",
   "featured": true,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "momo",
+   "chowmein",
+   "thukpa",
+   "biryani",
+   "spicy chicken",
+   "takeout"
+  ],
+  "hours": "Mon-Sun 11am-12:30am; Tue closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "everest-kitchen-3419",
@@ -86,9 +120,18 @@
   "website": "https://www.everestkitchenpa.com/",
   "featured": true,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "jhol momos",
+   "sekuwa",
+   "pork sadeko",
+   "chicken pakora",
+   "thukpa",
+   "takeout"
+  ],
+  "hours": "Tue-Sun 11am-9pm; Mon closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "pathivara-grocery-store-28df",
@@ -100,7 +143,7 @@
   "featured": false,
   "verified": false,
   "services": [],
-  "hours": null,
+  "hours": "Mon–Sun 9am–9pm",
   "languages": []
  },
  {
@@ -143,19 +186,6 @@
   "languages": []
  },
  {
-  "id": "everest-ethnic-restaurant-0c7a",
-  "name": "Everest Ethnic Restaurant",
-  "category": "restaurant",
-  "address": "4042 Saw Mill Run Blvd, Pittsburgh, PA 15227",
-  "phone": "(412) 537-6817",
-  "website": "https://www.facebook.com/Everest-Ethnic-Restaurant-852477411493916/",
-  "featured": false,
-  "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
- },
- {
   "id": "damauli-bazaar-e62e",
   "name": "Damauli Bazaar",
   "category": "grocery",
@@ -164,9 +194,16 @@
   "website": "https://www.facebook.com/DamauliBazzarPittsburgh/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "fresh produce",
+   "dried fruit",
+   "beans",
+   "rice"
+  ],
+  "hours": "Mon–Sun 9am–7pm",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "sagarmatha-jewelers-diamonds-usa-8ab9",
@@ -177,8 +214,13 @@
   "website": "https://www.facebook.com/709378319193291/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
+  "services": [
+   "22k/24k gold jewelry",
+   "custom jewelry designs",
+   "gold & silver bars",
+   "wedding jewelry"
+  ],
+  "hours": "Mon–Sun 10am–8pm",
   "languages": []
  },
  {
@@ -190,8 +232,12 @@
   "website": "https://www.facebook.com/DesiMkt",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
+  "services": [
+   "goat meat",
+   "pork",
+   "chicken"
+  ],
+  "hours": "Mon–Sun 9am–8pm",
   "languages": []
  },
  {
@@ -203,9 +249,18 @@
   "website": "https://www.facebook.com/subbapittsburgh/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "chicken datsi",
+   "chicken momo",
+   "veg momo",
+   "chicken thali",
+   "goat curry",
+   "thukpa"
+  ],
+  "hours": "Mon-Fri 11am-2pm & 5pm-10pm; Sat-Sun 5pm-10pm",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "allegheny-spice-kitchen-ec2b",
@@ -216,9 +271,19 @@
   "website": "https://alleghenyspicekitchen.com/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "chilli momos",
+   "fried momo",
+   "non-veg platter",
+   "shrimp curry",
+   "butter naan",
+   "catering",
+   "takeout"
+  ],
+  "hours": "Wed, Fri-Sun 11am-9pm; Mon, Tue, Thu closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "boudha-origin-7fb4",
@@ -229,9 +294,19 @@
   "website": "https://www.boudhaoriginpa.com/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "jhol momo",
+   "chilli momo",
+   "thukpa",
+   "mustang aalo",
+   "pork sekuwa",
+   "goat bhutan",
+   "delivery"
+  ],
+  "hours": "Mon-Wed, Fri-Sun 12pm-9pm; Thu closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "subba-subba-asian-restaurant-7107",
@@ -242,9 +317,18 @@
   "website": "http://www.subbapittsburgh.com",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "chicken datsi",
+   "chicken momo",
+   "veg momo",
+   "chicken thali",
+   "goat curry",
+   "thukpa"
+  ],
+  "hours": "Mon-Fri 11am-2pm & 5pm-10pm; Sat-Sun 5pm-10pm",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "nepali-asian-restaurant-bar-41da",
@@ -255,9 +339,17 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "spicy chicken",
+   "momos",
+   "spicy pork",
+   "takeout",
+   "beer"
+  ],
+  "hours": "Sun, Mon, Wed-Sat 10:30am-12am; Tue closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "carrick-bar-and-grill-5ba6",
@@ -268,9 +360,18 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "momo",
+   "spicy chicken",
+   "spicy pork",
+   "thukpa",
+   "biryani",
+   "takeout"
+  ],
+  "hours": "Sun, Mon, Wed-Sat 10:30am-12am; Tue closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "himali-kitchen-a3e4",
@@ -281,9 +382,20 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "jhol momo",
+   "chili momo",
+   "steamed momo",
+   "pork sekuwa",
+   "chicken thukpa",
+   "Nepali non-veg thali",
+   "butter chicken",
+   "delivery"
+  ],
+  "hours": "Mon-Tue, Thu-Sun 11am-9pm; Wed closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "namaste-momo-corner-534b",
@@ -294,9 +406,21 @@
   "website": "https://order.online/store/namaste-momo-corner-pittsburgh-23689143",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "jhol momo",
+   "c-style momo",
+   "fried momo",
+   "samosas",
+   "pani puri",
+   "chatpate",
+   "chowmein",
+   "Nepali chai",
+   "takeout"
+  ],
+  "hours": "Mon-Wed, Fri-Sun 11am-9pm; Tue closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "nepali-bazaar-nim-nim-llc-b861",
@@ -307,9 +431,18 @@
   "website": "https://nim-nim-llc.business.site/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "asian spices",
+   "fresh goat meat",
+   "fresh vegetables",
+   "fresh fruits",
+   "fresh chicken"
+  ],
+  "hours": "Mon–Sun 9am–9pm",
+  "languages": [
+   "Nepali",
+   "English"
+  ]
  },
  {
   "id": "baldwin-indo-nepali-grocery-store-3e42",
@@ -320,9 +453,17 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "spices",
+   "goat meat",
+   "fresh vegetables",
+   "fresh fruits",
+   "chutneys"
+  ],
+  "hours": "Mon–Sun 9am–9pm",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "barsha-jewelers-2811",
@@ -333,8 +474,15 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
+  "services": [
+   "custom gold jewelry design",
+   "jewelry repair",
+   "gold buying",
+   "jewelry appraisals",
+   "engagement & wedding rings",
+   "22k/24k gold jewelry"
+  ],
+  "hours": "Tue–Sun 10am–6pm",
   "languages": []
  },
  {
@@ -346,8 +494,15 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
+  "services": [
+   "personal care",
+   "housekeeping",
+   "companionship",
+   "medication supervision",
+   "transportation",
+   "dementia care"
+  ],
+  "hours": "Mon–Fri 9am–5pm",
   "languages": []
  },
  {
@@ -359,7 +514,10 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "buyer representation",
+   "seller representation"
+  ],
   "hours": null,
   "languages": []
  },
@@ -372,7 +530,10 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "buyer representation",
+   "first-time buyers"
+  ],
   "hours": null,
   "languages": []
  },
@@ -385,9 +546,18 @@
   "website": "https://nim-nim-llc.business.site/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "asian spices",
+   "fresh goat meat",
+   "fresh vegetables",
+   "fresh fruits",
+   "fresh chicken"
+  ],
+  "hours": "Mon–Sun 9am–9pm",
+  "languages": [
+   "Nepali",
+   "English"
+  ]
  },
  {
   "id": "baldwin-indo-nepali-grocery-store-cbf8",
@@ -398,9 +568,17 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "spices",
+   "goat meat",
+   "fresh vegetables",
+   "fresh fruits",
+   "chutneys"
+  ],
+  "hours": "Mon–Sun 9am–9pm",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "damauli-bazar-pittsburgh15236-524a",
@@ -411,9 +589,16 @@
   "website": "https://www.facebook.com/DamauliBazzarPittsburgh/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "fresh produce",
+   "dried fruit",
+   "beans",
+   "rice"
+  ],
+  "hours": "Mon–Sun 9am–7pm",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "monal-bazaar-llc-ef2a",
@@ -424,9 +609,16 @@
   "website": "http://Monalbazaar.com/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "goat meat",
+   "pantry staples",
+   "fresh produce",
+   "frozen food"
+  ],
+  "hours": "Mon–Sun 9am–8pm",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "nepali-chowk-convenience-store-dbad",
@@ -450,8 +642,12 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
+  "services": [
+   "goat meat",
+   "pork",
+   "chicken"
+  ],
+  "hours": "Mon–Sun 9am–8pm",
   "languages": []
  },
  {
@@ -463,9 +659,16 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "nepali spices",
+   "indian spices",
+   "fresh vegetables",
+   "candy"
+  ],
+  "hours": "Mon–Sun 9am–9pm",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "gorkha-department-store-7573",
@@ -476,9 +679,16 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "goat meat",
+   "local chicken",
+   "fresh fruits",
+   "fresh vegetables"
+  ],
+  "hours": "Mon–Sun 9am–8pm",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "51-international-market-namaste-kaka-40e7",
@@ -490,8 +700,10 @@
   "featured": false,
   "verified": false,
   "services": [],
-  "hours": null,
-  "languages": []
+  "hours": "Mon–Sun 9am–8pm",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "chautari-home-care-llc-ea28",
@@ -502,8 +714,15 @@
   "website": "https://chautarihomecare.com",
   "featured": true,
   "verified": false,
-  "services": [],
-  "hours": null,
+  "services": [
+   "personal care assistance",
+   "companionship & supervision",
+   "meal preparation",
+   "medication reminders",
+   "light housekeeping & errands",
+   "care coordination"
+  ],
+  "hours": "24/7",
   "languages": []
  },
  {
@@ -515,8 +734,15 @@
   "website": "http://www.everesthomecare.com/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
+  "services": [
+   "personal care",
+   "housekeeping",
+   "companionship",
+   "medication supervision",
+   "transportation",
+   "dementia care"
+  ],
+  "hours": "Mon–Fri 9am–5pm",
   "languages": []
  },
  {
@@ -542,7 +768,7 @@
   "featured": false,
   "verified": false,
   "services": [],
-  "hours": null,
+  "hours": "Mon–Fri 9am–5pm",
   "languages": []
  },
  {
@@ -554,7 +780,12 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "personal care",
+   "homemaking",
+   "companionship",
+   "medication assistance"
+  ],
   "hours": null,
   "languages": []
  },
@@ -567,8 +798,14 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
+  "services": [
+   "personal care",
+   "companionship",
+   "meal planning",
+   "medication management",
+   "dementia care"
+  ],
+  "hours": "Mon–Fri 9am–6pm, Sat–Sun 10am–4pm",
   "languages": []
  },
  {
@@ -580,8 +817,13 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
+  "services": [
+   "personal care",
+   "homemaking",
+   "companionship",
+   "medication assistance"
+  ],
+  "hours": "Mon–Fri 9am–6pm, Sat–Sun 10am–4pm",
   "languages": []
  },
  {
@@ -593,7 +835,13 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "bathing & toileting",
+   "dementia care",
+   "meal preparation",
+   "medication supervision",
+   "safety supervision"
+  ],
   "hours": null,
   "languages": []
  },
@@ -606,7 +854,14 @@
   "website": "https://punyahomecare.com",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "companionship",
+   "personal care",
+   "homemaking",
+   "respite care",
+   "live-in care",
+   "24/7 care"
+  ],
   "hours": null,
   "languages": []
  },
@@ -619,7 +874,12 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "personal care",
+   "homemaking",
+   "companionship",
+   "medication assistance"
+  ],
   "hours": null,
   "languages": []
  },
@@ -632,8 +892,13 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
+  "services": [
+   "personal assistance",
+   "companionship",
+   "housekeeping",
+   "homemaker services"
+  ],
+  "hours": "Mon–Fri 9am–5pm",
   "languages": []
  },
  {
@@ -645,9 +910,19 @@
   "website": "https://agentpages.twfg.com/upendradahal",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "auto insurance",
+   "home insurance",
+   "life insurance",
+   "business insurance",
+   "renters insurance"
+  ],
+  "hours": "Mon–Fri 9am–5pm",
+  "languages": [
+   "English",
+   "Nepali",
+   "Hindi"
+  ]
  },
  {
   "id": "damu-dahal-57fa",
@@ -658,7 +933,14 @@
   "website": "https://www.uniqueinsurancellc.com/about-us/",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "auto insurance",
+   "home insurance",
+   "commercial insurance",
+   "umbrella insurance",
+   "motorcycle insurance",
+   "condominium insurance"
+  ],
   "hours": null,
   "languages": []
  },
@@ -671,9 +953,19 @@
   "website": "https://www.loanfactory.com/find-loan-officers/detail/sobe-dhital-2389496",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "first-time home buyers",
+   "investment property loans",
+   "refinancing",
+   "commercial loans"
+  ],
   "hours": null,
-  "languages": []
+  "languages": [
+   "English",
+   "Nepali",
+   "Hindi",
+   "Punjabi"
+  ]
  },
  {
   "id": "diwas-adhikari-f589",
@@ -686,7 +978,11 @@
   "verified": false,
   "services": [],
   "hours": null,
-  "languages": []
+  "languages": [
+   "English",
+   "Nepali",
+   "Hindi"
+  ]
  },
  {
   "id": "prashanna-sangroula-5bd5",
@@ -697,9 +993,20 @@
   "website": "https://www.loanfactory.com/prashannasangroula",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "FHA loans",
+   "conventional mortgages",
+   "VA loans",
+   "refinancing",
+   "buyer/seller representation"
+  ],
   "hours": null,
-  "languages": []
+  "languages": [
+   "English",
+   "Nepali",
+   "Hindi",
+   "Urdu"
+  ]
  },
  {
   "id": "ramesh-bohara-80c1",
@@ -710,9 +1017,16 @@
   "website": "https://www.loanfactory.com/rameshbohara/homeready",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "FHA loans",
+   "conventional mortgages",
+   "VA loans",
+   "refinancing"
+  ],
   "hours": null,
-  "languages": []
+  "languages": [
+   "Nepali"
+  ]
  },
  {
   "id": "everest-kitchen-formerly-everest-ethnic-cfa9",
@@ -723,9 +1037,18 @@
   "website": "https://www.everestkitchenpa.com/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "jhol momos",
+   "sekuwa",
+   "pork sadeko",
+   "chicken pakora",
+   "thukpa",
+   "takeout"
+  ],
+  "hours": "Tue-Sun 11am-9pm; Mon closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "allegheny-spice-kitchen-formerly-sagun-a-7a78",
@@ -736,9 +1059,19 @@
   "website": "https://alleghenyspicekitchen.com/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "chilli momos",
+   "fried momo",
+   "non-veg platter",
+   "shrimp curry",
+   "butter naan",
+   "catering",
+   "takeout"
+  ],
+  "hours": "Wed, Fri-Sun 11am-9pm; Mon, Tue, Thu closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "himali-kitchen-6609",
@@ -749,9 +1082,20 @@
   "website": "https://himalikitchenpgh.com/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "jhol momo",
+   "chili momo",
+   "steamed momo",
+   "pork sekuwa",
+   "chicken thukpa",
+   "Nepali non-veg thali",
+   "butter chicken",
+   "delivery"
+  ],
+  "hours": "Mon-Tue, Thu-Sun 11am-9pm; Wed closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "carrick-bar-and-grill-aka-nepali-asian-r-db1f",
@@ -762,9 +1106,18 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "momo",
+   "spicy chicken",
+   "spicy pork",
+   "thukpa",
+   "biryani",
+   "takeout"
+  ],
+  "hours": "Sun, Mon, Wed-Sat 10:30am-12am; Tue closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "mommalicious-momolicious-food-truck-baf0",
@@ -775,9 +1128,18 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "chicken momo",
+   "vegetable momo",
+   "Nepali chicken chowmein",
+   "Nepali vegetable chowmein",
+   "Nepali chicken curry with rice",
+   "catering"
+  ],
   "hours": null,
-  "languages": []
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "people-s-indian-restaurant-250f",
@@ -788,9 +1150,19 @@
   "website": "https://peoplesindianpa.com/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "lunch buffet",
+   "chicken tikka masala",
+   "chicken biryani",
+   "goat curry",
+   "chaat",
+   "mango lassi",
+   "takeout"
+  ],
+  "hours": "Mon-Sat 11am-2:30pm & 4:30pm-9pm (weekday lunch buffet 11:30am-2pm)",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "namaste-india-58ac",
@@ -801,9 +1173,19 @@
   "website": "https://www.namasteindiapa.com/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "chicken tikka masala",
+   "chicken biryani",
+   "butter chicken",
+   "chicken momo",
+   "samosas",
+   "garlic naan",
+   "delivery"
+  ],
+  "hours": "Mon, Wed-Sun 11am-9pm; Tue closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "nepali-tiffin-service-home-based-94d8",
@@ -814,9 +1196,18 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "dal bhat",
+   "chicken curry",
+   "momos",
+   "chana masala",
+   "saag paneer",
+   "pickup and delivery"
+  ],
   "hours": null,
-  "languages": []
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "photosbyroshan-roshan-ghimeray-f59a",
@@ -827,7 +1218,12 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "wedding photography",
+   "engagement sessions",
+   "family portraits",
+   "photo albums & prints"
+  ],
   "hours": null,
   "languages": []
  },
@@ -840,7 +1236,12 @@
   "website": "https://sikapariyerphotography.mypixieset.com",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "wedding photography",
+   "engagement sessions",
+   "portrait sessions",
+   "candid photography"
+  ],
   "hours": null,
   "languages": []
  },
@@ -853,7 +1254,9 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "makeup services"
+  ],
   "hours": null,
   "languages": []
  },
@@ -866,7 +1269,9 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "cosmetology services"
+  ],
   "hours": null,
   "languages": []
  },
@@ -879,9 +1284,16 @@
   "website": "https://www.coldwellbanker.com/pa/pittsburgh/agents/dek-thapa/aid-P00200000Fp8bw0xefYhSOTyy39jnAhUK50VZdSe",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "buyer representation",
+   "seller representation"
+  ],
   "hours": null,
-  "languages": []
+  "languages": [
+   "English",
+   "Hindi",
+   "Nepali"
+  ]
  },
  {
   "id": "narayan-katel-1f70",
@@ -892,7 +1304,10 @@
   "website": "https://kwpgh.com/agents/227728",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "buyer representation",
+   "first-time buyers"
+  ],
   "hours": null,
   "languages": []
  },
@@ -905,7 +1320,10 @@
   "website": "https://www.homes.com/real-estate-agents/shyam-nepal/966l7m4/",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "buyer representation",
+   "seller representation"
+  ],
   "hours": null,
   "languages": []
  },
@@ -918,9 +1336,18 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "momo",
+   "spicy chicken",
+   "spicy pork",
+   "thukpa",
+   "biryani",
+   "takeout"
+  ],
+  "hours": "Sun, Mon, Wed-Sat 10:30am-12am; Tue closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "doge-cafe-aaea",
@@ -931,9 +1358,14 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "veggie chowmein",
+   "Nepali/Indian dishes"
+  ],
   "hours": null,
-  "languages": []
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "taste-of-the-himalayas-restaurant-and-ba-b437",
@@ -944,9 +1376,18 @@
   "website": "https://tasteofthehimalayapa.com/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "momos",
+   "curries",
+   "biryani",
+   "tandoori",
+   "catering",
+   "pickup and delivery"
+  ],
+  "hours": "Tue-Sun 2pm-11:30pm; Mon closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "sherpa-projects-llc-ang-sherpa-ca6a",
@@ -957,7 +1398,9 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "real estate investment"
+  ],
   "hours": null,
   "languages": []
  },
@@ -970,9 +1413,19 @@
   "website": "https://www.namasteindiapa.com/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "chicken tikka masala",
+   "chicken biryani",
+   "butter chicken",
+   "chicken momo",
+   "samosas",
+   "garlic naan",
+   "delivery"
+  ],
+  "hours": "Mon, Wed-Sun 11am-9pm; Tue closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "taste-of-the-himalayas-f8b9",
@@ -983,9 +1436,18 @@
   "website": "https://tasteofthehimalayapa.com/",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "momos",
+   "curries",
+   "biryani",
+   "tandoori",
+   "catering",
+   "pickup and delivery"
+  ],
+  "hours": "Tue-Sun 2pm-11:30pm; Mon closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "double-star-groceries-42b9",
@@ -996,9 +1458,17 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "nepali groceries",
+   "indian groceries",
+   "filipino foods",
+   "fresh vegetables",
+   "halo-halo ice cream"
+  ],
+  "hours": "Mon–Sat 9am–9pm, Sun 9am–8pm",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "rijal-tax-service-9d5f",
@@ -1009,7 +1479,9 @@
   "website": "https://www.facebook.com/rijaltaxservice/",
   "featured": true,
   "verified": false,
-  "services": [],
+  "services": [
+   "individual tax filing"
+  ],
   "hours": null,
   "languages": []
  },
@@ -1023,7 +1495,7 @@
   "featured": false,
   "verified": false,
   "services": [],
-  "hours": null,
+  "hours": "Mon–Fri 9am–5pm",
   "languages": []
  },
  {
@@ -1035,7 +1507,11 @@
   "website": "https://www.5startaxservices.com/location",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "individual tax returns",
+   "bookkeeping",
+   "payroll services"
+  ],
   "hours": null,
   "languages": []
  },
@@ -1048,8 +1524,11 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
+  "services": [
+   "tax preparation",
+   "tax planning"
+  ],
+  "hours": "Daily 10am–7pm",
   "languages": []
  },
  {
@@ -1061,7 +1540,10 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
+  "services": [
+   "individual tax filing",
+   "small business taxes"
+  ],
   "hours": null,
   "languages": []
  },
@@ -1074,9 +1556,18 @@
   "website": "",
   "featured": false,
   "verified": false,
-  "services": [],
-  "hours": null,
-  "languages": []
+  "services": [
+   "momo",
+   "spicy chicken",
+   "spicy pork",
+   "thukpa",
+   "biryani",
+   "takeout"
+  ],
+  "hours": "Sun, Mon, Wed-Sat 10:30am-12am; Tue closed",
+  "languages": [
+   "English"
+  ]
  },
  {
   "id": "himalayan-grocery-3637",
@@ -1088,7 +1579,7 @@
   "featured": false,
   "verified": false,
   "services": [],
-  "hours": null,
+  "hours": "Mon–Sun 9am–7pm",
   "languages": []
  }
 ]
