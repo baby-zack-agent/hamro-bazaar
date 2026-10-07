@@ -268,7 +268,9 @@ section.band { background: var(--color-paper-deep); }
 }
 @media (min-width: 1024px) {
   .tabbar { display: none; }
-  body { padding-bottom: 0; }
+  body { padding-bottom: 0; } /* tab-bar clearance is mobile-only */
+  /* Cap the no-photo media banner so it reads composed, not empty (mobile keeps 16/10) */
+  .detail-media { max-height: 380px; }
 }
 
 /* ============ Footer — the ONE night surface ============ */
@@ -313,6 +315,10 @@ section.band { background: var(--color-paper-deep); }
   transition: color 150ms ease;
 }
 .site-footer nav a:hover { color: #faf7f0; }
+/* Desktop: footer sits flush against content — no white band (tab bar is hidden ≥1024px) */
+@media (min-width: 1024px) {
+  .site-footer { margin-top: 0; }
+}
 
 /* ============ Hero ============ */
 .hero { padding: var(--space-12) 0 var(--space-8); }
