@@ -50,6 +50,7 @@ import { CATEGORIES, categoryLabel } from '../lib/db.js';
       msg.hidden = true;
       const fd = new FormData(form);
       const body = {
+        type: 'announcement',
         businessName: String(fd.get('businessName') || '').trim(),
         category: String(fd.get('category') || ''),
         title: String(fd.get('title') || '').trim(),
@@ -58,7 +59,7 @@ import { CATEGORIES, categoryLabel } from '../lib/db.js';
         website: String(fd.get('website') || ''), // honeypot
       };
       try {
-        const res = await fetch('/api/submit-announcement', {
+        const res = await fetch('/api/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),

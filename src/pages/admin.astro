@@ -114,10 +114,10 @@ $('#login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   $('#login-err').hidden = true;
   try {
-    const res = await fetch('/api/admin-login', {
+    const res = await fetch('/api/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key: $('#adm-key').value }),
+      body: JSON.stringify({ action: 'login', key: $('#adm-key').value }),
     });
     if (!res.ok) { $('#login-err').hidden = false; return; }
     $('#adm-key').value = '';
@@ -126,7 +126,7 @@ $('#login-form').addEventListener('submit', async (e) => {
   } catch { $('#login-err').hidden = false; }
 });
 $('#logout').addEventListener('click', async () => {
-  await fetch('/api/admin-logout', { method: 'POST' }).catch(() => {});
+  await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'logout' }) }).catch(() => {});
   showLogin();
 });
 
@@ -144,7 +144,7 @@ for (const [tab, pane] of TABS) {
 // --- listings ---
 let listingsCache = [];
 async function loadListings() {
-  const data = await api('/api/admin/listings');
+  const data = await api('/api/admin?resource=listings');
   listingsCache = data.listings;
   $('#lcount').textContent = listingsCache.length;
   const tb = $('#listing-table tbody');
@@ -178,16 +178,16 @@ $('#listing-table').addEventListener('click', async (e) => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (act === 'feat') {
       const l = listingsCache.find((x) => x.id === id);
-      await api('/api/admin/featured', 'POST', { id, featured: !l.featured });
+      await api('/api/admin', 'POST', { action: 'featured-toggle', id, featured: !l.featured });
       await loadListings();
     } else if (act === 'ver') {
       const l = listingsCache.find((x) => x.id === id);
-      await api('/api/admin/verify', 'POST', { id, verified: !l.verified });
+      await api('/api/admin', 'POST', { action: 'verify-toggle', id, verified: !l.verified });
       await loadListings();
     } else if (act === 'del') {
       const l = listingsCache.find((x) => x.id === id);
       if (confirm(`Delete "${l.name}"? This commits to GitHub immediately.`)) {
-        await api('/api/admin/listings', 'DELETE', { id });
+        await api('/api/admin', 'POST', { action: 'listing-delete', id });
         await loadListings();
       }
     }
@@ -210,7 +210,7 @@ $('#listing-form').addEventListener('submit', async (e) => {
     languages: $('#lf-langs').value.split(',').map((s) => s.trim()).filter(Boolean),
   };
   try {
-    await api('/api/admin/listings', 'POST', body);
+    await api('/api/admin', 'POST', { action: 'listing-save', ...body });
     msg.hidden = false;
     msg.style.color = 'var(--ok)';
     msg.textContent = 'Saved — committing to GitHub. The live site redeploys in ~1 minute.';
@@ -221,7 +221,7 @@ $('#listing-form').addEventListener('submit', async (e) => {
 
 // --- announcements ---
 async function loadAnnouncements() {
-  const data = await api('/api/admin/announcements');
+  const data = await api('/api/admin?resource=announcements');
   const tb = $('#ann-table tbody');
   tb.innerHTML = data.announcements.map((a) => `<tr>
     <td>${esc(a.date)}</td>
@@ -237,7 +237,7 @@ $('#ann-table').addEventListener('click', async (e) => {
   try {
     const id = btn.getAttribute('data-id');
     const cur = btn.textContent.trim() === 'Unpublish';
-    await api('/api/admin/announcements/publish', 'POST', { id, published: !cur });
+    await api('/api/admin', 'POST', { action: 'announcement-publish', id, published: !cur });
     await loadAnnouncements();
   } catch (err) { alert(err.message); }
 });
@@ -246,7 +246,8 @@ $('#ann-form').addEventListener('submit', async (e) => {
   const msg = $('#af-msg');
   msg.hidden = true;
   try {
-    await api('/api/admin/announcements', 'POST', {
+    await api('/api/admin', 'POST', {
+      action: 'announcement-add',
       title_en: $('#af-en').value.trim(),
       title_ne: $('#af-ne').value.trim(),
       category: $('#af-cat').value,
@@ -267,7 +268,7 @@ function subSummary(s) {
   return esc(s.id);
 }
 async function loadSubmissions() {
-  const data = await api('/api/admin/submissions');
+  const data = await api('/api/admin?resource=submissions');
   const tb = $('#sub-table tbody');
   const pending = data.submissions.filter((s) => s.status === 'pending').length;
   $('#sub-badge').textContent = pending ? `(${pending})` : '';
@@ -287,12 +288,12 @@ $('#sub-table').addEventListener('click', async (e) => {
   const id = btn.getAttribute('data-id');
   const act = btn.getAttribute('data-act');
   try {
-    await api('/api/admin/submissions', 'POST', { id, action: act });
+    await api('/api/admin', 'POST', { action: 'submission-moderate', id, decision: act });
     await loadSubmissions();
   } catch (err) { alert(err.message); }
 });
 
 // If we already have a session cookie, skip the login form.
-api('/api/admin/listings').then(() => { showAdmin(); return Promise.all([loadListings(), loadAnnouncements(), loadSubmissions()]); }).catch(() => showLogin());
+api('/api/admin?resource=listings').then(() => { showAdmin(); return Promise.all([loadListings(), loadAnnouncements(), loadSubmissions()]); }).catch(() => showLogin());
 </script>
 </Base>

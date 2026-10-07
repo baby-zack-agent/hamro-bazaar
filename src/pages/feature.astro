@@ -68,6 +68,7 @@ const nameMap = Object.fromEntries(getListings().map((l) => [l.id, l.name]));
       msg.hidden = true;
       const fd = new FormData(form);
       const body = {
+        type: 'featured',
         businessName: String(fd.get('businessName') || '').trim(),
         contact: String(fd.get('contact') || '').trim(),
         message: String(fd.get('message') || '').trim(),
@@ -75,7 +76,7 @@ const nameMap = Object.fromEntries(getListings().map((l) => [l.id, l.name]));
         website: String(fd.get('website') || ''), // honeypot
       };
       try {
-        const res = await fetch('/api/submit-featured', {
+        const res = await fetch('/api/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),

@@ -137,6 +137,7 @@ const maps = mapsLink(listing.address);
         return;
       }
       const body = {
+        type: 'review',
         listingId: String(fd.get('listingId') || ''),
         name: String(fd.get('name') || '').trim(),
         rating: Number(rating),
@@ -144,7 +145,7 @@ const maps = mapsLink(listing.address);
         website: String(fd.get('website') || ''), // honeypot
       };
       try {
-        const res = await fetch('/api/submit-review', {
+        const res = await fetch('/api/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),
