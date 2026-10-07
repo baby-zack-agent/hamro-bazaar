@@ -64,3 +64,59 @@ export function newId(name, phone) {
   const rand = Math.random().toString(36).slice(2, 6);
   return `${slug}-${rand}`;
 }
+
+// --- Phase 2: public submissions (moderation queue) ---
+
+// Hidden field real users never fill. Bots do. Named "website" so it looks
+// like a plausible field to a scraper.
+function honeypot(input) {
+  if (input.website && String(input.website).trim()) throw new Error('spam detected');
+}
+
+export function validateAnnouncementSubmission(input) {
+  honeypot(input);
+  const businessName = str(input.businessName, 120);
+  if (!businessName) throw new Error('business name is required');
+  const category = str(input.category, 30);
+  if (!CATEGORIES.includes(category)) throw new Error('invalid category');
+  const title = str(input.title, 200);
+  if (!title) throw new Error('title is required');
+  const contact = str(input.contact, 120);
+  if (!contact) throw new Error('contact is required');
+  return {
+    businessName,
+    category,
+    title,
+    details: str(input.details, 2000) || '',
+    contact,
+  };
+}
+
+export function validateReviewSubmission(input) {
+  honeypot(input);
+  const listingId = str(input.listingId, 60);
+  if (!listingId) throw new Error('listing is required');
+  const name = str(input.name, 80);
+  if (!name) throw new Error('name is required');
+  const rating = Number(input.rating);
+  if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+    throw new Error('rating must be between 1 and 5');
+  }
+  const text = str(input.text, 1000);
+  if (!text) throw new Error('review text is required');
+  return { listingId, name, rating, text };
+}
+
+export function validateFeaturedRequest(input) {
+  honeypot(input);
+  const businessName = str(input.businessName, 120);
+  if (!businessName) throw new Error('business name is required');
+  const contact = str(input.contact, 120);
+  if (!contact) throw new Error('contact is required');
+  return {
+    businessName,
+    contact,
+    listingId: str(input.listingId, 60) || null,
+    message: str(input.message, 1000) || '',
+  };
+}

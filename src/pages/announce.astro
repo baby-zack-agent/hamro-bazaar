@@ -1,0 +1,79 @@
+---
+import Base from '../layouts/Base.astro';
+import { CATEGORIES, categoryLabel } from '../lib/db.js';
+---
+<Base title="Post an announcement" tab="announcements">
+  <div class="wrap">
+    <section class="block">
+      <h1 class="eyebrow" data-i18n="annsub.title" style="margin-bottom:8px">Post an announcement</h1>
+      <p data-i18n="annsub.sub" style="color:var(--ink-soft)">Free for every business. We review each post before it goes live.</p>
+
+      <form id="annsub-form" style="margin-top:16px">
+        <div class="field">
+          <label for="s-biz" data-i18n="annsub.biz">Business name</label>
+          <input id="s-biz" name="businessName" required maxlength="120" />
+        </div>
+        <div class="field">
+          <label for="s-cat" data-i18n="annsub.cat">Category</label>
+          <select id="s-cat" name="category">
+            {CATEGORIES.map((c) => <option value={c}>{categoryLabel(c)}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for="s-title" data-i18n="annsub.titleField">Announcement title</label>
+          <input id="s-title" name="title" required maxlength="200" data-i18n-ph="annsub.titlePh" placeholder="e.g. Fresh sel roti every Saturday" />
+        </div>
+        <div class="field">
+          <label for="s-details" data-i18n="annsub.details">Details</label>
+          <textarea id="s-details" name="details" maxlength="2000" data-i18n-ph="annsub.detailsPh" placeholder="Dates, prices, anything useful…"></textarea>
+        </div>
+        <div class="field">
+          <label for="s-contact" data-i18n="annsub.contact">Your contact (phone or WhatsApp)</label>
+          <input id="s-contact" name="contact" required maxlength="120" inputmode="tel" />
+        </div>
+        {/* honeypot — humans never fill this */}
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <button class="btn btn-primary btn-block" type="submit">
+          <span data-i18n="annsub.send">Submit for review</span>
+        </button>
+        <p id="s-msg" class="formmsg" hidden></p>
+        <p style="font-size:13px;color:var(--ink-faint)" data-i18n="annsub.note">No account needed. Posts go live after a quick review — usually within a day.</p>
+      </form>
+    </section>
+  </div>
+  <script>
+    import { t, getLang } from '../lib/i18n.js';
+    const form = document.getElementById('annsub-form');
+    const msg = document.getElementById('s-msg');
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.hidden = true;
+      const fd = new FormData(form);
+      const body = {
+        businessName: String(fd.get('businessName') || '').trim(),
+        category: String(fd.get('category') || ''),
+        title: String(fd.get('title') || '').trim(),
+        details: String(fd.get('details') || '').trim(),
+        contact: String(fd.get('contact') || '').trim(),
+        website: String(fd.get('website') || ''), // honeypot
+      };
+      try {
+        const res = await fetch('/api/submit-announcement', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'failed');
+        msg.hidden = false;
+        msg.className = 'formmsg ok';
+        msg.textContent = t('annsub.ok', getLang());
+        form.reset();
+      } catch (err) {
+        msg.hidden = false;
+        msg.className = 'formmsg err';
+        msg.textContent = t('annsub.err', getLang());
+      }
+    });
+  </script>
+</Base>

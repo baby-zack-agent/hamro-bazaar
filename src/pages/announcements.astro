@@ -10,6 +10,9 @@ const announcements = getAnnouncements();
     <section class="block">
       <h1 class="eyebrow" data-i18n="ann.title" style="margin-bottom:8px">Announcements</h1>
       <p data-i18n="ann.sub" style="color:var(--ink-soft)">New products, sales, and community news — free for every business to post.</p>
+      <div style="margin:14px 0 4px">
+        <a class="btn btn-ghost" href="/announce"><span data-i18n="ann.postOwn">Post your own announcement</span></a>
+      </div>
       <div class="cards" style="margin-top:16px">
         {announcements.map((a) => <AnnouncementCard announcement={a} />)}
       </div>
@@ -24,7 +27,7 @@ const announcements = getAnnouncements();
       try { data = JSON.parse(document.getElementById('hb-ann-data').textContent); } catch {}
       document.querySelectorAll('[data-ann]').forEach((el) => {
         const row = data.find((a) => a.id === el.getAttribute('data-ann'));
-        const p = row && el.querySelector('p');
+        const p = row && el.querySelector('p.atitle');
         if (p) p.textContent = row.title[lang] || row.title.en;
         const when = row && el.querySelector('.when');
         // date + category label stays server-rendered; fine for v1.

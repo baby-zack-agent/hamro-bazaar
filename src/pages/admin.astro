@@ -23,6 +23,7 @@ import { CATEGORIES, categoryLabel } from '../lib/db.js';
         <div class="admin-tabs" role="tablist">
           <button class="chip" id="tab-listings" aria-pressed="true">Listings</button>
           <button class="chip" id="tab-ann" aria-pressed="false">Announcements</button>
+          <button class="chip" id="tab-sub" aria-pressed="false">Submissions <span id="sub-badge"></span></button>
           <button class="chip" id="logout" style="margin-left:auto">Log out</button>
         </div>
 
@@ -76,6 +77,17 @@ import { CATEGORIES, categoryLabel } from '../lib/db.js';
           </table>
           </div>
         </div>
+
+        <div id="pane-sub" hidden>
+          <h2 class="eyebrow">Moderation queue</h2>
+          <p class="notice">Community submissions. Approving an announcement publishes it immediately; approving a review attaches it to the listing; featured requests just need your follow-up.</p>
+          <div style="overflow-x:auto;margin-top:12px">
+          <table class="admin-table" id="sub-table">
+            <thead><tr><th>Date</th><th>Type</th><th>Summary</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+          </table>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -110,7 +122,7 @@ $('#login-form').addEventListener('submit', async (e) => {
     if (!res.ok) { $('#login-err').hidden = false; return; }
     $('#adm-key').value = '';
     showAdmin();
-    await Promise.all([loadListings(), loadAnnouncements()]);
+    await Promise.all([loadListings(), loadAnnouncements(), loadSubmissions()]);
   } catch { $('#login-err').hidden = false; }
 });
 $('#logout').addEventListener('click', async () => {
@@ -119,12 +131,13 @@ $('#logout').addEventListener('click', async () => {
 });
 
 // --- tabs ---
-for (const [tab, pane] of [['#tab-listings', '#pane-listings'], ['#tab-ann', '#pane-ann']]) {
+const TABS = [['#tab-listings', '#pane-listings'], ['#tab-ann', '#pane-ann'], ['#tab-sub', '#pane-sub']];
+for (const [tab, pane] of TABS) {
   $(tab).addEventListener('click', () => {
-    $('#tab-listings').setAttribute('aria-pressed', tab === '#tab-listings');
-    $('#tab-ann').setAttribute('aria-pressed', tab === '#tab-ann');
-    $('#pane-listings').hidden = tab !== '#tab-listings';
-    $('#pane-ann').hidden = tab !== '#tab-ann';
+    for (const [t, p] of TABS) {
+      $(t).setAttribute('aria-pressed', t === tab);
+      $(p).hidden = p !== pane;
+    }
   });
 }
 
@@ -246,7 +259,40 @@ $('#ann-form').addEventListener('submit', async (e) => {
   } catch (err) { msg.hidden = false; msg.style.color = 'var(--maroon-deep)'; msg.textContent = err.message; }
 });
 
+// --- submissions (moderation queue) ---
+function subSummary(s) {
+  if (s.type === 'announcement') return `<strong>${esc(s.businessName)}</strong><br>${esc(s.title)}${s.details ? `<br><span style="color:var(--ink-faint)">${esc(s.details.slice(0, 120))}</span>` : ''}<br><span style="color:var(--ink-faint)">contact: ${esc(s.contact || '—')}</span>`;
+  if (s.type === 'review') return `<strong>${esc(s.name)}</strong> rated ${'★'.repeat(s.rating)}<br>${esc(s.text.slice(0, 160))}<br><span style="color:var(--ink-faint)">listing: ${esc(s.listingId)}</span>`;
+  if (s.type === 'featured-request') return `<strong>${esc(s.businessName)}</strong><br><span style="color:var(--ink-faint)">contact: ${esc(s.contact || '—')}</span>${s.message ? `<br>${esc(s.message.slice(0, 160))}` : ''}${s.listingId ? `<br><span style="color:var(--ink-faint)">listing: ${esc(s.listingId)}</span>` : ''}`;
+  return esc(s.id);
+}
+async function loadSubmissions() {
+  const data = await api('/api/admin/submissions');
+  const tb = $('#sub-table tbody');
+  const pending = data.submissions.filter((s) => s.status === 'pending').length;
+  $('#sub-badge').textContent = pending ? `(${pending})` : '';
+  tb.innerHTML = data.submissions.map((s) => `<tr>
+    <td>${esc((s.created || '').slice(0, 10))}</td>
+    <td>${esc(s.type)}</td>
+    <td>${subSummary(s)}</td>
+    <td>${esc(s.status)}</td>
+    <td>${s.status === 'pending' ? `<div class="rowbtns">
+      <button class="minibtn ok-on" data-act="approve" data-id="${s.id}">Approve</button>
+      <button class="minibtn" data-act="reject" data-id="${s.id}">Reject</button>
+    </div>` : '—'}</td></tr>`).join('') || '<tr><td colspan="5">Queue is empty.</td></tr>';
+}
+$('#sub-table').addEventListener('click', async (e) => {
+  const btn = e.target.closest('button[data-act]');
+  if (!btn) return;
+  const id = btn.getAttribute('data-id');
+  const act = btn.getAttribute('data-act');
+  try {
+    await api('/api/admin/submissions', 'POST', { id, action: act });
+    await loadSubmissions();
+  } catch (err) { alert(err.message); }
+});
+
 // If we already have a session cookie, skip the login form.
-api('/api/admin/listings').then(() => { showAdmin(); return Promise.all([loadListings(), loadAnnouncements()]); }).catch(() => showLogin());
+api('/api/admin/listings').then(() => { showAdmin(); return Promise.all([loadListings(), loadAnnouncements(), loadSubmissions()]); }).catch(() => showLogin());
 </script>
 </Base>

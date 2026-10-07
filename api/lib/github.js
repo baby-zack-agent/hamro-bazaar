@@ -50,3 +50,4 @@ export async function putJsonFile(path, data, message) {
 
 export const LISTINGS_PATH = 'src/data/listings.json';
 export const ANNOUNCEMENTS_PATH = 'src/data/announcements.json';
+export const SUBMISSIONS_PATH = 'src/data/submissions.json';

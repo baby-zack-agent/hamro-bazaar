@@ -58,6 +58,7 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
         <h2 data-i18n="own.title">List your business — free</h2>
         <p data-i18n="band.sub">Get listed in front of the whole community — free, and we do the work.</p>
         <a class="btn btn-primary" href="/list-business"><span data-i18n="band.cta">List your business — free</span></a>
+        <a class="btn btn-ghost" href="/feature" style="margin-left:8px"><span data-i18n="band.feat">Get featured — $25/mo</span></a>
       </div>
     </section>
   </div>
@@ -108,7 +109,7 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
       try { annData = JSON.parse(document.getElementById('hb-ann-data').textContent); } catch {}
       document.querySelectorAll('[data-ann]').forEach((el) => {
         const row = annData.find((a) => a.id === el.getAttribute('data-ann'));
-        const p = row && el.querySelector('p');
+        const p = row && el.querySelector('p.atitle');
         if (p) p.textContent = row.title[lang] || row.title.en;
       });
     }

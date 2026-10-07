@@ -60,10 +60,6 @@ export const STRINGS = {
     en: 'No reviews yet — be the first after you visit.',
     ne: 'अहिलेसम्म समीक्षा छैन — तपाईं गएपछि पहिलो लेख्नुहोस्।',
   },
-  'detail.reviewsSoon': {
-    en: 'Reviews open soon. For now, call or WhatsApp the business directly.',
-    ne: 'समीक्षा चाँडै खुल्नेछ। अहिलेलाई व्यवसायलाई सिधै फोन वा व्हाट्सएप गर्नुहोस्।',
-  },
   'detail.back': { en: 'Back to browse', ne: 'खोजीमा फर्कनुहोस्' },
   'detail.website': { en: 'Website', ne: 'वेबसाइट' },
 
@@ -137,6 +133,84 @@ export const STRINGS = {
   // misc
   'misc.close': { en: 'Close', ne: 'बन्द गर्नुहोस्' },
   'misc.loading': { en: 'Loading…', ne: 'लोड हुँदैछ…' },
+
+  // submit announcement (public)
+  'ann.postOwn': { en: 'Post your own announcement', ne: 'आफ्नै घोषणा पोस्ट गर्नुहोस्' },
+  'annsub.title': { en: 'Post an announcement', ne: 'घोषणा पोस्ट गर्नुहोस्' },
+  'annsub.sub': {
+    en: 'Free for every business. We review each post before it goes live.',
+    ne: 'हरेक व्यवसायका लागि नि:शुल्क। प्रत्यक्ष हुनुअघि हामी हरेक पोस्ट जाँच्छौं।',
+  },
+  'annsub.biz': { en: 'Business name', ne: 'व्यवसायको नाम' },
+  'annsub.cat': { en: 'Category', ne: 'वर्ग' },
+  'annsub.titleField': { en: 'Announcement title', ne: 'घोषणाको शीर्षक' },
+  'annsub.titlePh': { en: 'e.g. Fresh sel roti every Saturday', ne: 'जस्तै: हरेक शनिबार ताजा सेलरोटी' },
+  'annsub.details': { en: 'Details', ne: 'विवरण' },
+  'annsub.detailsPh': { en: 'Dates, prices, anything useful…', ne: 'मिति, मूल्य, उपयोगी जानकारी…' },
+  'annsub.contact': { en: 'Your contact (phone or WhatsApp)', ne: 'तपाईंको सम्पर्क (फोन वा व्हाट्सएप)' },
+  'annsub.send': { en: 'Submit for review', ne: 'जाँचका लागि पठाउनुहोस्' },
+  'annsub.ok': {
+    en: "Received! We'll review it and post it soon.",
+    ne: 'प्राप्त भयो! हामी जाँचेर चाँडै पोस्ट गर्नेछौं।',
+  },
+  'annsub.err': { en: 'Something went wrong. Please try again.', ne: 'केही गलत भयो। कृपया पुन: प्रयास गर्नुहोस्।' },
+  'annsub.note': {
+    en: 'No account needed. Posts go live after a quick review — usually within a day.',
+    ne: 'खाता चाहिँदैन। छिटो जाँचपछि पोस्ट प्रत्यक्ष हुन्छ — सामान्यतया एक दिनभित्र।',
+  },
+
+  // reviews (public)
+  'rev.name': { en: 'Your name', ne: 'तपाईंको नाम' },
+  'rev.rating': { en: 'Rating', ne: 'मूल्याङ्कन' },
+  'rev.text': { en: 'Your review', ne: 'तपाईंको समीक्षा' },
+  'rev.textPh': { en: 'What was your experience like?', ne: 'तपाईंको अनुभव कस्तो रह्यो?' },
+  'rev.send': { en: 'Submit review', ne: 'समीक्षा पठाउनुहोस्' },
+  'rev.ok': {
+    en: 'Thanks! Your review is waiting for approval.',
+    ne: 'धन्यवाद! तपाईंको समीक्षा स्वीकृतिको प्रतीक्षामा छ।',
+  },
+  'rev.note': {
+    en: 'Reviews are moderated to keep things fair.',
+    ne: 'निष्पक्षताका लागि समीक्षाहरू जाँचिन्छन्।',
+  },
+
+  // feature my business
+  'feat.title': { en: 'Feature my business', ne: 'मेरो व्यवसाय विशेष बनाउनुहोस्' },
+  'feat.sub': {
+    en: '$25/month. Get seen first by the whole community.',
+    ne: '$२५/महिना। सम्पूर्ण समुदायले पहिले देख्नुहोस्।',
+  },
+  'feat.b1t': { en: 'Top of your category', ne: 'तपाईंको वर्गको शीर्षमा' },
+  'feat.b1d': {
+    en: 'Your listing appears first whenever someone browses your category.',
+    ne: 'कसैले तपाईंको वर्ग हेर्दा तपाईंको सूची सबैभन्दा पहिले देखिन्छ।',
+  },
+  'feat.b2t': { en: 'Homepage carousel', ne: 'होमपेज क्यारोसेल' },
+  'feat.b2d': {
+    en: 'A rotating spot on the home page, seen by every visitor.',
+    ne: 'होम पेजमा घुम्ने स्थान — हरेक आगन्तुकले देख्छ।',
+  },
+  'feat.b3t': { en: 'Featured badge', ne: 'विशेष ब्याज' },
+  'feat.b3d': {
+    en: 'A gold badge that marks you as a community favorite.',
+    ne: 'तपाईंलाई समुदायको रोजाइ भनेर चिनाउने सुनौलो ब्याज।',
+  },
+  'feat.pay': { en: 'How to pay', ne: 'कसरी भुक्तानी गर्ने' },
+  'feat.payd': {
+    en: 'Pay $25/month by Zelle or Venmo. Then send the request below and mention your payment — we confirm and activate your spot, usually within a day.',
+    ne: '$२५/महिना Zelle वा Venmo बाट तिर्नुहोस्। त्यसपछि तलको फारम पठाउनुहोस् र आफ्नो भुक्तानी उल्लेख गर्नुहोस् — हामी पुष्टि गरेर तपाईंको स्थान सक्रिय पार्नेछौं, सामान्यतया एक दिनभित्र।',
+  },
+  'feat.formTitle': { en: 'Request featured placement', ne: 'विशेष स्थानका लागि अनुरोध' },
+  'feat.biz': { en: 'Business name', ne: 'व्यवसायको नाम' },
+  'feat.contact': { en: 'Your contact (phone or WhatsApp)', ne: 'तपाईंको सम्पर्क (फोन वा व्हाट्सएप)' },
+  'feat.msg': { en: 'Anything we should know (optional)', ne: 'हामीले जान्नुपर्ने केही छ? (वैकल्पिक)' },
+  'feat.send': { en: 'Send request', ne: 'अनुरोध पठाउनुहोस्' },
+  'feat.ok': {
+    en: "Request received! We'll reach out to confirm your spot.",
+    ne: 'अनुरोध प्राप्त भयो! तपाईंको स्थान पुष्टि गर्न हामी सम्पर्क गर्नेछौं।',
+  },
+  'feat.link': { en: 'Feature this business', ne: 'यो व्यवसाय विशेष बनाउनुहोस्' },
+  'band.feat': { en: 'Get featured — $25/mo', ne: 'विशेष बन्नुहोस् — $२५/महिना' },
 };
 
 export function t(key, lang = 'en') {

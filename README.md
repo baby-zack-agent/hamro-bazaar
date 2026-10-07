@@ -21,27 +21,38 @@ hamro-bazaar/
 │   ├── styles/global.css         # design tokens (10 colors / 8 font sizes — keep the census)
 │   ├── components/              # ListingCard, CategoryGrid, AnnouncementCard
 │   ├── layouts/Base.astro        # header, tab bar, footer, lang + SW bootstrap
-│   └── pages/
-│       ├── index.astro          # home: hero search, categories, featured rail, announcements, owner CTA
-│       ├── browse.astro         # filters (category, neighborhood, open-now), result cards
-│       ├── business/[id].astro  # detail sheet (84 static paths)
-│       ├── announcements.astro  # feed
-│       ├── request.astro        # service-request form -> prefilled WhatsApp deep link
-│       ├── list-business.astro  # owner onboarding explainer (WhatsApp done-for-you)
-│       └── admin.astro          # password-gated admin panel (listings + announcements)
-├── api/                         # Vercel serverless functions (NOT Astro routes)
-│   ├── admin-login.js           # POST {key} -> httpOnly session cookie (HMAC, 7-day)
-│   ├── admin-logout.js
-│   ├── lib/
-│   │   ├── auth.js              # stateless session create/verify, JSON body reader
-│   │   ├── github.js            # getJsonFile / putJsonFile via GitHub REST
-│   │   └── validate.js          # server-side input validation
-│   └── admin/
-│       ├── listings.js          # GET list · POST add/update · DELETE
-│       ├── featured.js          # POST {id, featured}
-│       ├── verify.js            # POST {id, verified}
-│       ├── announcements.js     # GET list · POST add
-│       └── announcements/publish.js  # POST {id, published}
+│   │   └── pages/
+│   │       ├── index.astro          # home: hero search, categories, featured rail, announcements, owner CTA
+│   │       ├── browse.astro         # filters (category, neighborhood, open-now), result cards
+│   │       ├── business/[id].astro  # detail sheet + review form + approved reviews
+│   │       ├── announcements.astro  # feed (+ link to /announce)
+│   │       ├── announce.astro       # public announcement submission form
+│   │       ├── feature.astro        # featured placement ($25/mo) + request form
+│   │       ├── request.astro        # service-request form -> prefilled WhatsApp deep link
+│   │       ├── list-business.astro  # owner onboarding explainer (WhatsApp done-for-you)
+│   │       └── admin.astro          # admin panel (listings + announcements + submissions)
+│   ├── api/                         # Vercel serverless functions (NOT Astro routes)
+│   │   ├── admin-login.js           # POST {key} -> httpOnly session cookie (HMAC, 7-day)
+│   │   ├── admin-logout.js
+│   │   ├── submit-announcement.js   # PUBLIC: announcement -> moderation queue
+│   │   ├── submit-review.js         # PUBLIC: review for a listing -> moderation queue
+│   │   ├── submit-featured.js       # PUBLIC: featured request -> moderation queue
+│   │   ├── lib/
+│   │   │   ├── auth.js              # stateless session create/verify, JSON body reader
+│   │   │   ├── github.js            # getJsonFile / putJsonFile via GitHub REST
+│   │   │   ├── validate.js          # server-side validation (admin + public)
+│   │   │   └── ratelimit.js         # best-effort in-memory per-IP limit (public writes)
+│   │   └── admin/
+│   │       ├── listings.js          # GET list · POST add/update · DELETE
+│   │       ├── featured.js          # POST {id, featured}
+│   │       ├── verify.js            # POST {id, verified}
+│   │       ├── announcements.js     # GET list · POST add
+│   │       ├── announcements/publish.js  # POST {id, published}
+│   │       └── submissions.js       # GET queue · POST {id, action: approve|reject}
+│   ├── src/data/
+│   │   ├── listings.json            # 84 real listings; reviews appended on approval
+│   │   ├── announcements.json       # announcements feed
+│   │   └── submissions.json         # moderation queue (pending/approved/rejected)
 ├── public/
 │   ├── manifest.json            # PWA manifest (standalone, theme #8c2b2b)
 │   ├── sw.js                    # best-effort service worker (never breaks the page)
@@ -109,9 +120,29 @@ No secrets are committed. `.env` is gitignored.
 
 - **Open-now filter** is backed by owner-reported `hours` only; listings without hours are
   excluded rather than guessed. Real open-now needs structured hours (Phase 2).
-- **Reviews** show an honest empty state; submission opens in Phase 2 with moderation.
+- **Reviews** are community-submitted and moderated (approve in `/admin` → Submissions).
+  Nothing shows without approval.
 - **Payments** for featured placement are manual (Zelle/Venmo tracked outside the app)
-  until a verified payment rail exists.
+  until a verified payment rail exists. `/feature` explains the deal and queues requests.
 - **WhatsApp intake** is human-operated (the agent) in Phase 1; the Business Cloud API
   needs Meta business verification (Phase 3).
 - Announcement seed content is placeholder copy for the demo feed, not real business posts.
+- **Rate limiting** on public write endpoints is in-memory per serverless instance
+  (best effort). Determined abuse needs a shared store (Phase 3).
+
+## Phase 2 — community features (this build)
+
+- **Public submissions:** `/announce` (announcements), review form on every business page,
+  `/feature` (featured placement requests). All POST to public `/api/submit-*` routes with
+  server-side validation, a honeypot field, and per-IP rate limiting (5/hour, best effort).
+  Submissions land in `src/data/submissions.json` as `{type, status:"pending"}` via the
+  same GitHub-commit write path. No login, no account — but nothing goes live unreviewed.
+- **Moderation:** `/admin` → Submissions tab lists the queue newest-first with a pending
+  count badge. Approve → announcement appended to `announcements.json` (published),
+  review appended to the listing's `reviews` array, featured-request just marked approved
+  for manual follow-up. Reject → marked rejected. All through HMAC admin auth.
+- **Featured placement:** `/feature` explains $25/mo (top of category, homepage carousel,
+  gold badge), manual Zelle/Venmo payment instructions, and a request form. Linked from
+  business pages ("Feature this business") and the home owner CTA band.
+- Submitted announcements carry the author's text in both language slots until translated;
+  the agent can refine the Nepali via the Announcements admin tab.

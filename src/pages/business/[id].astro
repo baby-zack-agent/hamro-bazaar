@@ -35,6 +35,10 @@ const maps = mapsLink(listing.address);
       )}
       {wa && <a class="btn btn-ghost" href={wa} target="_blank" rel="noopener">WhatsApp</a>}
     </div>
+    <p style="margin:4px 0 0;font-size:14px">
+      <a href={`/feature?listing=${listing.id}`}><span data-i18n="feat.link">Feature this business</span></a>
+      <span style="color:var(--ink-faint)"> · $25/mo</span>
+    </p>
 
     <div class="kv">
       <div class="row">
@@ -68,11 +72,98 @@ const maps = mapsLink(listing.address);
 
     <section class="block">
       <h2 class="eyebrow" data-i18n="detail.reviews">Reviews</h2>
-      <p data-i18n="detail.noReviews">No reviews yet — be the first after you visit.</p>
-      <p class="notice" data-i18n="detail.reviewsSoon">Reviews open soon. For now, call or WhatsApp the business directly.</p>
+      {listing.reviews?.length ? (
+        <div class="reviews">
+          {listing.reviews.map((r) => (
+            <article class="review">
+              <div class="rhead">
+                <strong>{r.name}</strong>
+                <span class="stars" aria-label={`${r.rating} / 5`}>{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
+              </div>
+              <p>{r.text}</p>
+              <div class="rdate">{r.date}</div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <p data-i18n="detail.noReviews">No reviews yet — be the first after you visit.</p>
+      )}
+
+      <h3 style="font-size:16px;margin:20px 0 8px"><span data-i18n="rev.send">Submit review</span></h3>
+      <form id="review-form">
+        <input type="hidden" name="listingId" value={listing.id} />
+        <div class="field">
+          <label for="rv-name" data-i18n="rev.name">Your name</label>
+          <input id="rv-name" name="name" required maxlength="80" />
+        </div>
+        <div class="field">
+          <span class="flabel" data-i18n="rev.rating">Rating</span>
+          <div class="stars-input" role="radiogroup" aria-label="Rating">
+            {[5, 4, 3, 2, 1].map((n) => (
+              <>
+                <input type="radio" name="rating" id={`rv-r${n}`} value={n} />
+                <label for={`rv-r${n}`} title={`${n} / 5`}>★</label>
+              </>
+            ))}
+          </div>
+        </div>
+        <div class="field">
+          <label for="rv-text" data-i18n="rev.text">Your review</label>
+          <textarea id="rv-text" name="text" required maxlength="1000" rows="3" data-i18n-ph="rev.textPh" placeholder="What was your experience like?"></textarea>
+        </div>
+        {/* honeypot — humans never fill this */}
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <button class="btn btn-primary btn-block" type="submit">
+          <span data-i18n="rev.send">Submit review</span>
+        </button>
+        <p id="rv-msg" class="formmsg" hidden></p>
+        <p style="font-size:13px;color:var(--ink-faint)" data-i18n="rev.note">Reviews are moderated to keep things fair.</p>
+      </form>
     </section>
   </div>
+  <script>
+    import { t, getLang } from '../../lib/i18n.js';
+    const form = document.getElementById('review-form');
+    const msg = document.getElementById('rv-msg');
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.hidden = true;
+      const fd = new FormData(form);
+      const rating = fd.get('rating');
+      if (!rating) {
+        msg.hidden = false;
+        msg.className = 'formmsg err';
+        msg.textContent = t('rev.rating', getLang()) + ' — 1–5';
+        return;
+      }
+      const body = {
+        listingId: String(fd.get('listingId') || ''),
+        name: String(fd.get('name') || '').trim(),
+        rating: Number(rating),
+        text: String(fd.get('text') || '').trim(),
+        website: String(fd.get('website') || ''), // honeypot
+      };
+      try {
+        const res = await fetch('/api/submit-review', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'failed');
+        msg.hidden = false;
+        msg.className = 'formmsg ok';
+        msg.textContent = t('rev.ok', getLang());
+        form.reset();
+      } catch (err) {
+        msg.hidden = false;
+        msg.className = 'formmsg err';
+        msg.textContent = t('annsub.err', getLang());
+      }
+    });
+  </script>
 </Base>
 <style>
   .meta { color: var(--ink-soft); margin: 4px 0 0; }
+  .flabel { display: block; font-family: var(--mono); font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); margin-bottom: 6px; }
 </style>
