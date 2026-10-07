@@ -120,6 +120,8 @@ import Base from '../layouts/Base.astro';
 
   <script>
     import { t, getLang } from '../lib/i18n.js';
+    import { track } from '../lib/analytics.js';
+    track('survey_start'); // funnel: survey page entry (fire-and-forget)
     const form = document.getElementById('sv-form');
     const msg = document.getElementById('sv-msg');
     const fill = document.getElementById('sv-fill');
