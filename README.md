@@ -133,8 +133,9 @@ No secrets are committed. `.env` is gitignored.
 ## Phase 2 — community features (this build)
 
 - **Public submissions:** `/announce` (announcements), review form on every business page,
-  `/feature` (featured placement requests). All POST to public `/api/submit-*` routes with
-  server-side validation, a honeypot field, and per-IP rate limiting (5/hour, best effort).
+  `/feature` (featured placement requests). All POST to the public `/api/submit` route
+  (`{type}` dispatches announcement/review/featured) with server-side validation, a
+  honeypot field, and per-IP rate limiting (5/hour, best effort).
   Submissions land in `src/data/submissions.json` as `{type, status:"pending"}` via the
   same GitHub-commit write path. No login, no account — but nothing goes live unreviewed.
 - **Moderation:** `/admin` → Submissions tab lists the queue newest-first with a pending
@@ -146,3 +147,36 @@ No secrets are committed. `.env` is gitignored.
   business pages ("Feature this business") and the home owner CTA band.
 - Submitted announcements carry the author's text in both language slots until translated;
   the agent can refine the Nepali via the Announcements admin tab.
+
+## Tap analytics (funnel: visit → call/WhatsApp tap)
+
+**What is tracked** — four events, via `POST /api/event` (`api/event.js`, the 4th
+serverless function; Hobby cap is 12):
+- `call_tap` + `listingId` — a `tel:` link was tapped
+- `whatsapp_tap` + `listingId` — a `wa.me` link was tapped (non-listing taps,
+  e.g. the service-request form and list-business CTA, carry `context` instead)
+- `search` + `qlen` — hero search submitted, with a query-**length** bucket (0–3) only
+- `survey_start` — survey page entry (event hook ready in `src/lib/analytics.js`;
+  wire `track('survey_start')` when the survey page lands)
+
+The client fires with `navigator.sendBeacon` (fire-and-forget, `try/catch`
+everywhere — analytics can never break the page or block navigation). Taps are
+caught by a single delegated listener in `src/layouts/Base.astro` matching
+`a[href^="tel:"]` / `a[href^="https://wa.me"]`, so server-rendered cards,
+live-search results, and future links are all covered. Listing anchors carry
+`data-listing-id`; the search form sends only the length bucket.
+
+**Storage:** each event is one JSON line appended to
+`analytics/events-YYYY-MM-DD.jsonl` in the repo, via the GitHub-commit write
+path (`ANALYTICS_PATH(date)` + `getTextFile`/`putTextFile` in `api/lib/github.js`;
+concurrent writes retry once on sha conflict). Commit messages are quiet
+(`analytics: 2026-10-07`).
+
+**What is deliberately NOT tracked:** no personal data, no IP addresses stored,
+no cookies, no fingerprinting, no raw query text, no pageview tracking. The
+endpoint validates the event name against an allowlist and clamps all fields.
+
+**Admin:** `/admin` → Analytics tab reads the public `analytics/*.jsonl` files
+straight from GitHub (no new serverless function needed) and shows per-day
+totals, top 10 listings by taps (names resolved via the authed listings fetch),
+and a 7-day taps bar trend (inline SVG, no chart lib).
