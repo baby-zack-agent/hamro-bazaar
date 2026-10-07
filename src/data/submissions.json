@@ -14,7 +14,7 @@
  {
   "id": "sub-muyctpeb-we3d",
   "type": "survey",
-  "status": "pending",
+  "status": "rejected",
   "created": "2026-10-07T17:01:11.507Z",
   "grocery": "hamro-store",
   "service": "diaspora",
@@ -23,6 +23,7 @@
   "trigger": "",
   "zip": "",
   "language": "",
-  "phone": ""
+  "phone": "",
+  "moderated": "2026-10-07T17:01:28.878Z"
  }
 ]
