@@ -1,7 +1,7 @@
 // Best-effort service worker. Cache-first shell + data; offline fallback page.
 // Registration is wrapped in try/catch on the page — this file must never throw
 // in a way that breaks the site (it can't: it only runs in the SW context).
-const CACHE = 'hamro-bazaar-v1';
+const CACHE = 'hamro-bazaar-v2';
 const SHELL = [
   '/',
   '/browse',
@@ -10,6 +10,10 @@ const SHELL = [
   '/list-business',
   '/offline.html',
   '/manifest.json',
+  '/js/pwa-install.js',
+  '/icons/apple-touch-icon.png',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png',
 ];
 
 self.addEventListener('install', (event) => {
