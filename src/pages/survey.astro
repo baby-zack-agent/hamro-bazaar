@@ -297,6 +297,12 @@ import Base from '../layouts/Base.astro';
     });
     form?.addEventListener('input', updateProgress);
     updateProgress();
+    // Hook for the layout: Base.astro re-applies i18n after this script runs,
+    // which would clobber the interpolated count with the raw "{n}" template.
+    window.__hbSurveyRefresh = updateProgress;
+    window.addEventListener('pagehide', () => {
+      if (window.__hbSurveyRefresh === updateProgress) window.__hbSurveyRefresh = undefined;
+    });
 
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();

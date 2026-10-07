@@ -175,6 +175,9 @@ const fontCss = 'https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:
 
       // Language: re-apply on each navigation; bind fresh toggle nodes only.
       applyLang(getLang());
+      // Page-level dynamic strings (e.g. the survey's interpolated "{n}"
+      // counter) must be refreshed after applyLang clobbers them.
+      try { window.__hbSurveyRefresh?.(); } catch {}
       document.querySelectorAll('[data-lang-toggle]').forEach((btn) => {
         if (btn.dataset.hbBound) return;
         btn.dataset.hbBound = '1';
