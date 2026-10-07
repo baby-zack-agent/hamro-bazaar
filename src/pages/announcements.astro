@@ -10,8 +10,9 @@ const announcements = getAnnouncements();
     <section class="block">
       <h1 class="eyebrow" data-i18n="ann.title" style="margin-bottom:8px">Announcements</h1>
       <p data-i18n="ann.sub" style="color:var(--ink-soft)">New products, sales, and community news — free for every business to post.</p>
-      <div style="margin:14px 0 4px">
+      <div style="margin:14px 0 4px;display:flex;gap:8px;flex-wrap:wrap">
         <a class="btn btn-ghost" href="/announce"><span data-i18n="ann.postOwn">Post your own announcement</span></a>
+        <a class="btn btn-ghost" href="/survey"><span data-i18n="sv.cta">Take the 2-minute survey</span></a>
       </div>
       <div class="cards" style="margin-top:16px">
         {announcements.map((a) => <AnnouncementCard announcement={a} />)}

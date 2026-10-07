@@ -1,0 +1,193 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Community spending survey" tab="home">
+  <div class="wrap">
+    <section class="block">
+      <h1 class="eyebrow" data-i18n="sv.title" style="margin-bottom:8px">Community spending survey</h1>
+      <p data-i18n="sv.sub" style="color:var(--ink-soft)">2 minutes. Help us understand how our community shops — so we build the right thing.</p>
+
+      <div class="sv-progress" aria-hidden="true">
+        <div class="sv-bar"><span id="sv-fill"></span></div>
+        <p id="sv-count" data-i18n="sv.answered" style="font-size:13px;color:var(--ink-faint);margin-top:6px">0 of 8 answered</p>
+      </div>
+
+      <form id="sv-form" style="margin-top:8px">
+        <!-- Q1 grocery -->
+        <div class="field sv-q">
+          <label data-i18n="sv.q1">Where did your household’s last ~$100 of desi groceries go?</label>
+          <div class="opts" role="radiogroup">
+            <label class="opt"><input type="radio" name="grocery" value="hamro-listed" required /><span data-i18n="sv.q1o1">A desi store listed on Hamro Bazaar</span></label>
+            <label class="opt"><input type="radio" name="grocery" value="other-desi" /><span data-i18n="sv.q1o2">Another Nepali/Indian grocery store</span></label>
+            <label class="opt"><input type="radio" name="grocery" value="mainstream" /><span data-i18n="sv.q1o3">A mainstream supermarket</span></label>
+            <label class="opt"><input type="radio" name="grocery" value="online" /><span data-i18n="sv.q1o4">Online</span></label>
+            <label class="opt"><input type="radio" name="grocery" value="mix" /><span data-i18n="sv.q1o5">A mix of these</span></label>
+          </div>
+        </div>
+
+        <!-- Q2 service -->
+        <div class="field sv-q">
+          <label data-i18n="sv.q2">Where did your last service need go? (mechanic, tax, salon…)</label>
+          <div class="opts" role="radiogroup">
+            <label class="opt"><input type="radio" name="service" value="diaspora" required /><span data-i18n="sv.q2o1">A Nepali/Indian-owned business</span></label>
+            <label class="opt"><input type="radio" name="service" value="mainstream" /><span data-i18n="sv.q2o2">A mainstream business</span></label>
+            <label class="opt"><input type="radio" name="service" value="diy-friend" /><span data-i18n="sv.q2o3">Did it myself / asked a friend</span></label>
+            <label class="opt"><input type="radio" name="service" value="none" /><span data-i18n="sv.q2o4">Haven’t needed one recently</span></label>
+          </div>
+        </div>
+
+        <!-- Q3 discovery -->
+        <div class="field sv-q">
+          <label data-i18n="sv.q3">How do you usually FIND a desi business today?</label>
+          <div class="opts" role="radiogroup">
+            <label class="opt"><input type="radio" name="discovery" value="whatsapp" required /><span data-i18n="sv.q3o1">WhatsApp group</span></label>
+            <label class="opt"><input type="radio" name="discovery" value="facebook" /><span data-i18n="sv.q3o2">Facebook</span></label>
+            <label class="opt"><input type="radio" name="discovery" value="google" /><span data-i18n="sv.q3o3">Google / maps</span></label>
+            <label class="opt"><input type="radio" name="discovery" value="friend" /><span data-i18n="sv.q3o4">Friend or family</span></label>
+            <label class="opt"><input type="radio" name="discovery" value="hamro" /><span data-i18n="sv.q3o5">Hamro Bazaar</span></label>
+          </div>
+        </div>
+
+        <!-- Q4 open text -->
+        <div class="field sv-q">
+          <label for="sv-trigger"><span data-i18n="sv.q4">What would make you try a NEW desi business?</span> <span class="sv-tag" data-i18n="sv.optional">optional</span></label>
+          <textarea id="sv-trigger" name="trigger" maxlength="1000" data-i18n-ph="sv.q4ph" placeholder="Optional — a sentence or two is plenty"></textarea>
+        </div>
+
+        <!-- Q5 online intent -->
+        <div class="field sv-q">
+          <label data-i18n="sv.q5">Would you order groceries or book services online if it were in Nepali or Hindi?</label>
+          <div class="opts" role="radiogroup">
+            <label class="opt"><input type="radio" name="onlineIntent" value="yes" required /><span data-i18n="sv.q5o1">Yes</span></label>
+            <label class="opt"><input type="radio" name="onlineIntent" value="maybe" /><span data-i18n="sv.q5o2">Maybe</span></label>
+            <label class="opt"><input type="radio" name="onlineIntent" value="no" /><span data-i18n="sv.q5o3">No</span></label>
+          </div>
+        </div>
+
+        <!-- Q6 zip -->
+        <div class="field sv-q">
+          <label for="sv-zip"><span data-i18n="sv.q6">Home zip code</span> <span class="sv-tag" data-i18n="sv.optional">optional</span></label>
+          <input id="sv-zip" name="zip" inputmode="numeric" maxlength="10" data-i18n-ph="sv.q6ph" placeholder="e.g. 15236" />
+        </div>
+
+        <!-- Q7 language -->
+        <div class="field sv-q">
+          <label><span data-i18n="sv.q7">Preferred language</span> <span class="sv-tag" data-i18n="sv.optional">optional</span></label>
+          <div class="opts" role="radiogroup">
+            <label class="opt"><input type="radio" name="language" value="Nepali" /><span data-i18n="sv.q7o1">Nepali</span></label>
+            <label class="opt"><input type="radio" name="language" value="Hindi" /><span data-i18n="sv.q7o2">Hindi</span></label>
+            <label class="opt"><input type="radio" name="language" value="English" /><span data-i18n="sv.q7o3">English</span></label>
+          </div>
+        </div>
+
+        <!-- Q8 phone -->
+        <div class="field sv-q">
+          <label for="sv-phone"><span data-i18n="sv.q8">Phone</span> <span class="sv-tag" data-i18n="sv.optional">optional</span></label>
+          <input id="sv-phone" name="phone" type="tel" inputmode="tel" maxlength="20" />
+          <p style="font-size:13px;color:var(--ink-faint);margin-top:4px" data-i18n="sv.q8note">Optional — only for the raffle. We never share it.</p>
+        </div>
+
+        {/* honeypot — humans never fill this */}
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+        <button class="btn btn-primary btn-block" type="submit">
+          <span data-i18n="sv.send">Submit survey</span>
+        </button>
+        <p id="sv-msg" class="formmsg" hidden></p>
+        <p style="font-size:13px;color:var(--ink-faint)" data-i18n="sv.note">No account needed. Anonymous unless you share your phone.</p>
+      </form>
+
+      <div id="sv-thanks" class="notice" hidden style="margin-top:16px">
+        <p data-i18n="sv.ok" style="margin:0">Thank you! Your answers help us build what the community actually wants.</p>
+      </div>
+    </section>
+  </div>
+
+  <style>
+    .sv-progress { margin: 16px 0 4px; }
+    .sv-bar { height: 6px; border-radius: 999px; background: var(--paper-deep); overflow: hidden; }
+    .sv-bar span { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--maroon); transition: width 250ms ease; }
+    .sv-q { margin-bottom: 20px; }
+    .sv-tag { font-size: 11px; color: var(--ink-faint); text-transform: none; letter-spacing: 0; }
+    .opts { display: grid; gap: 8px; margin-top: 2px; }
+    .opt { position: relative; display: block; border: var(--hairline); border-radius: 4px; background: var(--paper-raised); padding: 12px 14px; cursor: pointer; min-height: 48px; display: flex; align-items: center; }
+    .opt input { position: absolute; opacity: 0; pointer-events: none; }
+    .opt span { font-size: var(--fs-body); color: var(--ink); }
+    .opt.sel { border-color: var(--maroon); border-width: 2px; padding: 11px 13px; background: color-mix(in oklab, var(--maroon) 6%, var(--paper-raised)); }
+    .opt:active { transform: scale(0.99); }
+  </style>
+
+  <script>
+    import { t, getLang } from '../lib/i18n.js';
+    const form = document.getElementById('sv-form');
+    const msg = document.getElementById('sv-msg');
+    const fill = document.getElementById('sv-fill');
+    const count = document.getElementById('sv-count');
+    const thanks = document.getElementById('sv-thanks');
+
+    function answeredCount() {
+      let n = 0;
+      for (const name of ['grocery', 'service', 'discovery', 'onlineIntent', 'language']) {
+        if (form.querySelector(`input[name="${name}"]:checked`)) n++;
+      }
+      if (form.trigger.value.trim()) n++;
+      if (form.zip.value.trim()) n++;
+      if (form.phone.value.trim()) n++;
+      return n;
+    }
+
+    function updateProgress() {
+      const n = answeredCount();
+      fill.style.width = `${(n / 8) * 100}%`;
+      count.textContent = t('sv.answered', getLang()).replace('{n}', String(n));
+    }
+
+    form?.addEventListener('change', (e) => {
+      const input = e.target;
+      if (input.matches('.opt input')) {
+        form.querySelectorAll(`input[name="${input.name}"]`).forEach((r) => {
+          r.closest('.opt').classList.toggle('sel', r.checked);
+        });
+      }
+      updateProgress();
+    });
+    form?.addEventListener('input', updateProgress);
+    updateProgress();
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.hidden = true;
+      const fd = new FormData(form);
+      const body = {
+        type: 'survey',
+        grocery: String(fd.get('grocery') || ''),
+        service: String(fd.get('service') || ''),
+        discovery: String(fd.get('discovery') || ''),
+        trigger: String(fd.get('trigger') || '').trim(),
+        onlineIntent: String(fd.get('onlineIntent') || ''),
+        zip: String(fd.get('zip') || '').trim(),
+        language: String(fd.get('language') || ''),
+        phone: String(fd.get('phone') || '').trim(),
+        website: String(fd.get('website') || ''), // honeypot
+      };
+      try {
+        const res = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'failed');
+        form.hidden = true;
+        document.querySelector('.sv-progress').hidden = true;
+        thanks.hidden = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        msg.hidden = false;
+        msg.className = 'formmsg err';
+        msg.textContent = t('sv.err', getLang());
+      }
+    });
+  </script>
+</Base>

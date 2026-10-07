@@ -18,11 +18,11 @@ const wa = waLink(listing.phone, waGreeting(listing, lang));
   {listing.address && <div class="addr">{listing.address}</div>}
   <div class="actions">
     {tel ? (
-      <a class="btn btn-primary" href={tel}><span data-i18n="card.call">Call</span></a>
+      <a class="btn btn-primary" href={tel} data-listing-id={listing.id}><span data-i18n="card.call">Call</span></a>
     ) : (
       <span class="nophone" data-i18n="card.noPhone">phone not listed</span>
     )}
-    {wa && <a class="btn btn-ghost" href={wa} target="_blank" rel="noopener">WhatsApp</a>}
+    {wa && <a class="btn btn-ghost" href={wa} target="_blank" rel="noopener" data-listing-id={listing.id}>WhatsApp</a>}
   </div>
 </article>
 <style>

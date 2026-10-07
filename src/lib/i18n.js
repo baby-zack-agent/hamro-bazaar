@@ -211,6 +211,75 @@ export const STRINGS = {
   },
   'feat.link': { en: 'Feature this business', ne: 'यो व्यवसाय विशेष बनाउनुहोस्' },
   'band.feat': { en: 'Get featured — $25/mo', ne: 'विशेष बन्नुहोस् — $२५/महिना' },
+
+  // community spending survey
+  'sv.cta': { en: 'Take the 2-minute survey', ne: '२-मिनेटको सर्वेक्षण भर्नुहोस्' },
+  'sv.title': { en: 'Community spending survey', ne: 'सामुदायिक खर्च सर्वेक्षण' },
+  'sv.sub': {
+    en: '2 minutes. Help us understand how our community shops — so we build the right thing.',
+    ne: '२ मिनेट। हाम्रो समुदायले कसरी किनमेल गर्छ बुझ्न मद्दत गर्नुहोस् — ताकि हामी सही कुरा बनाउन सकौं।',
+  },
+  'sv.answered': { en: '{n} of 8 answered', ne: '{n} / ८ उत्तर दिइयो' },
+  'sv.optional': { en: 'optional', ne: 'वैकल्पिक' },
+  'sv.q1': {
+    en: 'Where did your household’s last ~$100 of desi groceries go?',
+    ne: 'तपाईंको घरको पछिल्लो ~$१०० को देसी किराना कहाँ खर्च भयो?',
+  },
+  'sv.q1o1': { en: 'A desi store listed on Hamro Bazaar', ne: 'हाम्रो बजारमा सूचीबद्ध देसी पसल' },
+  'sv.q1o2': { en: 'Another Nepali/Indian grocery store', ne: 'अर्को नेपाली/भारतीय किराना पसल' },
+  'sv.q1o3': { en: 'A mainstream supermarket', ne: 'मुख्यधाराको सुपरमार्केट' },
+  'sv.q1o4': { en: 'Online', ne: 'अनलाइन' },
+  'sv.q1o5': { en: 'A mix of these', ne: 'यीमध्ये धेरै ठाउँ' },
+  'sv.q2': {
+    en: 'Where did your last service need go? (mechanic, tax, salon…)',
+    ne: 'तपाईंको पछिल्लो सेवा आवश्यकता कहाँ गयो? (मेकानिक, कर, सैलुन…)',
+  },
+  'sv.q2o1': { en: 'A Nepali/Indian-owned business', ne: 'नेपाली/भारतीय स्वामित्वको व्यवसाय' },
+  'sv.q2o2': { en: 'A mainstream business', ne: 'मुख्यधाराको व्यवसाय' },
+  'sv.q2o3': { en: 'Did it myself / asked a friend', ne: 'आफैं गरें / साथीलाई सोधें' },
+  'sv.q2o4': { en: 'Haven’t needed one recently', ne: 'हालसालै आवश्यक परेन' },
+  'sv.q3': {
+    en: 'How do you usually FIND a desi business today?',
+    ne: 'तपाईं आजकल देसी व्यवसाय कसरी खोज्नुहुन्छ?',
+  },
+  'sv.q3o1': { en: 'WhatsApp group', ne: 'व्हाट्सएप ग्रुप' },
+  'sv.q3o2': { en: 'Facebook', ne: 'फेसबुक' },
+  'sv.q3o3': { en: 'Google / maps', ne: 'गुगल / नक्सा' },
+  'sv.q3o4': { en: 'Friend or family', ne: 'साथी वा परिवार' },
+  'sv.q3o5': { en: 'Hamro Bazaar', ne: 'हाम्रो बजार' },
+  'sv.q4': {
+    en: 'What would make you try a NEW desi business?',
+    ne: 'तपाईंलाई नयाँ देसी व्यवसाय प्रयास गर्न के ले उत्प्रेरित गर्छ?',
+  },
+  'sv.q4ph': { en: 'Optional — a sentence or two is plenty', ne: 'वैकल्पिक — एक-दुई वाक्य पर्याप्त छ' },
+  'sv.q5': {
+    en: 'Would you order groceries or book services online if it were in Nepali or Hindi?',
+    ne: 'नेपाली वा हिन्दीमा भए किराना अनलाइन अर्डर वा सेवा बुक गर्नुहुन्छ?',
+  },
+  'sv.q5o1': { en: 'Yes', ne: 'हुन्छ' },
+  'sv.q5o2': { en: 'Maybe', ne: 'सायद' },
+  'sv.q5o3': { en: 'No', ne: 'हुँदैन' },
+  'sv.q6': { en: 'Home zip code', ne: 'घरको जिप कोड' },
+  'sv.q6ph': { en: 'e.g. 15236', ne: 'जस्तै: 15236' },
+  'sv.q7': { en: 'Preferred language', ne: 'रुचाइएको भाषा' },
+  'sv.q7o1': { en: 'Nepali', ne: 'नेपाली' },
+  'sv.q7o2': { en: 'Hindi', ne: 'हिन्दी' },
+  'sv.q7o3': { en: 'English', ne: 'अंग्रेजी' },
+  'sv.q8': { en: 'Phone', ne: 'फोन' },
+  'sv.q8note': {
+    en: 'Optional — only for the raffle. We never share it.',
+    ne: 'वैकल्पिक — केवल चिट्ठाका लागि। हामी कहिल्यै साझा गर्दैनौं।',
+  },
+  'sv.send': { en: 'Submit survey', ne: 'सर्वेक्षण पठाउनुहोस्' },
+  'sv.ok': {
+    en: 'Thank you! Your answers help us build what the community actually wants.',
+    ne: 'धन्यवाद! तपाईंका उत्तरहरूले समुदायले साँच्चै चाहेको कुरा बनाउन मद्दत गर्छ।',
+  },
+  'sv.err': { en: 'Something went wrong. Please try again.', ne: 'केही गलत भयो। कृपया पुन: प्रयास गर्नुहोस्।' },
+  'sv.note': {
+    en: 'No account needed. Anonymous unless you share your phone.',
+    ne: 'खाता चाहिँदैन। फोन नदिएसम्म गोप्य रहन्छ।',
+  },
 };
 
 export function t(key, lang = 'en') {

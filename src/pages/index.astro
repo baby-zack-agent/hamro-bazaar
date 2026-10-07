@@ -24,6 +24,9 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
         </button>
       </form>
       <div class="cards" id="search-results" style="margin-top:12px" hidden></div>
+      <div style="margin-top:14px">
+        <a class="btn btn-ghost" href="/survey"><span data-i18n="sv.cta">Take the 2-minute survey</span></a>
+      </div>
     </section>
 
     <section class="block">
@@ -68,6 +71,7 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
     import { searchListings, categoryLabel } from '../lib/db.js';
     import { telLink, waLink, waGreeting } from '../lib/format.js';
     import { getLang, t } from '../lib/i18n.js';
+    import { track, qlenBucket } from '../lib/analytics.js';
 
     const data = JSON.parse(document.getElementById('hb-listings-data').textContent);
     const form = document.getElementById('home-search');
@@ -83,8 +87,8 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
         <div class="meta">${categoryLabel(l.category, lang)}</div>
         ${l.address ? `<div class="addr">${escapeHTML(l.address)}</div>` : ''}
         <div class="actions">
-          ${tel ? `<a class="btn btn-primary" href="${tel}">${t('card.call', lang)}</a>` : `<span class="nophone">${t('card.noPhone', lang)}</span>`}
-          ${wa ? `<a class="btn btn-ghost" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
+          ${tel ? `<a class="btn btn-primary" href="${tel}" data-listing-id="${l.id}">${t('card.call', lang)}</a>` : `<span class="nophone">${t('card.noPhone', lang)}</span>`}
+          ${wa ? `<a class="btn btn-ghost" href="${wa}" target="_blank" rel="noopener" data-listing-id="${l.id}">WhatsApp</a>` : ''}
         </div></article>`;
     }
     function escapeHTML(s) {
@@ -101,7 +105,13 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
     }
     // Live filter; plain form submit still works without JS (GET /browse?q=).
     input.addEventListener('input', render);
-    form.addEventListener('submit', (e) => { if (input.value.trim()) e.preventDefault(); });
+    form.addEventListener('submit', (e) => {
+      const q = input.value.trim();
+      if (q) {
+        track('search', { qlen: qlenBucket(q) }); // bucket only — raw query text never leaves the device
+        e.preventDefault();
+      }
+    });
     document.addEventListener('hb:lang', render);
     // Announcement titles re-render on toggle (shared pattern).
     function renderAnn(lang) {

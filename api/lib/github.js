@@ -51,3 +51,36 @@ export async function putJsonFile(path, data, message) {
 export const LISTINGS_PATH = 'src/data/listings.json';
 export const ANNOUNCEMENTS_PATH = 'src/data/announcements.json';
 export const SUBMISSIONS_PATH = 'src/data/submissions.json';
+
+// --- Tap analytics (append-only JSONL, one file per UTC day) ---
+export function ANALYTICS_PATH(date) {
+  const d = date instanceof Date ? date : new Date(date);
+  return `analytics/events-${d.toISOString().slice(0, 10)}.jsonl`;
+}
+
+// Raw text read. Missing file -> { sha: null, text: '' } (caller creates it).
+export async function getTextFile(path) {
+  const { token, repo, branch } = cfg();
+  const url = `${API}/repos/${repo}/contents/${path}?ref=${encodeURIComponent(branch)}`;
+  const res = await fetch(url, { headers: headers(token) });
+  if (res.status === 404) return { sha: null, text: '' };
+  if (!res.ok) throw new Error(`GitHub read failed: ${res.status} ${await res.text()}`);
+  const json = await res.json();
+  return { sha: json.sha, text: Buffer.from(json.content || '', 'base64').toString('utf8') };
+}
+
+// Raw text write. sha === null creates the file (GitHub makes parent dirs).
+export async function putTextFile(path, text, message, sha) {
+  const { token, repo, branch } = cfg();
+  const url = `${API}/repos/${repo}/contents/${path}`;
+  const body = {
+    message,
+    content: Buffer.from(text, 'utf8').toString('base64'),
+    branch,
+    committer: { name: 'baby-zack-agent', email: 'baby-zack-agent@users.noreply.github.com' },
+  };
+  if (sha) body.sha = sha;
+  const res = await fetch(url, { method: 'PUT', headers: headers(token), body: JSON.stringify(body) });
+  if (!res.ok) throw new Error(`GitHub write failed: ${res.status} ${await res.text()}`);
+  return res.json();
+}

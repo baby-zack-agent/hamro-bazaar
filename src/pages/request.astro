@@ -43,6 +43,7 @@ const hoods = neighborhoods();
     </section>
   </div>
   <script define:vars={{ waNumber }}>
+    import { track } from '../lib/analytics.js';
     document.getElementById('req-form')?.addEventListener('submit', (e) => {
       e.preventDefault();
       if (!waNumber) return;
@@ -50,6 +51,7 @@ const hoods = neighborhoods();
       const hood = document.getElementById('f-hood').value;
       const langpref = document.getElementById('f-lang').value;
       if (!need) return;
+      track('whatsapp_tap', { context: 'request' }); // no listing — the service-request flow itself
       const msg = `Hamro Bazaar service request\nNeed: ${need}\nNeighborhood: ${hood}${langpref ? `\nLanguage: ${langpref}` : ''}`;
       window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
     });

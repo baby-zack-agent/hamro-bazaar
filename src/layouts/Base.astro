@@ -70,6 +70,22 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
 
   <script>
     import { getLang, setLang, applyLang } from '../lib/i18n.js';
+    import { track } from '../lib/analytics.js';
+
+    // Tap analytics: delegated, fire-and-forget. Catches every tel:/wa.me
+    // link on the site — server-rendered cards, live-search results, and any
+    // future links — without touching each template's click handling.
+    document.addEventListener('click', (e) => {
+      try {
+        const a = e.target.closest('a[href^="tel:"], a[href^="https://wa.me"]');
+        if (!a) return;
+        const href = a.getAttribute('href') || '';
+        track(href.startsWith('tel:') ? 'call_tap' : 'whatsapp_tap', {
+          listingId: a.getAttribute('data-listing-id') || null,
+          context: a.getAttribute('data-track-context') || null,
+        });
+      } catch { /* never break navigation */ }
+    }, { capture: true });
 
     // Language
     applyLang(getLang());

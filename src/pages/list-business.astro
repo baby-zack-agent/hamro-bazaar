@@ -28,7 +28,7 @@ const waHref = waNumber
       </div>
 
       {waHref ? (
-        <a class="btn btn-primary btn-block" href={waHref} target="_blank" rel="noopener"><span data-i18n="own.cta">Start on WhatsApp</span></a>
+        <a class="btn btn-primary btn-block" href={waHref} target="_blank" rel="noopener" data-track-context="list-business"><span data-i18n="own.cta">Start on WhatsApp</span></a>
       ) : (
         <p class="notice">WhatsApp onboarding opens soon — check back shortly.</p>
       )}
