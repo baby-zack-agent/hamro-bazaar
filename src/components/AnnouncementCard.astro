@@ -1,0 +1,12 @@
+---
+import { categoryLabel } from '../lib/db.js';
+
+// Pure markup. Pages that list announcements include one shared JSON blob
+// (#hb-ann-data) + one rerender script for the language toggle.
+const { announcement, lang = 'en' } = Astro.props;
+const title = announcement.title?.[lang] || announcement.title?.en || '';
+---
+<article class="acard" data-ann={announcement.id}>
+  <div class="when">{announcement.date} · {categoryLabel(announcement.category, lang)}</div>
+  <p>{title}</p>
+</article>

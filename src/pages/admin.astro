@@ -1,0 +1,252 @@
+---
+import Base from '../layouts/Base.astro';
+import { CATEGORIES, categoryLabel } from '../lib/db.js';
+---
+<Base title="Admin">
+  <div class="wrap">
+    <section class="block">
+      <h1 class="eyebrow">Admin</h1>
+
+      <div id="login-pane">
+        <p class="notice">Restricted area. Sign in with the admin key.</p>
+        <form id="login-form" style="margin-top:12px">
+          <div class="field">
+            <label for="adm-key">Admin key</label>
+            <input id="adm-key" type="password" autocomplete="current-password" required minlength="8" />
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+          <p id="login-err" style="color:var(--maroon-deep);font-size:13px" hidden>Wrong key. Try again.</p>
+        </form>
+      </div>
+
+      <div id="admin-pane" hidden>
+        <div class="admin-tabs" role="tablist">
+          <button class="chip" id="tab-listings" aria-pressed="true">Listings</button>
+          <button class="chip" id="tab-ann" aria-pressed="false">Announcements</button>
+          <button class="chip" id="logout" style="margin-left:auto">Log out</button>
+        </div>
+
+        <div id="pane-listings">
+          <h2 class="eyebrow">Add / edit listing</h2>
+          <form id="listing-form" style="margin:12px 0 20px">
+            <input type="hidden" id="lf-id" />
+            <div class="field"><label for="lf-name">Name *</label><input id="lf-name" required maxlength="120" /></div>
+            <div class="field"><label for="lf-cat">Category *</label>
+              <select id="lf-cat">{CATEGORIES.map((c) => <option value={c}>{categoryLabel(c)}</option>)}</select>
+            </div>
+            <div class="field"><label for="lf-phone">Phone</label><input id="lf-phone" inputmode="tel" placeholder="(412) 555-0123" /></div>
+            <div class="field"><label for="lf-addr">Address</label><input id="lf-addr" maxlength="200" /></div>
+            <div class="field"><label for="lf-web">Website</label><input id="lf-web" inputmode="url" placeholder="https://…" /></div>
+            <div class="field"><label for="lf-hours">Hours</label><input id="lf-hours" maxlength="200" placeholder="Mon–Sat 9am–8pm" /></div>
+            <div class="field"><label for="lf-services">Services (comma separated)</label><input id="lf-services" maxlength="500" /></div>
+            <div class="field"><label for="lf-langs">Languages (comma separated)</label><input id="lf-langs" maxlength="200" placeholder="Nepali, English" /></div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-primary" type="submit" style="flex:1">Save listing</button>
+              <button class="btn btn-ghost" type="button" id="lf-reset">Clear</button>
+            </div>
+            <p id="lf-msg" style="font-size:13px" hidden></p>
+          </form>
+          <h2 class="eyebrow">All listings (<span id="lcount">…</span>)</h2>
+          <div style="overflow-x:auto">
+          <table class="admin-table" id="listing-table">
+            <thead><tr><th>Name</th><th>Cat</th><th>Phone</th><th>Flags</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+          </table>
+          </div>
+        </div>
+
+        <div id="pane-ann" hidden>
+          <h2 class="eyebrow">Add announcement</h2>
+          <form id="ann-form" style="margin:12px 0 20px">
+            <div class="field"><label for="af-en">Title (English) *</label><input id="af-en" required maxlength="200" /></div>
+            <div class="field"><label for="af-ne">Title (Nepali) *</label><input id="af-ne" required maxlength="200" /></div>
+            <div class="field"><label for="af-cat">Category</label>
+              <select id="af-cat">{CATEGORIES.map((c) => <option value={c}>{categoryLabel(c)}</option>)}<option value="other">Community</option></select>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-primary" type="submit" style="flex:1">Publish announcement</button>
+            </div>
+            <p id="af-msg" style="font-size:13px" hidden></p>
+          </form>
+          <h2 class="eyebrow">All announcements</h2>
+          <div style="overflow-x:auto">
+          <table class="admin-table" id="ann-table">
+            <thead><tr><th>Date</th><th>Title</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function api(path, method = 'GET', body) {
+  const res = await fetch(path, {
+    method,
+    headers: body ? { 'Content-Type': 'application/json' } : undefined,
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (res.status === 401) { showLogin(); throw new Error('unauthorized'); }
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `request failed (${res.status})`);
+  return data;
+}
+function showLogin() { $('#login-pane').hidden = false; $('#admin-pane').hidden = true; }
+function showAdmin() { $('#login-pane').hidden = true; $('#admin-pane').hidden = false; }
+
+// --- login ---
+$('#login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  $('#login-err').hidden = true;
+  try {
+    const res = await fetch('/api/admin-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: $('#adm-key').value }),
+    });
+    if (!res.ok) { $('#login-err').hidden = false; return; }
+    $('#adm-key').value = '';
+    showAdmin();
+    await Promise.all([loadListings(), loadAnnouncements()]);
+  } catch { $('#login-err').hidden = false; }
+});
+$('#logout').addEventListener('click', async () => {
+  await fetch('/api/admin-logout', { method: 'POST' }).catch(() => {});
+  showLogin();
+});
+
+// --- tabs ---
+for (const [tab, pane] of [['#tab-listings', '#pane-listings'], ['#tab-ann', '#pane-ann']]) {
+  $(tab).addEventListener('click', () => {
+    $('#tab-listings').setAttribute('aria-pressed', tab === '#tab-listings');
+    $('#tab-ann').setAttribute('aria-pressed', tab === '#tab-ann');
+    $('#pane-listings').hidden = tab !== '#tab-listings';
+    $('#pane-ann').hidden = tab !== '#tab-ann';
+  });
+}
+
+// --- listings ---
+let listingsCache = [];
+async function loadListings() {
+  const data = await api('/api/admin/listings');
+  listingsCache = data.listings;
+  $('#lcount').textContent = listingsCache.length;
+  const tb = $('#listing-table tbody');
+  tb.innerHTML = listingsCache.map((l) => `<tr>
+    <td><strong>${esc(l.name)}</strong><br><span style="color:var(--ink-faint)">${esc(l.address || '')}</span></td>
+    <td>${esc(l.category)}</td>
+    <td>${esc(l.phone || '—')}</td>
+    <td>${l.featured ? '★ ' : ''}${l.verified ? '✓' : ''}</td>
+    <td><div class="rowbtns">
+      <button class="minibtn" data-act="edit" data-id="${l.id}">Edit</button>
+      <button class="minibtn ${l.featured ? 'on' : ''}" data-act="feat" data-id="${l.id}">Feat</button>
+      <button class="minibtn ${l.verified ? 'ok-on' : ''}" data-act="ver" data-id="${l.id}">Ver</button>
+      <button class="minibtn" data-act="del" data-id="${l.id}">Del</button>
+    </div></td></tr>`).join('');
+}
+$('#listing-table').addEventListener('click', async (e) => {
+  const btn = e.target.closest('button[data-act]');
+  if (!btn) return;
+  const id = btn.getAttribute('data-id');
+  const act = btn.getAttribute('data-act');
+  try {
+    if (act === 'edit') {
+      const l = listingsCache.find((x) => x.id === id);
+      if (!l) return;
+      $('#lf-id').value = l.id; $('#lf-name').value = l.name; $('#lf-cat').value = l.category;
+      $('#lf-phone').value = l.phone || ''; $('#lf-addr').value = l.address || '';
+      $('#lf-web').value = l.website || ''; $('#lf-hours').value = l.hours || '';
+      $('#lf-services').value = (l.services || []).join(', ');
+      $('#lf-langs').value = (l.languages || []).join(', ');
+      $('#lf-name').focus();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (act === 'feat') {
+      const l = listingsCache.find((x) => x.id === id);
+      await api('/api/admin/featured', 'POST', { id, featured: !l.featured });
+      await loadListings();
+    } else if (act === 'ver') {
+      const l = listingsCache.find((x) => x.id === id);
+      await api('/api/admin/verify', 'POST', { id, verified: !l.verified });
+      await loadListings();
+    } else if (act === 'del') {
+      const l = listingsCache.find((x) => x.id === id);
+      if (confirm(`Delete "${l.name}"? This commits to GitHub immediately.`)) {
+        await api('/api/admin/listings', 'DELETE', { id });
+        await loadListings();
+      }
+    }
+  } catch (err) { alert(err.message); }
+});
+$('#lf-reset').addEventListener('click', () => $('#listing-form').reset());
+$('#listing-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = $('#lf-msg');
+  msg.hidden = true;
+  const body = {
+    id: $('#lf-id').value || undefined,
+    name: $('#lf-name').value.trim(),
+    category: $('#lf-cat').value,
+    phone: $('#lf-phone').value.trim(),
+    address: $('#lf-addr').value.trim(),
+    website: $('#lf-web').value.trim(),
+    hours: $('#lf-hours').value.trim() || null,
+    services: $('#lf-services').value.split(',').map((s) => s.trim()).filter(Boolean),
+    languages: $('#lf-langs').value.split(',').map((s) => s.trim()).filter(Boolean),
+  };
+  try {
+    await api('/api/admin/listings', 'POST', body);
+    msg.hidden = false;
+    msg.style.color = 'var(--ok)';
+    msg.textContent = 'Saved — committing to GitHub. The live site redeploys in ~1 minute.';
+    $('#listing-form').reset();
+    await loadListings();
+  } catch (err) { msg.hidden = false; msg.style.color = 'var(--maroon-deep)'; msg.textContent = err.message; }
+});
+
+// --- announcements ---
+async function loadAnnouncements() {
+  const data = await api('/api/admin/announcements');
+  const tb = $('#ann-table tbody');
+  tb.innerHTML = data.announcements.map((a) => `<tr>
+    <td>${esc(a.date)}</td>
+    <td>${esc(a.title?.en || '')}</td>
+    <td>${a.published ? 'live' : 'draft'}</td>
+    <td><div class="rowbtns">
+      <button class="minibtn ${a.published ? 'on' : ''}" data-act="pub" data-id="${a.id}">${a.published ? 'Unpublish' : 'Publish'}</button>
+    </div></td></tr>`).join('');
+}
+$('#ann-table').addEventListener('click', async (e) => {
+  const btn = e.target.closest('button[data-act="pub"]');
+  if (!btn) return;
+  try {
+    const id = btn.getAttribute('data-id');
+    const cur = btn.textContent.trim() === 'Unpublish';
+    await api('/api/admin/announcements/publish', 'POST', { id, published: !cur });
+    await loadAnnouncements();
+  } catch (err) { alert(err.message); }
+});
+$('#ann-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = $('#af-msg');
+  msg.hidden = true;
+  try {
+    await api('/api/admin/announcements', 'POST', {
+      title_en: $('#af-en').value.trim(),
+      title_ne: $('#af-ne').value.trim(),
+      category: $('#af-cat').value,
+      published: true,
+    });
+    msg.hidden = false; msg.style.color = 'var(--ok)';
+    msg.textContent = 'Published — committing to GitHub.';
+    $('#ann-form').reset();
+    await loadAnnouncements();
+  } catch (err) { msg.hidden = false; msg.style.color = 'var(--maroon-deep)'; msg.textContent = err.message; }
+});
+
+// If we already have a session cookie, skip the login form.
+api('/api/admin/listings').then(() => { showAdmin(); return Promise.all([loadListings(), loadAnnouncements()]); }).catch(() => showLogin());
+</script>
+</Base>

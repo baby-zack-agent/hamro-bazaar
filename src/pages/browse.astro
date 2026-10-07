@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import ListingCard from '../components/ListingCard.astro';
+import { CATEGORIES, filterListings, searchListings, neighborhoods, categoryLabel } from '../lib/db.js';
+
+const params = Astro.url.searchParams;
+const q = params.get('q') || '';
+const category = params.get('category') || 'all';
+const neighborhood = params.get('neighborhood') || 'all';
+const openNow = params.get('open') === '1';
+
+let results = filterListings({ category, neighborhood, openNow });
+if (q) {
+  const qLower = q.toLowerCase();
+  results = results.filter((l) => [l.name, l.address, l.category].join(' ').toLowerCase().includes(qLower));
+}
+const hoods = neighborhoods();
+
+function chipHref(patch) {
+  const p = new URLSearchParams({ q, category, neighborhood, ...(openNow ? { open: '1' } : {}) });
+  for (const [k, v] of Object.entries(patch)) {
+    if (v === null || v === undefined || v === '') p.delete(k);
+    else p.set(k, v);
+  }
+  const s = p.toString();
+  return s ? `/browse?${s}` : '/browse';
+}
+---
+<Base title="Browse" tab="browse">
+  <div class="wrap">
+    <section class="block">
+      <h1 class="eyebrow" data-i18n="browse.title" style="margin-bottom:12px">Browse businesses</h1>
+
+      <form class="searchbar" action="/browse" method="get" style="margin-bottom:12px">
+        <input type="search" name="q" value={q} data-i18n-ph="hero.searchPh" placeholder="What do you need?" aria-label="Search" />
+        <input type="hidden" name="category" value={category} />
+        <input type="hidden" name="neighborhood" value={neighborhood} />
+        {openNow && <input type="hidden" name="open" value="1" />}
+        <button class="btn btn-primary" type="submit" aria-label="Search">→</button>
+      </form>
+
+      <div class="chips" style="margin-bottom:8px" role="group" aria-label="Category">
+        <a class="chip" aria-pressed={category === 'all' ? 'true' : 'false'} href={chipHref({ category: null })}><span data-i18n="browse.all">All</span></a>
+        {CATEGORIES.map((c) => (
+          <a class="chip" aria-pressed={category === c ? 'true' : 'false'} href={chipHref({ category: c })}>{categoryLabel(c)}</a>
+        ))}
+      </div>
+
+      <div class="chips" style="margin-bottom:8px" role="group" aria-label="Neighborhood">
+        <a class="chip" aria-pressed={neighborhood === 'all' ? 'true' : 'false'} href={chipHref({ neighborhood: null })}><span data-i18n="browse.all">All</span></a>
+        {hoods.map((h) => (
+          <a class="chip" aria-pressed={neighborhood === h ? 'true' : 'false'} href={chipHref({ neighborhood: h })}>{h}</a>
+        ))}
+      </div>
+
+      <div class="chips" style="margin-bottom:16px">
+        <a class="chip" aria-pressed={openNow ? 'true' : 'false'} href={chipHref({ open: openNow ? null : '1' })}
+           title="Based on owner-reported hours. When in doubt, call.">
+          <span data-i18n="browse.openNow">Open now</span>
+        </a>
+      </div>
+      {openNow && <p class="notice" data-i18n="browse.openNowNote" style="margin-bottom:16px">Based on owner-reported hours. When in doubt, call.</p>}
+
+      <p class="eyebrow">{results.length} <span data-i18n="browse.results">businesses</span></p>
+      <div class="cards" style="margin-top:8px">
+        {results.map((l) => <ListingCard listing={l} />)}
+      </div>
+      {results.length === 0 && (
+        <div>
+          <p data-i18n="browse.noResults">No businesses match those filters.</p>
+          <a class="btn btn-ghost" href="/browse"><span data-i18n="browse.clearFilters">Clear filters</span></a>
+        </div>
+      )}
+    </section>
+  </div>
+</Base>

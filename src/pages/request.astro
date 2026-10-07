@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import { neighborhoods } from '../lib/db.js';
+
+const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
+const hoods = neighborhoods();
+---
+<Base title="Request a service" tab="request">
+  <div class="wrap">
+    <section class="block">
+      <h1 class="eyebrow" data-i18n="req.title" style="margin-bottom:8px">Request a service</h1>
+      <p data-i18n="req.sub" style="color:var(--ink-soft)">Tell us what you need. We open WhatsApp with your request ready to send.</p>
+
+      {!waNumber && (
+        <p class="notice" style="margin:16px 0">WhatsApp requests aren't wired up yet — check back soon.</p>
+      )}
+
+      <form id="req-form" style="margin-top:16px">
+        <div class="field">
+          <label for="f-need" data-i18n="req.need">What do you need?</label>
+          <textarea id="f-need" name="need" required data-i18n-ph="req.needPh" placeholder="e.g. A mechanic near Baldwin who speaks Nepali"></textarea>
+        </div>
+        <div class="field">
+          <label for="f-hood" data-i18n="req.hood">Neighborhood</label>
+          <select id="f-hood" name="hood">
+            {hoods.map((h) => <option value={h}>{h}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-lang" data-i18n="req.lang">Preferred language</label>
+          <select id="f-lang" name="langpref">
+            <option value="" data-i18n="req.langAny">No preference</option>
+            <option value="Nepali">Nepali / नेपाली</option>
+            <option value="Hindi">Hindi / हिन्दी</option>
+            <option value="English">English</option>
+          </select>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit" disabled={!waNumber}>
+          <span data-i18n="req.send">Send via WhatsApp</span>
+        </button>
+        <p style="font-size:13px;color:var(--ink-faint)" data-i18n="req.note">No account needed. Your request goes straight to our team on WhatsApp.</p>
+      </form>
+    </section>
+  </div>
+  <script define:vars={{ waNumber }}>
+    document.getElementById('req-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!waNumber) return;
+      const need = document.getElementById('f-need').value.trim();
+      const hood = document.getElementById('f-hood').value;
+      const langpref = document.getElementById('f-lang').value;
+      if (!need) return;
+      const msg = `Hamro Bazaar service request\nNeed: ${need}\nNeighborhood: ${hood}${langpref ? `\nLanguage: ${langpref}` : ''}`;
+      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+    });
+  </script>
+</Base>

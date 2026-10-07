@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+
+const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
+const waHref = waNumber
+  ? `https://wa.me/${waNumber}?text=${encodeURIComponent('Namaste! I want to list my business on Hamro Bazaar. / नमस्ते! म आफ्नो व्यवसाय हाम्रो बजारमा सूचीबद्ध गर्न चाहन्छु।')}`
+  : null;
+---
+<Base title="List your business">
+  <div class="wrap">
+    <section class="block">
+      <h1 class="eyebrow" data-i18n="own.title" style="margin-bottom:8px">List your business — free</h1>
+      <p data-i18n="own.sub" style="color:var(--ink-soft); font-size:19px">No dashboard. No forms. No English required.</p>
+
+      <div class="steps" style="margin:20px 0">
+        <div class="step">
+          <h3 data-i18n="own.step1t">Say hello on WhatsApp</h3>
+          <p data-i18n="own.step1d">Message us in Nepali, Hindi, or English — whichever is easiest.</p>
+        </div>
+        <div class="step">
+          <h3 data-i18n="own.step2t">Two-minute chat</h3>
+          <p data-i18n="own.step2d">We ask about your services, hours, and photos. That is the whole process.</p>
+        </div>
+        <div class="step">
+          <h3 data-i18n="own.step3t">We build your listing</h3>
+          <p data-i18n="own.step3d">You approve it with a thumbs-up. Updates anytime — just message us.</p>
+        </div>
+      </div>
+
+      {waHref ? (
+        <a class="btn btn-primary btn-block" href={waHref} target="_blank" rel="noopener"><span data-i18n="own.cta">Start on WhatsApp</span></a>
+      ) : (
+        <p class="notice">WhatsApp onboarding opens soon — check back shortly.</p>
+      )}
+      <p style="font-size:13px;color:var(--ink-faint);margin-top:12px" data-i18n="own.free">Listing is free forever. Optional featured placement available later.</p>
+    </section>
+  </div>
+</Base>

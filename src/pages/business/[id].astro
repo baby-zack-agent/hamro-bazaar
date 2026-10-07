@@ -1,0 +1,78 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getListing, getListings, categoryLabel } from '../../lib/db.js';
+import { telLink, waLink, waGreeting, mapsLink } from '../../lib/format.js';
+
+export function getStaticPaths() {
+  return getListings().map((l) => ({ params: { id: l.id } }));
+}
+
+const { id } = Astro.params;
+const listing = getListing(id);
+if (!listing) return Astro.redirect('/browse');
+
+const tel = telLink(listing.phone);
+const wa = waLink(listing.phone, waGreeting(listing));
+const maps = mapsLink(listing.address);
+---
+<Base title={listing.name}>
+  <div class="wrap">
+    <section class="detail-head">
+      <a href="/browse" style="font-size:14px">← <span data-i18n="detail.back">Back to browse</span></a>
+      <h1>{listing.name}</h1>
+      <span class="badges" style="margin:0">
+        {listing.featured && <span class="badge badge-gold" data-i18n="badge.featured">Featured</span>}
+        {listing.verified && <span class="badge badge-ok" data-i18n="badge.verified">Verified</span>}
+      </span>
+      <p class="meta">{categoryLabel(listing.category)}</p>
+    </section>
+
+    <div class="cta-row">
+      {tel ? (
+        <a class="btn btn-primary" href={tel}><span data-i18n="card.call">Call</span></a>
+      ) : (
+        <span class="nophone" data-i18n="card.noPhone">phone not listed</span>
+      )}
+      {wa && <a class="btn btn-ghost" href={wa} target="_blank" rel="noopener">WhatsApp</a>}
+    </div>
+
+    <div class="kv">
+      <div class="row">
+        <span class="k" data-i18n="detail.services">Services</span>
+        <span class="v">{listing.services?.length ? listing.services.join(', ') : '—'}</span>
+      </div>
+      <div class="row">
+        <span class="k" data-i18n="detail.hours">Hours</span>
+        <span class="v">{listing.hours ? listing.hours : <em data-i18n="detail.hoursUnknown">Call for hours</em>}</span>
+      </div>
+      <div class="row">
+        <span class="k" data-i18n="detail.languages">Languages</span>
+        <span class="v">
+          {listing.languages?.length ? listing.languages.join(', ') : '—'}
+          <br /><small style="color:var(--ink-faint)" data-i18n="detail.languagesNote">Community-reported. Confirm when you call.</small>
+        </span>
+      </div>
+      {listing.address && (
+        <div class="row">
+          <span class="k">Address</span>
+          <span class="v">{listing.address}{maps && <> · <a href={maps} target="_blank" rel="noopener"><span data-i18n="detail.directions">Directions</span></a></>}</span>
+        </div>
+      )}
+      {listing.website && (
+        <div class="row">
+          <span class="k" data-i18n="detail.website">Website</span>
+          <span class="v"><a href={listing.website} target="_blank" rel="noopener">{listing.website.replace(/^https?:\/\//, '')}</a></span>
+        </div>
+      )}
+    </div>
+
+    <section class="block">
+      <h2 class="eyebrow" data-i18n="detail.reviews">Reviews</h2>
+      <p data-i18n="detail.noReviews">No reviews yet — be the first after you visit.</p>
+      <p class="notice" data-i18n="detail.reviewsSoon">Reviews open soon. For now, call or WhatsApp the business directly.</p>
+    </section>
+  </div>
+</Base>
+<style>
+  .meta { color: var(--ink-soft); margin: 4px 0 0; }
+</style>

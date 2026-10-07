@@ -1,0 +1,31 @@
+---
+import { categoryLabel } from '../lib/db.js';
+import { telLink, waLink, waGreeting } from '../lib/format.js';
+
+const { listing, lang = 'en' } = Astro.props;
+const tel = telLink(listing.phone);
+const wa = waLink(listing.phone, waGreeting(listing, lang));
+---
+<article class="lcard">
+  <div class="top">
+    <h3><a class="cardlink" href={`/business/${listing.id}`}>{listing.name}</a></h3>
+    <span class="badges">
+      {listing.featured && <span class="badge badge-gold" data-i18n="badge.featured">Featured</span>}
+      {listing.verified && <span class="badge badge-ok" data-i18n="badge.verified">Verified</span>}
+    </span>
+  </div>
+  <div class="meta">{categoryLabel(listing.category, lang)}</div>
+  {listing.address && <div class="addr">{listing.address}</div>}
+  <div class="actions">
+    {tel ? (
+      <a class="btn btn-primary" href={tel}><span data-i18n="card.call">Call</span></a>
+    ) : (
+      <span class="nophone" data-i18n="card.noPhone">phone not listed</span>
+    )}
+    {wa && <a class="btn btn-ghost" href={wa} target="_blank" rel="noopener">WhatsApp</a>}
+  </div>
+</article>
+<style>
+  .cardlink { color: inherit; text-decoration: none; }
+  .cardlink:hover { text-decoration: underline; }
+</style>

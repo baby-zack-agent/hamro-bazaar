@@ -1,0 +1,106 @@
+---
+import '../styles/global.css';
+
+const { title = 'Hamro Bazaar', tab = '' } = Astro.props;
+const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{title} · Hamro Bazaar</title>
+  <meta name="description" content="Every Nepali & Indian service in Pittsburgh. One search." />
+  <meta name="theme-color" content="#8c2b2b" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Hamro Bazaar" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="/icons/icon-192.svg" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body data-wa-number={waNumber}>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/" aria-label="Hamro Bazaar home">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="2" y="2" width="28" height="28" rx="7" fill="#8c2b2b"/>
+          <path d="M8 13h16l-2.2 8.2a2 2 0 0 1-1.9 1.5H12a2 2 0 0 1-1.9-1.5L8 13z" fill="none" stroke="#c6a15b" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M10 13c0-3.5 2.7-6 6-6s6 2.5 6 6" fill="none" stroke="#c6a15b" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <span class="word"><span data-i18n="brand.name">Hamro Bazaar</span><small data-i18n="brand.tag">Pittsburgh pilot</small></span>
+      </a>
+      <button class="lang-toggle" data-lang-toggle aria-pressed="false" aria-label="Switch language / भाषा परिवर्तन">
+        <span data-lang-label>ने</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p data-i18n="foot.tag">Hamro Bazaar · Pittsburgh pilot concept</p>
+      <p data-i18n="foot.made">Built for the Nepali & Indian community of Pittsburgh.</p>
+    </div>
+  </footer>
+
+  <nav class="tabbar" aria-label="Primary">
+    <a href="/" aria-current={tab === 'home' ? 'page' : undefined}>
+      <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>
+      <span data-i18n="nav.home">Home</span>
+    </a>
+    <a href="/browse" aria-current={tab === 'browse' ? 'page' : undefined}>
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span data-i18n="nav.browse">Browse</span>
+    </a>
+    <a href="/announcements" aria-current={tab === 'announcements' ? 'page' : undefined}>
+      <svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4V5z"/></svg>
+      <span data-i18n="nav.announcements">Announcements</span>
+    </a>
+    <a href="/request" aria-current={tab === 'request' ? 'page' : undefined}>
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      <span data-i18n="nav.request">Request</span>
+    </a>
+  </nav>
+
+  <script>
+    import { getLang, setLang, applyLang } from '../lib/i18n.js';
+
+    // Language
+    applyLang(getLang());
+    document.querySelectorAll('[data-lang-toggle]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const next = getLang() === 'ne' ? 'en' : 'ne';
+        setLang(next);
+      });
+    });
+
+    // Section-head reveal only (everything else stays still).
+    // Fallback timer guarantees content appears even if IO never fires.
+    const reveal = () => document.querySelectorAll('.rv:not(.in)').forEach((el) => el.classList.add('in'));
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, { threshold: 0.15 });
+      document.querySelectorAll('.rv').forEach((el) => io.observe(el));
+      setTimeout(reveal, 2500);
+    } else {
+      reveal();
+    }
+
+    // Best-effort service worker — must never break the page.
+    try {
+      if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    } catch { /* offline support is a bonus, not a requirement */ }
+  </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+---
+import Base from '../layouts/Base.astro';
+import CategoryGrid from '../components/CategoryGrid.astro';
+import ListingCard from '../components/ListingCard.astro';
+import AnnouncementCard from '../components/AnnouncementCard.astro';
+import { getFeatured, getListings, getAnnouncements } from '../lib/db.js';
+
+const featured = getFeatured();
+const listings = getListings();
+const announcements = getAnnouncements().slice(0, 3);
+const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
+---
+<Base title="Home" tab="home">
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow" data-i18n="hero.eyebrow">Pittsburgh · Nepali + Indian community</div>
+      <h1 data-i18n="hero.title">Every Nepali &amp; Indian service in Pittsburgh. One search.</h1>
+      <p class="lead" data-i18n="hero.sub">Groceries, momo spots, mechanics, tax help, home care — listed by the community, free forever.</p>
+      <form class="searchbar" action="/browse" method="get" id="home-search">
+        <input type="search" name="q" data-i18n-ph="hero.searchPh" placeholder="What do you need?"
+               aria-label="Search businesses" autocomplete="off" />
+        <button class="btn btn-primary" type="submit" aria-label="Search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        </button>
+      </form>
+      <div class="cards" id="search-results" style="margin-top:12px" hidden></div>
+    </section>
+
+    <section class="block">
+      <h2 class="rv eyebrow" data-i18n="sec.categories" style="margin-bottom:12px">Categories</h2>
+      <CategoryGrid />
+    </section>
+  </div>
+
+  <section class="block band">
+    <div class="wrap">
+      <h2 class="rv eyebrow" data-i18n="sec.featured" style="margin-bottom:12px">Featured near you</h2>
+      <div class="rail" id="featured-rail">
+        {featured.map((l) => <ListingCard listing={l} />)}
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="block">
+      <h2 class="rv eyebrow" style="margin-bottom:12px">
+        <span data-i18n="sec.announcements">Fresh announcements</span>
+        &nbsp;·&nbsp;<a href="/announcements" data-i18n="sec.announcementsAll">View all</a>
+      </h2>
+      <div class="cards">
+        {announcements.map((a) => <AnnouncementCard announcement={a} />)}
+      </div>
+    </section>
+
+    <section class="block band" style="border-radius:8px; margin-bottom:8px;">
+      <div class="wrap band-inner">
+        <div class="eyebrow rv" data-i18n="band.title">Own a business?</div>
+        <h2 data-i18n="own.title">List your business — free</h2>
+        <p data-i18n="band.sub">Get listed in front of the whole community — free, and we do the work.</p>
+        <a class="btn btn-primary" href="/list-business"><span data-i18n="band.cta">List your business — free</span></a>
+      </div>
+    </section>
+  </div>
+
+  <script id="hb-listings-data" type="application/json">{JSON.stringify(listings)}</script>
+  <script>
+    import { searchListings, categoryLabel } from '../lib/db.js';
+    import { telLink, waLink, waGreeting } from '../lib/format.js';
+    import { getLang, t } from '../lib/i18n.js';
+
+    const data = JSON.parse(document.getElementById('hb-listings-data').textContent);
+    const form = document.getElementById('home-search');
+    const input = form.querySelector('input[name="q"]');
+    const results = document.getElementById('search-results');
+
+    function cardHTML(l, lang) {
+      const tel = telLink(l.phone);
+      const wa = waLink(l.phone, waGreeting(l, lang));
+      return `<article class="lcard">
+        <div class="top"><h3><a class="cardlink" href="/business/${l.id}">${escapeHTML(l.name)}</a></h3>
+        <span class="badges">${l.featured ? `<span class="badge badge-gold">${t('badge.featured', lang)}</span>` : ''}${l.verified ? `<span class="badge badge-ok">${t('badge.verified', lang)}</span>` : ''}</span></div>
+        <div class="meta">${categoryLabel(l.category, lang)}</div>
+        ${l.address ? `<div class="addr">${escapeHTML(l.address)}</div>` : ''}
+        <div class="actions">
+          ${tel ? `<a class="btn btn-primary" href="${tel}">${t('card.call', lang)}</a>` : `<span class="nophone">${t('card.noPhone', lang)}</span>`}
+          ${wa ? `<a class="btn btn-ghost" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
+        </div></article>`;
+    }
+    function escapeHTML(s) {
+      return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    function render() {
+      const q = input.value.trim();
+      const lang = getLang();
+      if (!q) { results.hidden = true; results.innerHTML = ''; return; }
+      const hits = searchListings(q).slice(0, 12);
+      results.hidden = false;
+      results.innerHTML = hits.length ? hits.map((l) => cardHTML(l, lang)).join('')
+        : `<p>${t('browse.noResults', lang)} <a href="/browse">${t('browse.clearFilters', lang)}</a></p>`;
+    }
+    // Live filter; plain form submit still works without JS (GET /browse?q=).
+    input.addEventListener('input', render);
+    form.addEventListener('submit', (e) => { if (input.value.trim()) e.preventDefault(); });
+    document.addEventListener('hb:lang', render);
+    // Announcement titles re-render on toggle (shared pattern).
+    function renderAnn(lang) {
+      let annData = [];
+      try { annData = JSON.parse(document.getElementById('hb-ann-data').textContent); } catch {}
+      document.querySelectorAll('[data-ann]').forEach((el) => {
+        const row = annData.find((a) => a.id === el.getAttribute('data-ann'));
+        const p = row && el.querySelector('p');
+        if (p) p.textContent = row.title[lang] || row.title.en;
+      });
+    }
+    document.addEventListener('hb:lang', (e) => renderAnn(e.detail.lang));
+  </script>
+  <script id="hb-ann-data" type="application/json">{JSON.stringify(getAnnouncements().slice(0, 3))}</script>
+</Base>
+<style>
+  .cardlink { color: inherit; text-decoration: none; }
+</style>

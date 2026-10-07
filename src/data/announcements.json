@@ -1,0 +1,52 @@
+[
+ {
+  "id": "ann-selroti",
+  "category": "grocery",
+  "date": "2026-10-04",
+  "published": true,
+  "title": {
+   "en": "Fresh sel roti every Saturday morning",
+   "ne": "हरेक शनिबार बिहान ताजा सेलरोटी"
+  }
+ },
+ {
+  "id": "ann-dashain",
+  "category": "grocery",
+  "date": "2026-10-03",
+  "published": true,
+  "title": {
+   "en": "Dashain sale: 15% off all spices & lentils this week",
+   "ne": "दशैं बिक्री: यस हप्ता सबै मसला र दालमा १५% छुट"
+  }
+ },
+ {
+  "id": "ann-jholmomo",
+  "category": "restaurant",
+  "date": "2026-10-02",
+  "published": true,
+  "title": {
+   "en": "Jhol momo now available on weekends",
+   "ne": "झोल म:म अब सप्ताहन्तमा उपलब्ध"
+  }
+ },
+ {
+  "id": "ann-tax",
+  "category": "tax_service",
+  "date": "2026-10-01",
+  "published": true,
+  "title": {
+   "en": "Free first-time tax filing consultation — walk-ins welcome",
+   "ne": "पहिलो पटक कर दाखिला गर्नेहरूलाई नि:शुल्क परामर्श"
+  }
+ },
+ {
+  "id": "ann-gathering",
+  "category": "other",
+  "date": "2026-09-30",
+  "published": true,
+  "title": {
+   "en": "Community gathering — first Sunday of the month, all welcome",
+   "ne": "सामुदायिक भेला — महिनाको पहिलो आइतबार, सबैलाई स्वागत छ"
+  }
+ }
+]

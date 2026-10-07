@@ -1,0 +1,1 @@
+{"dependencies":{"astro":"^4.16.0"},"description":"Hamro Bazaar — Pittsburgh-first service platform for the Nepali + Indian diaspora (Phase 1: working directory)","name":"hamro-bazaar","private":true,"scripts":{"build":"astro build","dev":"astro dev","preview":"astro preview"},"version":"0.1.0"}

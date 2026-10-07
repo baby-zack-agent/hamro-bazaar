@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import AnnouncementCard from '../components/AnnouncementCard.astro';
+import { getAnnouncements } from '../lib/db.js';
+
+const announcements = getAnnouncements();
+---
+<Base title="Announcements" tab="announcements">
+  <div class="wrap">
+    <section class="block">
+      <h1 class="eyebrow" data-i18n="ann.title" style="margin-bottom:8px">Announcements</h1>
+      <p data-i18n="ann.sub" style="color:var(--ink-soft)">New products, sales, and community news — free for every business to post.</p>
+      <div class="cards" style="margin-top:16px">
+        {announcements.map((a) => <AnnouncementCard announcement={a} />)}
+      </div>
+      {announcements.length === 0 && <p data-i18n="ann.empty">No announcements yet.</p>}
+    </section>
+  </div>
+  <script id="hb-ann-data" type="application/json">{JSON.stringify(announcements)}</script>
+  <script>
+    import { getLang } from '../lib/i18n.js';
+    function render(lang) {
+      let data = [];
+      try { data = JSON.parse(document.getElementById('hb-ann-data').textContent); } catch {}
+      document.querySelectorAll('[data-ann]').forEach((el) => {
+        const row = data.find((a) => a.id === el.getAttribute('data-ann'));
+        const p = row && el.querySelector('p');
+        if (p) p.textContent = row.title[lang] || row.title.en;
+        const when = row && el.querySelector('.when');
+        // date + category label stays server-rendered; fine for v1.
+      });
+    }
+    document.addEventListener('hb:lang', (e) => render(e.detail.lang));
+    render(getLang());
+  </script>
+</Base>
