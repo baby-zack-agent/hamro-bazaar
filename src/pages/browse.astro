@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import ListingCard from '../components/ListingCard.astro';
-import { CATEGORIES, filterListings, searchListings, neighborhoods, categoryLabel } from '../lib/db.js';
+import { CATEGORIES, filterListings, neighborhoods, categoryLabel } from '../lib/db.js';
 
 const params = Astro.url.searchParams;
 const q = params.get('q') || '';
@@ -29,9 +29,9 @@ function chipHref(patch) {
 <Base title="Browse" tab="browse">
   <div class="wrap">
     <section class="block">
-      <h1 class="eyebrow" data-i18n="browse.title" style="margin-bottom:12px">Browse businesses</h1>
+      <h1 class="sec-title" data-i18n="browse.title">Browse businesses</h1>
 
-      <form class="searchbar" action="/browse" method="get" style="margin-bottom:12px">
+      <form class="searchbar" action="/browse" method="get" style="margin-bottom:16px">
         <input type="search" name="q" value={q} data-i18n-ph="hero.searchPh" placeholder="What do you need?" aria-label="Search" />
         <input type="hidden" name="category" value={category} />
         <input type="hidden" name="neighborhood" value={neighborhood} />
@@ -61,8 +61,8 @@ function chipHref(patch) {
       </div>
       {openNow && <p class="notice" data-i18n="browse.openNowNote" style="margin-bottom:16px">Based on owner-reported hours. When in doubt, call.</p>}
 
-      <p class="eyebrow">{results.length} <span data-i18n="browse.results">businesses</span></p>
-      <div class="cards" style="margin-top:8px">
+      <p class="eyebrow" style="margin-bottom:12px">{results.length} <span data-i18n="browse.results">businesses</span></p>
+      <div class="cards">
         {results.map((l) => <ListingCard listing={l} />)}
       </div>
       {results.length === 0 && (

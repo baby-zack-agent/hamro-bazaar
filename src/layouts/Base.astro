@@ -3,6 +3,16 @@ import '../styles/global.css';
 
 const { title = 'Hamro Bazaar', tab = '' } = Astro.props;
 const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
+
+const nav = [
+  { id: 'home', href: '/', key: 'nav.home', label: 'Home' },
+  { id: 'browse', href: '/browse', key: 'nav.browse', label: 'Browse' },
+  { id: 'announcements', href: '/announcements', key: 'nav.announcements', label: 'Announcements' },
+  { id: 'request', href: '/request', key: 'nav.request', label: 'Request' },
+];
+// Preloaded woff2 URLs are pinned to the css2 response for
+// 'Tiro Devanagari Hindi' 400 (latin + devanagari subsets).
+const fontCss = 'https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:ital@0;1&display=swap';
 ---
 <!doctype html>
 <html lang="en">
@@ -19,19 +29,42 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" type="image/svg+xml" href="/icons/icon-192.svg" />
   <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
+  <!-- Display face: Tiro Devanagari Hindi (real Google Fonts family with native
+       Devanagari — the spec's 'Tiro Devanagari Serif' 404s). One face only. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+        href="https://fonts.gstatic.com/s/tirodevanagarihindi/v7/55xyezN7P8T4e0_CfIJrwdodg9HoYw0i-M9vT-MPXm4I3Q.woff2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+        href="https://fonts.gstatic.com/s/tirodevanagarihindi/v7/55xyezN7P8T4e0_CfIJrwdodg9HoYw0i-M9vTuMPXm4I3X_o.woff2" />
+  <link rel="stylesheet" href={fontCss} media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href={fontCss} /></noscript>
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body data-wa-number={waNumber}>
-  <header class="site-header">
-    <div class="wrap">
+  <header class="site-header" id="site-header">
+    <div class="wrap header-inner">
       <a class="brand" href="/" aria-label="Hamro Bazaar home">
         <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
           <rect x="2" y="2" width="28" height="28" rx="7" fill="#8c2b2b"/>
           <path d="M8 13h16l-2.2 8.2a2 2 0 0 1-1.9 1.5H12a2 2 0 0 1-1.9-1.5L8 13z" fill="none" stroke="#c6a15b" stroke-width="1.8" stroke-linejoin="round"/>
           <path d="M10 13c0-3.5 2.7-6 6-6s6 2.5 6 6" fill="none" stroke="#c6a15b" stroke-width="1.8" stroke-linecap="round"/>
         </svg>
-        <span class="word"><span data-i18n="brand.name">Hamro Bazaar</span><small data-i18n="brand.tag">Pittsburgh pilot</small></span>
+        <span class="word">
+          <span class="brand-name" data-i18n="brand.name">Hamro Bazaar</span>
+          <span class="brand-tag" data-i18n="brand.tag">Pittsburgh pilot</span>
+        </span>
       </a>
+      <nav class="site-nav" aria-label="Primary">
+        {nav.map((n) => (
+          <a class="navlink" href={n.href} aria-current={tab === n.id ? 'page' : undefined}>
+            <span data-i18n={n.key}>{n.label}</span>
+          </a>
+        ))}
+        <a class="btn btn-primary btn-sm" href="/list-business">
+          <span data-i18n="band.cta">List your business — free</span>
+        </a>
+      </nav>
       <button class="lang-toggle" data-lang-toggle aria-pressed="false" aria-label="Switch language / भाषा परिवर्तन">
         <span data-lang-label>ने</span>
       </button>
@@ -44,28 +77,42 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
 
   <footer class="site-footer">
     <div class="wrap">
-      <p data-i18n="foot.tag">Hamro Bazaar · Pittsburgh pilot concept</p>
-      <p data-i18n="foot.made">Built for the Nepali & Indian community of Pittsburgh.</p>
+      <div class="fgrid">
+        <div>
+          <span class="fname" data-i18n="brand.name">Hamro Bazaar</span>
+          <p data-i18n="foot.tag">Hamro Bazaar · Pittsburgh pilot concept</p>
+          <p class="ffine" data-i18n="foot.made">Built for the Nepali & Indian community of Pittsburgh.</p>
+        </div>
+        <nav aria-label="Explore">
+          <h3 data-i18n="foot.explore">Explore</h3>
+          <ul>
+            <li><a href="/"><span data-i18n="nav.home">Home</span></a></li>
+            <li><a href="/browse"><span data-i18n="nav.browse">Browse</span></a></li>
+            <li><a href="/announcements"><span data-i18n="nav.announcements">Announcements</span></a></li>
+            <li><a href="/request"><span data-i18n="nav.request">Request</span></a></li>
+          </ul>
+        </nav>
+        <nav aria-label="For owners">
+          <h3 data-i18n="foot.owners">For owners</h3>
+          <ul>
+            <li><a href="/list-business"><span data-i18n="band.cta">List your business — free</span></a></li>
+            <li><a href="/feature"><span data-i18n="band.feat">Get featured — $25/mo</span></a></li>
+          </ul>
+        </nav>
+      </div>
     </div>
   </footer>
 
   <nav class="tabbar" aria-label="Primary">
-    <a href="/" aria-current={tab === 'home' ? 'page' : undefined}>
-      <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>
-      <span data-i18n="nav.home">Home</span>
-    </a>
-    <a href="/browse" aria-current={tab === 'browse' ? 'page' : undefined}>
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <span data-i18n="nav.browse">Browse</span>
-    </a>
-    <a href="/announcements" aria-current={tab === 'announcements' ? 'page' : undefined}>
-      <svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4V5z"/></svg>
-      <span data-i18n="nav.announcements">Announcements</span>
-    </a>
-    <a href="/request" aria-current={tab === 'request' ? 'page' : undefined}>
-      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-      <span data-i18n="nav.request">Request</span>
-    </a>
+    {nav.map((n, i) => (
+      <a href={n.href} aria-current={tab === n.id ? 'page' : undefined}>
+        {i === 0 && <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>}
+        {i === 1 && <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>}
+        {i === 2 && <svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4V5z"/></svg>}
+        {i === 3 && <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>}
+        <span data-i18n={n.key}>{n.label}</span>
+      </a>
+    ))}
   </nav>
 
   <script>
@@ -86,6 +133,13 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
         });
       } catch { /* never break navigation */ }
     }, { capture: true });
+
+    // Solid-on-scroll header: hairline appears after 8px (no backdrop-filter —
+    // iOS Safari ghosts blurred sticky headers).
+    const header = document.getElementById('site-header');
+    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 
     // Language
     applyLang(getLang());

@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import CategoryGrid from '../components/CategoryGrid.astro';
 import ListingCard from '../components/ListingCard.astro';
 import AnnouncementCard from '../components/AnnouncementCard.astro';
-import { getFeatured, getListings, getAnnouncements } from '../lib/db.js';
+import { getFeatured, getListings, getAnnouncements, categoryLabel } from '../lib/db.js';
 
 const featured = getFeatured();
 const listings = getListings();
@@ -19,25 +19,26 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
       <form class="searchbar" action="/browse" method="get" id="home-search">
         <input type="search" name="q" data-i18n-ph="hero.searchPh" placeholder="What do you need?"
                aria-label="Search businesses" autocomplete="off" />
-        <button class="btn btn-primary" type="submit" aria-label="Search">
+        <button class="btn btn-primary btn-lg" type="submit">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <span class="sr-only" data-i18n="hero.searchLabel">Search businesses</span>
         </button>
       </form>
       <div class="cards" id="search-results" style="margin-top:12px" hidden></div>
-      <div style="margin-top:14px">
+      <div class="survey-cta">
         <a class="btn btn-ghost" href="/survey"><span data-i18n="sv.cta">Take the 2-minute survey</span></a>
       </div>
     </section>
 
-    <section class="block">
-      <h2 class="rv eyebrow" data-i18n="sec.categories" style="margin-bottom:12px">Categories</h2>
+    <section class="block" style="padding-top:0">
+      <h2 class="rv sec-title" data-i18n="sec.categories">Categories</h2>
       <CategoryGrid />
     </section>
   </div>
 
   <section class="block band">
     <div class="wrap">
-      <h2 class="rv eyebrow" data-i18n="sec.featured" style="margin-bottom:12px">Featured near you</h2>
+      <h2 class="rv sec-title" data-i18n="sec.featured">Featured near you</h2>
       <div class="rail" id="featured-rail">
         {featured.map((l) => <ListingCard listing={l} />)}
       </div>
@@ -46,7 +47,7 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
 
   <div class="wrap">
     <section class="block">
-      <h2 class="rv eyebrow" style="margin-bottom:12px">
+      <h2 class="rv sec-title">
         <span data-i18n="sec.announcements">Fresh announcements</span>
         &nbsp;·&nbsp;<a href="/announcements" data-i18n="sec.announcementsAll">View all</a>
       </h2>
@@ -55,13 +56,15 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
       </div>
     </section>
 
-    <section class="block band" style="border-radius:8px; margin-bottom:8px;">
-      <div class="wrap band-inner">
-        <div class="eyebrow rv" data-i18n="band.title">Own a business?</div>
+    <section class="block" style="padding-top:0">
+      <div class="band-cta rv">
+        <div class="eyebrow" data-i18n="band.title">Own a business?</div>
         <h2 data-i18n="own.title">List your business — free</h2>
         <p data-i18n="band.sub">Get listed in front of the whole community — free, and we do the work.</p>
-        <a class="btn btn-primary" href="/list-business"><span data-i18n="band.cta">List your business — free</span></a>
-        <a class="btn btn-ghost" href="/feature" style="margin-left:8px"><span data-i18n="band.feat">Get featured — $25/mo</span></a>
+        <div class="band-actions">
+          <a class="btn btn-on-dark" href="/list-business"><span data-i18n="band.cta">List your business — free</span></a>
+          <a class="btn btn-ghost-dark" href="/feature"><span data-i18n="band.feat">Get featured — $25/mo</span></a>
+        </div>
       </div>
     </section>
   </div>
@@ -81,14 +84,14 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
     function cardHTML(l, lang) {
       const tel = telLink(l.phone);
       const wa = waLink(l.phone, waGreeting(l, lang));
-      return `<article class="lcard">
-        <div class="top"><h3><a class="cardlink" href="/business/${l.id}">${escapeHTML(l.name)}</a></h3>
+      return `<article class="lcard${l.featured ? ' lcard-featured' : ''}">
+        <div class="card-top"><span class="card-cat">${escapeHTML(categoryLabel(l.category, lang))}</span>
         <span class="badges">${l.featured ? `<span class="badge badge-gold">${t('badge.featured', lang)}</span>` : ''}${l.verified ? `<span class="badge badge-ok">${t('badge.verified', lang)}</span>` : ''}</span></div>
-        <div class="meta">${categoryLabel(l.category, lang)}</div>
-        ${l.address ? `<div class="addr">${escapeHTML(l.address)}</div>` : ''}
-        <div class="actions">
-          ${tel ? `<a class="btn btn-primary" href="${tel}" data-listing-id="${l.id}">${t('card.call', lang)}</a>` : `<span class="nophone">${t('card.noPhone', lang)}</span>`}
-          ${wa ? `<a class="btn btn-ghost" href="${wa}" target="_blank" rel="noopener" data-listing-id="${l.id}">WhatsApp</a>` : ''}
+        <h3><a class="cardlink" href="/business/${l.id}">${escapeHTML(l.name)}</a></h3>
+        ${l.address ? `<p class="card-addr">${escapeHTML(l.address)}</p>` : ''}
+        <div class="card-actions">
+          ${tel ? `<a class="btn btn-primary" href="${tel}" data-listing-id="${l.id}" data-track-context="card">${t('card.call', lang)}</a>` : `<span class="nophone">${t('card.noPhone', lang)}</span>`}
+          ${wa ? `<a class="btn btn-ghost" href="${wa}" target="_blank" rel="noopener" data-listing-id="${l.id}" data-track-context="card">WhatsApp</a>` : ''}
         </div></article>`;
     }
     function escapeHTML(s) {
@@ -127,6 +130,3 @@ const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '';
   </script>
   <script id="hb-ann-data" type="application/json">{JSON.stringify(getAnnouncements().slice(0, 3))}</script>
 </Base>
-<style>
-  .cardlink { color: inherit; text-decoration: none; }
-</style>

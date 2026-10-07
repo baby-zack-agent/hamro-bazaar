@@ -14,63 +14,95 @@ if (!listing) return Astro.redirect('/browse');
 const tel = telLink(listing.phone);
 const wa = waLink(listing.phone, waGreeting(listing));
 const maps = mapsLink(listing.address);
+
+// Minimal inline-SVG line icons — no emoji. Shared glyph language with the
+// category rail. Used for the no-photo media panel (maroon tint, never gray).
+const glyphs = {
+  restaurant: '<path d="M4 11h16a8 8 0 0 1-16 0z"/><path d="M12 3v2M9 5l1 2M15 5l-1 2"/>',
+  grocery: '<path d="M5 9h14l-1.6 9.2a2 2 0 0 1-2 1.8H8.6a2 2 0 0 1-2-1.8L5 9z"/><path d="M8 9l3-5M16 9l-3-5"/>',
+  home_care: '<path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/><path d="M12 14.5l-1.8-1.4a1 1 0 0 1 1.3-1.5l.5.4.5-.4a1 1 0 0 1 1.3 1.5L12 14.5z"/>',
+  real_estate: '<path d="M4 20V9l8-5 8 5v11"/><path d="M4 20h16"/><path d="M10 20v-5h4v5"/>',
+  tax_service: '<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 13h7M9 17h7"/>',
+  loan_officer: '<path d="M3 9l9-6 9 6"/><path d="M4 9v2M20 9v2M6 11v7M10 11v7M14 11v7M18 11v7"/><path d="M3 20h18"/>',
+  insurance: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  other: '<circle cx="6" cy="6" r="1.6"/><circle cx="12" cy="6" r="1.6"/><circle cx="18" cy="6" r="1.6"/><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/><circle cx="6" cy="18" r="1.6"/><circle cx="12" cy="18" r="1.6"/><circle cx="18" cy="18" r="1.6"/>',
+};
+const glyph = glyphs[listing.category] || glyphs.other;
 ---
 <Base title={listing.name}>
   <div class="wrap">
     <section class="detail-head">
-      <a href="/browse" style="font-size:14px">← <span data-i18n="detail.back">Back to browse</span></a>
+      <a class="detail-back" href="/browse">← <span data-i18n="detail.back">Back to browse</span></a>
+      <div class="detail-media" role="img" aria-label={categoryLabel(listing.category)}>
+        <svg viewBox="0 0 24 24" aria-hidden="true" set:html={glyph} />
+      </div>
+      <div class="eyebrow">{categoryLabel(listing.category)}</div>
       <h1>{listing.name}</h1>
-      <span class="badges" style="margin:0">
+      <span class="badges">
         {listing.featured && <span class="badge badge-gold" data-i18n="badge.featured">Featured</span>}
         {listing.verified && <span class="badge badge-ok" data-i18n="badge.verified">Verified</span>}
       </span>
-      <p class="meta">{categoryLabel(listing.category)}</p>
+      <div class="detail-facts">
+        {listing.address && (
+          <div class="fact">
+            <span class="fk">Address</span>
+            <span>{listing.address}{maps && <> · <a href={maps} target="_blank" rel="noopener"><span data-i18n="detail.directions">Directions</span></a>}</span>
+          </div>
+        )}
+        <div class="fact">
+          <span class="fk" data-i18n="detail.hours">Hours</span>
+          <span>{listing.hours ? listing.hours : <em data-i18n="detail.hoursUnknown">Call for hours</em>}</span>
+        </div>
+      </div>
     </section>
 
     <div class="cta-row">
       {tel ? (
-        <a class="btn btn-primary" href={tel} data-listing-id={listing.id}><span data-i18n="card.call">Call</span></a>
+        <a class="btn btn-primary" href={tel} data-listing-id={listing.id} data-track-context="detail"><span data-i18n="card.call">Call</span></a>
       ) : (
         <span class="nophone" data-i18n="card.noPhone">phone not listed</span>
       )}
-      {wa && <a class="btn btn-ghost" href={wa} target="_blank" rel="noopener" data-listing-id={listing.id}>WhatsApp</a>}
+      {wa && <a class="btn btn-ghost" href={wa} target="_blank" rel="noopener" data-listing-id={listing.id} data-track-context="detail">WhatsApp</a>}
     </div>
     <p style="margin:4px 0 0;font-size:14px">
       <a href={`/feature?listing=${listing.id}`}><span data-i18n="feat.link">Feature this business</span></a>
-      <span style="color:var(--ink-faint)"> · $25/mo</span>
+      <span style="color:var(--color-ink-faint)"> · $25/mo</span>
     </p>
 
-    <div class="kv">
-      <div class="row">
-        <span class="k" data-i18n="detail.services">Services</span>
-        <span class="v">{listing.services?.length ? listing.services.join(', ') : '—'}</span>
-      </div>
-      <div class="row">
-        <span class="k" data-i18n="detail.hours">Hours</span>
-        <span class="v">{listing.hours ? listing.hours : <em data-i18n="detail.hoursUnknown">Call for hours</em>}</span>
-      </div>
-      <div class="row">
-        <span class="k" data-i18n="detail.languages">Languages</span>
-        <span class="v">
-          {listing.languages?.length ? listing.languages.join(', ') : '—'}
-          <br /><small style="color:var(--ink-faint)" data-i18n="detail.languagesNote">Community-reported. Confirm when you call.</small>
-        </span>
-      </div>
-      {listing.address && (
+    <section class="dsec">
+      <h2 class="eyebrow" data-i18n="detail.services">Services</h2>
+      <div class="kv">
         <div class="row">
-          <span class="k">Address</span>
-          <span class="v">{listing.address}{maps && <> · <a href={maps} target="_blank" rel="noopener"><span data-i18n="detail.directions">Directions</span></a></>}</span>
+          <span class="k" data-i18n="detail.services">Services</span>
+          <span class="v">{listing.services?.length ? listing.services.join(', ') : '—'}</span>
         </div>
-      )}
-      {listing.website && (
         <div class="row">
-          <span class="k" data-i18n="detail.website">Website</span>
-          <span class="v"><a href={listing.website} target="_blank" rel="noopener">{listing.website.replace(/^https?:\/\//, '')}</a></span>
+          <span class="k" data-i18n="detail.hours">Hours</span>
+          <span class="v">{listing.hours ? listing.hours : <em data-i18n="detail.hoursUnknown">Call for hours</em>}</span>
         </div>
-      )}
-    </div>
+        <div class="row">
+          <span class="k" data-i18n="detail.languages">Languages</span>
+          <span class="v">
+            {listing.languages?.length ? listing.languages.join(', ') : '—'}
+            <br /><small style="color:var(--color-ink-faint)" data-i18n="detail.languagesNote">Community-reported. Confirm when you call.</small>
+          </span>
+        </div>
+        {listing.address && (
+          <div class="row">
+            <span class="k">Address</span>
+            <span class="v">{listing.address}{maps && <> · <a href={maps} target="_blank" rel="noopener"><span data-i18n="detail.directions">Directions</span></a>}</span>
+          </div>
+        )}
+        {listing.website && (
+          <div class="row">
+            <span class="k" data-i18n="detail.website">Website</span>
+            <span class="v"><a href={listing.website} target="_blank" rel="noopener">{listing.website.replace(/^https?:\/\//, '')}</a></span>
+          </div>
+        )}
+      </div>
+    </section>
 
-    <section class="block">
+    <section class="dsec">
       <h2 class="eyebrow" data-i18n="detail.reviews">Reviews</h2>
       {listing.reviews?.length ? (
         <div class="reviews">
@@ -117,7 +149,7 @@ const maps = mapsLink(listing.address);
           <span data-i18n="rev.send">Submit review</span>
         </button>
         <p id="rv-msg" class="formmsg" hidden></p>
-        <p style="font-size:13px;color:var(--ink-faint)" data-i18n="rev.note">Reviews are moderated to keep things fair.</p>
+        <p style="font-size:13px;color:var(--color-ink-faint)" data-i18n="rev.note">Reviews are moderated to keep things fair.</p>
       </form>
     </section>
   </div>
@@ -164,7 +196,3 @@ const maps = mapsLink(listing.address);
     });
   </script>
 </Base>
-<style>
-  .meta { color: var(--ink-soft); margin: 4px 0 0; }
-  .flabel { display: block; font-family: var(--mono); font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); margin-bottom: 6px; }
-</style>

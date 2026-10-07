@@ -280,6 +280,9 @@ export const STRINGS = {
     en: 'No account needed. Anonymous unless you share your phone.',
     ne: 'खाता चाहिँदैन। फोन नदिएसम्म गोप्य रहन्छ।',
   },
+  // footer columns
+  'foot.explore': { en: 'Explore', ne: 'अन्वेषण' },
+  'foot.owners': { en: 'For owners', ne: 'व्यवसायीहरूका लागि' },
 };
 
 export function t(key, lang = 'en') {
